@@ -3,6 +3,7 @@ ShissuLocalization = ShissuLocalization or {}
 ShissuLocalization["ShissuHistory"] = {       
   TITLE         = "Гильдия: " .. GetString(SI_WINDOW_TITLE_GUILD_HISTORY),
   FILTER        = "Фильтр",
+  INFO          = "Дополнительная информация",
   CHOICE        = "Отобрано фильтром",
   GOLDADDED     = "Внесено",
   GOLDREMOVE    = "Снято",
@@ -19,4 +20,6 @@ ShissuLocalization["ShissuHistory"] = {
   SET2          = "Продажи: Оборот, внешние продажи, 3.5% налог",
   OPT           = "ОПЦИИ",
   LAST          = "Последняя неделя",
+  LAST_DEALER   = "Последний дилер гильдии: ",
+  FOUND         = "Guild Found: ",
 }

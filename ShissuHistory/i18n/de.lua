@@ -20,4 +20,6 @@ ShissuLocalization["ShissuHistory"] = {
   SET2          = "Verkäufe: Umsatz, Nicht-Gildenmitglieder (Extern), 3,5%-Beteiligung",
   OPT           = "OPTIONEN",
   LAST          = "letzte Woche",
+  LAST_DEALER   = "Letzter Gildenhändler: ",
+  FOUND         = "Gilde gefunden: ",
 }

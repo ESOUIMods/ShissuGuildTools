@@ -1,10 +1,72 @@
-﻿local _addon = {}  
+local _addon = {}  
 
 _addon.Name = "ShissuFramework"
 _addon.formattedName	= "|c82FA58Shissu|ceeeeee's Framework"
 _addon.Version = "0.6.3"
 
 _addon._settings = {}
+sf_internal = {}
+
+local logger = LibDebugLogger.Create(_addon.Name)
+_addon.logger = logger
+local SDLV = DebugLogViewer
+if SDLV then sf_internal.viewer = true else sf_internal.viewer = false end
+
+local function create_log(log_type, log_content)
+  if log_type == "Debug" then
+    _addon.logger:Debug(log_content)
+  end
+  if log_type == "Verbose" then
+    _addon.logger:Verbose(log_content)
+  end
+end
+
+local function emit_message(log_type, text)
+  if(text == "") then
+      text = "[Empty String]"
+  end
+  create_log(log_type, text)
+end
+
+local function emit_table(log_type, t, indent, table_history)
+  indent          = indent or "."
+  table_history    = table_history or {}
+
+  for k, v in pairs(t) do
+    local vType = type(v)
+
+    emit_message(log_type, indent.."("..vType.."): "..tostring(k).." = "..tostring(v))
+
+    if(vType == "table") then
+      if(table_history[v]) then
+        emit_message(log_type, indent.."Avoiding cycle on table...")
+      else
+        table_history[v] = true
+        emit_table(log_type, v, indent.."  ", table_history)
+      end
+    end
+  end
+end
+
+function _addon.dm(log_type, ...)
+  if not _addon.logger then return end
+  for i = 1, select("#", ...) do
+    local value = select(i, ...)
+    if(type(value) == "table") then
+      emit_table(log_type, value)
+    else
+      emit_message(log_type, tostring(value))
+    end
+  end
+end
+
+function sf_internal.v(...)
+  if ... and sf_internal.viewer then
+    _addon.dm("Debug", ...)
+  else
+    d(...)
+  end
+end
 
 local stdColor = "|c82FA58"
 local white = "|ceeeeee" 
@@ -57,10 +119,6 @@ end
 
 ShissuFramework = _addon    
 EVENT_MANAGER:RegisterForEvent(_addon.Name, EVENT_ADD_ON_LOADED, _addon.EVENT_ADD_ON_LOADED)
-
---- FOR A NEW ADDON, TESTING FUNCTION
--- /script checkGoldDeposits("Tamrilando", 2000)
--- /script checkGoldDeposits("Tamrizon", 2000)
 
 function markPlayer()
   local numCount = 0
@@ -117,12 +175,18 @@ function markPlayer()
   end)
 end
 
+--- FOR A NEW ADDON, TESTING FUNCTION
+-- /script checkGoldDeposits("Tamrilando", 2000)
+-- /script sf_internal:checkGoldDeposits("Tamrizon", 2000)
+
 -- Not offical, testing
-function checkGoldDeposits(guildName, goldDeposit, removeReminder)
-  local lastKiosk = ShissuFramework["func"].currentTime() + ShissuFramework["func"].getKioskTime() - 604800
+function sf_internal:checkGoldDeposits(guildName, goldDeposit, removeReminder)
+  -- local lastKiosk = ShissuFramework["func"].currentTime() + ShissuFramework["func"].getKioskTime() - 604800
+  local lastKiosk = ShissuFramework["func"].getKioskTime() - 604800 -- 7 days
+  sf_internal.v(lastKiosk)
   local _history = shissuHistoryScanner
   
-  d("Letzter Gildenh�ndler: " .. GetDateStringFromTimestamp(lastKiosk) .. " - " .. ZO_FormatTime((lastKiosk) % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR))
+  sf_internal.v(ShissuLocalization["ShissuHistory"]["LAST_DEALER"] .. GetDateStringFromTimestamp(lastKiosk) .. " - " .. ZO_FormatTime((lastKiosk) % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR))
 
   -- GuildId?
   local numGuild = GetNumGuilds()
@@ -130,7 +194,7 @@ function checkGoldDeposits(guildName, goldDeposit, removeReminder)
   
   for gId = 1, numGuild do
     if (guildName == GetGuildName(gId)) then
-      d("Gilde gefunden: " .. guildName .. "(" .. gId .. ")")
+      sf_internal.v(_L("FOUND") .. guildName .. "(" .. gId .. ")")
       guildId = gId
       break
     end  
@@ -285,11 +349,12 @@ function checkGoldDeposits(guildName, goldDeposit, removeReminder)
       -- ________________
       
       -- Anzahl der Spieler erreicht
+      -- Number of players reached
       if numMember == numCount then
-        d("Es wurden " .. found .. " Notizen bearbeitet")
-        d("Es haben " .. notPayed .. " Spieler nicht bezahlt")
-        d("Es haben " .. noteExist .. " Spieler letzte woche nicht bezahlt")
-        d("Es haben " .. payed .. " Spieler bezahlt")
+        d("There were " .. found .. " Notes edited")
+        d(notPayed .. " Players did not pay")
+        d(noteExist .. " Players did not pay last week")
+        d(payed .. " Players paid")
              
         EVENT_MANAGER:UnregisterForUpdate("SGT_NOTE_SALE_EDIT")       
       end
