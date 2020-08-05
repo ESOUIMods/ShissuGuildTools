@@ -212,8 +212,9 @@ function _addon.getHistoryInfo(guildName, name)
         local timeLast = 0         
         end
 
-       -- if (name == "@Aerydir") then
-       --   d(name .. " - " .. lastGold .. " - " .. timeLast .. " - " .. _mail.gold)
+        --if (name == "@Splatadude") then
+        --  d(name .. " - " .. lastGold .. " - " .. timeLast .. " - " .. _mail.gold)
+        --    d(_mail.goldSince)
         --end
 
         if (lastGold and timeLast) then
