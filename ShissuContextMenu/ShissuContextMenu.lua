@@ -295,8 +295,7 @@ function _addon.createGuildVars(saveVar, value)
     local numGuild = GetNumGuilds()
     
     for guildId=1, numGuild do
-      local guildId = GetGuildId(guildId)
-      local guildName = GetGuildName(GetGuildId(guildId))  
+      local guildName = GetGuildName(GetGuildId(guildId))
       
       if shissuContextMenu[saveVar][guildName] == nil then shissuContextMenu[saveVar][guildName] = value end
     end

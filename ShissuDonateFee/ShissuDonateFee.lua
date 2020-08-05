@@ -79,9 +79,7 @@ function _addon.createSettings()
   local numGuild = GetNumGuilds()
     
   for guildId = 1, numGuild do
-    guildId = GetGuildId(guildId)
-    local guildId = GetGuildId(guildId)
-    local guildName = GetGuildName(guildId)  
+    local guildName = GetGuildName(GetGuildId(guildId))  
 
     controls[#controls+1] = {
       type = "title",
@@ -148,9 +146,7 @@ function _addon.chatReminder()
     local numGuild = GetNumGuilds()
 
     for guildId = 1, numGuild do
-      guildId = GetGuildId(guildId)
-      local guildId = GetGuildId(guildId)
-      local guildName = GetGuildName(guildId)  
+      local guildName = GetGuildName(GetGuildId(guildId))  
 
       if ( shissuDonateFee[guildName] ~= nil ) then
         if ( shissuDonateFee[guildName]["enabled"] == true and shissuDonateFee[guildName]["nextAutoPay"] ~= nil ) then
@@ -243,12 +239,11 @@ function _addon.openUI()
             local historyAllow = false
 
             for guildId=1, numGuilds do
-	      guildId = GetGuildId(guildId)
-              local guildId = GetGuildId(guildId)
-              local guildName2 = GetGuildName(guildId)
+              local guildsId = GetGuildId(guildId)
+              local guildName2 = GetGuildName(guildsId)
 
               if ( guildName2 == guildName ) then
-    	          depositAllow = DoesPlayerHaveGuildPermission(guildId, GUILD_PERMISSION_BANK_DEPOSIT)
+    	          depositAllow = DoesPlayerHaveGuildPermission(guildsId, GUILD_PERMISSION_BANK_DEPOSIT)
                 --
                 break
               end

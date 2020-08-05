@@ -14,8 +14,8 @@ local white = _globals["white"]
 local green = _globals["green"]
 local red = _globals["red"]
 
-local currentTime = ShissuFramework["func"].currentTime
-local getKioskTime = ShissuFramework["func"].getKioskTime
+local currentTime = GetTimeStamp()
+local getKioskTime = ShissuFramework["func"].getKioskTime()
 
 
 local _addon = {}
@@ -141,8 +141,8 @@ function _addon.processEvents(guildId, category)
   local last = 1
   local inc = -1
   
-  local nextKiosk = currentTime() + getKioskTime()
-  local lastNPC = nextKiosk - 604800
+  local nextKiosk = getKioskTime
+  local lastNPC = nextKiosk - ShissuFramework["func"].days_last_kiosk()
   local previousKiosk = lastNPC - 604800
   
   --d("process: " .. guildId .. guildName)

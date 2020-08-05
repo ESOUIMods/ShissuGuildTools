@@ -103,6 +103,7 @@ function _addon.filterScrollList(self)
   local filterCount = 0
 
   local guildId = GUILD_SELECTOR.guildId
+  --sf_internal.v(guildId)
   local guildName = GetGuildName(guildId)
 
   local goldAdded = 0
@@ -117,13 +118,7 @@ function _addon.filterScrollList(self)
 
   local currentTime = GetTimeStamp()
   local nextKiosk = ShissuFramework["func"].getKioskTime()
-  local days_last_kiosk
-  if GetTimeStamp() > 1597172400 then -- proposed flip begining Tuesday Aug 11
-    days_last_kiosk = 604800 -- 7 days
-  else
-    days_last_kiosk = 777600 + 3600 -- 9 days 1 Hour to reflect old cuttof of 6:00-- PM Pacific
-  end
-  local lastKiosk = nextKiosk - days_last_kiosk
+  local lastKiosk = nextKiosk - ShissuFramework["func"].days_last_kiosk()
   local previousKiosk = lastKiosk - 604800
 
 --  d("1: " .. GetDateStringFromTimestamp(lastKioskTime) .. " - " .. ZO_FormatTime((lastKioskTime) % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR))

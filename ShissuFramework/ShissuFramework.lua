@@ -177,36 +177,31 @@ end
 
 --- FOR A NEW ADDON, TESTING FUNCTION
 -- /script checkGoldDeposits("Tamrilando", 2000)
--- /script sf_internal:checkGoldDeposits("Tamrizon", 2000)
+-- /script sf_internal:checkGoldDeposits("To Carry Your Burdens", 2000)
 
 -- Not offical, testing
 function sf_internal:checkGoldDeposits(guildName, goldDeposit, removeReminder)
-  local days_last_kiosk
-  if GetTimeStamp() > 1597172400 then -- proposed flip begining Tuesday Aug 11
-    days_last_kiosk = 604800 -- 7 days
-  else
-    days_last_kiosk = 777600 + 3600 -- 9 days 1 Hour to reflect old cuttof of 6:00-- PM Pacific
-  end
-  local lastKiosk = ShissuFramework["func"].getKioskTime() - days_last_kiosk -- 7 days
+  local lastKiosk = ShissuFramework["func"].getKioskTime() - ShissuFramework["func"].days_last_kiosk()
   --sf_internal.v(lastKiosk)
   local _history = shissuHistoryScanner
 
-  sf_internal.v(ShissuFramework["func"].getKioskTime())
+  --sf_internal.v(ShissuFramework["func"].getKioskTime())
 
-  sf_internal.v(ShissuLocalization["ShissuHistory"]["LAST_DEALER"] .. GetDateStringFromTimestamp(lastKiosk) .. " - " .. ZO_FormatTime((lastKiosk) % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR))
+  --sf_internal.v(ShissuLocalization["ShissuHistory"]["LAST_DEALER"] .. GetDateStringFromTimestamp(lastKiosk) .. " - " .. ZO_FormatTime((lastKiosk) % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR))
 
   -- GuildId?
   local numGuild = GetNumGuilds()
   local guildId = nil
 
   for gId = 1, numGuild do
-    if (guildName == GetGuildName(gId)) then
-      --sf_internal.v(_L("FOUND") .. guildName .. "(" .. gId .. ")")
-      guildId = gId
+    if (guildName == GetGuildName(GetGuildId(gId))) then
+      sf_internal.v(ShissuLocalization["ShissuHistory"]["FOUND"] .. guildName .. " (" .. GetGuildId(gId) .. ")")
+      guildId = GetGuildId(gId)
       break
     end
   end
 
+  --sf_internal.v(guildId)
   if (guildId ~= nil) then
     local reminderText = guildName .. " Reminder\n" .. goldDeposit .. " Gold"
     local numMember = GetNumGuildMembers(guildId)
@@ -247,7 +242,7 @@ function sf_internal:checkGoldDeposits(guildName, goldDeposit, removeReminder)
 
       if (waitOnEdit == "2") then
         if waiting == 0 then
-          d("WARTEN")
+          sf_internal.v("WAITING")
           waiting = 1
         end
 
@@ -268,7 +263,7 @@ function sf_internal:checkGoldDeposits(guildName, goldDeposit, removeReminder)
       end
 
       if waitOnEdit == "0" then
-        d(waitOnEdit .. " - " .. numCount .. " CHECK NAME: " .. displayName)       end
+        sf_internal.v(waitOnEdit .. " - " .. numCount .. " CHECK NAME: " .. displayName)       end
 
       -- Reminder an allen Namen entfernen
       if removeReminder == true then
@@ -311,15 +306,15 @@ function sf_internal:checkGoldDeposits(guildName, goldDeposit, removeReminder)
                     local goldWeek = gold / goldDeposit
                     local addTime = goldWeek * 604800
 
-                    d(goldWeek)
+                    sf_internal.v(goldWeek)
 
                     if (goldWeek > 0 ) then
                       if lastTime + addTime > lastKiosk then
-                        d("--> NAME (VORRAUSGEZAHLT): " .. displayName)
+                        sf_internal.v("--> NAME (VORRAUSGEZAHLT): " .. displayName)
 
                         payed = payed + 1
                       else
-                        d("--> NAME (NICHT VORRAUSGEZAHLT): " .. displayName)
+                        sf_internal.v("--> NAME (NICHT VORRAUSGEZAHLT): " .. displayName)
 
                         if (string.len(note) > 0) then
                           note = note .. "\n" .. reminderText
@@ -333,7 +328,7 @@ function sf_internal:checkGoldDeposits(guildName, goldDeposit, removeReminder)
                       end
 
                     elseif (lastTime < lastKiosk or gold == 0) then
-                      d("--> NAME (NICHT GEZAHLT): " .. displayName)
+                      sf_internal.v("--> NAME (NICHT GEZAHLT): " .. displayName)
 
                       if (string.len(note) > 0) then
                         note = note .. "\n" .. reminderText
@@ -358,10 +353,10 @@ function sf_internal:checkGoldDeposits(guildName, goldDeposit, removeReminder)
       -- Anzahl der Spieler erreicht
       -- Number of players reached
       if numMember == numCount then
-        d("There were " .. found .. " Notes edited")
-        d(notPayed .. " Players did not pay")
-        d(noteExist .. " Players did not pay last week")
-        d(payed .. " Players paid")
+        sf_internal.v("There were " .. found .. " Notes edited")
+        sf_internal.v(notPayed .. " Players did not pay")
+        sf_internal.v(noteExist .. " Players did not pay last week")
+        sf_internal.v(payed .. " Players paid")
 
         EVENT_MANAGER:UnregisterForUpdate("SGT_NOTE_SALE_EDIT")
       end

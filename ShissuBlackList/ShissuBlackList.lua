@@ -491,7 +491,7 @@ function ShissuBlackList:SetupRow(control, data)
     
   for i=1, numGuild do
     local guildId = GetGuildId(i)
-    local guildName = GetGuildName(guildId)
+    local guildName = GetGuildName(GetGuildId(guildId))
     
     local guildControl = control:GetNamedChild('Guild' .. i)            
     

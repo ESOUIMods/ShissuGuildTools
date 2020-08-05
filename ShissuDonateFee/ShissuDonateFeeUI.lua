@@ -50,8 +50,7 @@ function ShissuDonateFeeUI:BuildMasterList()
   local maxGold = {}
 
   for guildId = 1, numGuild do
-    guildId = GetGuildId(guildId)
-    local guildName = GetGuildName(guildId)  
+    local guildName = GetGuildName(GetGuildId(guildId))  
 
     maxGold[guildName] = 0
 

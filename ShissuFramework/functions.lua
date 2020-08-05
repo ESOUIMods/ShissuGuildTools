@@ -103,6 +103,21 @@ function _func.isStringEmpty(text)
   return text == nil or text == ''
 end
 
+function _func.getDay()
+  local start_of_day = GetTimeStamp() - GetSecondsSinceMidnight()
+  return start_of_day
+end
+
+function _func.days_last_kiosk()
+  local days_last_kiosk
+  if GetTimeStamp() > 1597172400 then -- proposed flip begining Tuesday Aug 11
+    days_last_kiosk = 604800 -- 7 days if after Aug 11
+  else
+    days_last_kiosk = 777600 + 3600 -- 9 days 1 Hour to reflect old cuttof of 6:00-- PM Pacific
+  end
+  return days_last_kiosk
+end
+
 -- Zeit bis zum nächsten Gildenhändler???
 -- Time to the next guild trader
 function _func.getKioskTime(which)
