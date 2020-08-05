@@ -294,7 +294,7 @@ function _addon.initKioskTimer()
         
   -- Fensterelement
   _addon.time = CreateControlFromVirtual("SGT_HomeTimer", ZO_GuildHome, "ZO_DefaultTextButton")
-  _addon.time:SetAnchor(TOPLEFT, ZO_GuildHome, TOPLEFT, 32, 550)
+  _addon.time:SetAnchor(TOPLEFT, ZO_GuildHome, TOPLEFT, 32, 590)
   _addon.time:SetWidth(180)
   _addon.time:SetHeight(100)
   _addon.time:SetHidden(false)  

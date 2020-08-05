@@ -551,14 +551,34 @@ function _addon.core.formatMessage(messageType, fromName, text, isFromCustomerSe
       fromLink = fromLink .. " " .. guildLvL
     end   
 
-    if channelLink then
-      return timeStamp .. additionalInfo .. zo_strformat(channelInfo.format, channelLink, fromLink .."|r", text), channelInfo.saveTarget, fromDisplayName, text
-    end
+--    if channelLink then
+--      return timeStamp .. additionalInfo .. zo_strformat(channelInfo.format, channelLink, fromLink .."|r", text), channelInfo.saveTarget, fromDisplayName, text
+--    end
   
-    return timeStamp .. additionalInfo .. zo_strformat(channelInfo.format, fromLink .. "|r", text, GetCustomerServiceIcon(isFromCustomerService)), channelInfo.saveTarget, fromDisplayName, text
-  end
+--    return timeStamp .. additionalInfo .. zo_strformat(channelInfo.format, fromLink .. "|r", text, GetCustomerServiceIcon(isFromCustomerService)), channelInfo.saveTarget, fromDisplayName, text
+--  end
   
-  return timeStamp .. text
+--  return timeStamp .. text
+
+---------
+            if channelInfo.formatMessage then
+                text = zo_strformat(SI_CHAT_MESSAGE_FORMATTER, text)
+            end
+
+            if channelLink then
+                formattedText = string.format(GetString(channelInfo.format), channelLink, fromLink .."|r", text)
+            else
+                if channelInfo.supportCSIcon then
+                    formattedText = string.format(GetString(channelInfo.format), GetCustomerServiceIcon(isFromCustomerService), fromLink .. "|r", text)
+                else
+                    formattedText = string.format(GetString(channelInfo.format), fromLink .. "|r", text)
+                end
+            end
+            return timeStamp .. additionalInfo .. formattedText, channelInfo.saveTarget, fromDisplayName, text
+       end
+
+       return timeStamp .. text
+------
 end
 
 function _addon.core.onLickClicked(rawLink, mouseButton, linkText, color, linkType, lineNumber, chanCode)
