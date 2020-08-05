@@ -20,7 +20,7 @@ local whiteGold = _globals["goldSymbol"]
 local setPanel = ShissuFramework["setPanel"]
 
 local round = ShissuFramework["func"].round
-local currentTimeC = ShissuFramework["func"].currentTime
+local currentTimeC = GetTimeStamp()
 local getKioskTime = ShissuFramework["func"].getKioskTime
 local isStringEmpty = ShissuFramework["func"].isStringEmpty
 local checkBoxLabel = ShissuFramework["interface"].checkBoxLabel
@@ -115,8 +115,8 @@ function _addon.filterScrollList(self)
   local turnover = 0 
   local tax = 0     
 
-  local currentTime = currentTimeC()
-  local nextKiosk = currentTime + getKioskTime()
+  local currentTime = GetTimeStamp()
+  local nextKiosk = ShissuFramework["func"].getKioskTime()
   local lastKiosk = nextKiosk - 604800
   local previousKiosk = lastKiosk - 604800
   
@@ -188,9 +188,9 @@ function _addon.filterScrollList(self)
             if data.eventType == GUILD_EVENT_BANKGOLD_ADDED then 
             
               if kioskCheckBox then
-                --d("1: " .. GetDateStringFromTimestamp(lastKioskTime) .. " - " .. ZO_FormatTime((lastKioskTime) % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR))
-                --d("2: " .. GetDateStringFromTimestamp(currentTime - data.secsSinceEvent) .. " - " .. ZO_FormatTime((lastKioskTime2) % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR))  
-                --d("--")
+                --sf_internal.v("1: " .. GetDateStringFromTimestamp(lastKioskTime) .. " - " .. ZO_FormatTime((lastKioskTime) % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR))
+                --sf_internal.v("2: " .. GetDateStringFromTimestamp(currentTime - data.secsSinceEvent) .. " - " .. ZO_FormatTime((lastKioskTime2) % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR))  
+                --sf_internal.v("--")
                 
                 if (currentTime - data.secsSinceEvent) >= lastKiosk then 
                   goldAdded = goldAdded + data.param2
@@ -253,7 +253,7 @@ function _addon.filterScrollList(self)
         if (shissuHistory["sales"]) then
           if data.eventType == GUILD_EVENT_ITEM_SOLD then
             if (not isStringEmpty(data.param1)) then
-              --d(data.param2)
+              sf_internal.v(data.param2)
               if _SGTguildMemberList[data.param2] ~= nil then
                 local guilds = _SGTguildMemberList[data.param2]["guilds"]
   

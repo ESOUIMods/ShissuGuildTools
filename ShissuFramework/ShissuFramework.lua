@@ -181,7 +181,6 @@ end
 
 -- Not offical, testing
 function sf_internal:checkGoldDeposits(guildName, goldDeposit, removeReminder)
-  -- local lastKiosk = ShissuFramework["func"].currentTime() + ShissuFramework["func"].getKioskTime() - 604800
   local lastKiosk = ShissuFramework["func"].getKioskTime() - 604800 -- 7 days
   sf_internal.v(lastKiosk)
   local _history = shissuHistoryScanner

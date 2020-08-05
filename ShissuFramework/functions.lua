@@ -103,42 +103,12 @@ function _func.isStringEmpty(text)
   return text == nil or text == ''
 end
 
--- Aktuelle Uhrzeit... Korrektur +
--- Current time + correction
-function _func.currentTime()
-  local correction = GetSecondsSinceMidnight() - (GetTimeStamp() % 86400)
-  --sf_internal.v(string.format("%s %s", "1: correction: ", correction))
-  if correction < -12*60*60 then correction = correction + 86400 end
-  --sf_internal.v(string.format("%s %s", "2: correction: ", correction))
-  the_result = GetTimeStamp() + correction
-  --sf_internal.v(string.format("%s %s", "3: the_result: ", the_result))
-  --sf_internal.v(string.format("%s %s", "4: the time: ", GetTimeStamp()))
-  --sf_internal.v(string.format("%s %s", "5: the diff: ", GetDiffBetweenTimeStamps(GetTimeStamp(),the_result)))
-  return the_result
-end
-
 -- Zeit bis zum nächsten Gildenhändler???
 -- Time to the next guild trader
-function _func.getKioskTime(which, additional, day)
-  local hourSeconds = 60 * 60
-  local daySeconds = 60 * 60 *24
-  local weekSeconds = 7 * daySeconds
+function _func.getKioskTime(which)
   local additional = additional or 0
 
-  -- Erste Woche 1970 beginnt Donnerstag -> Verschiebung auf Gebotsende
-  -- First week of 1970 begins Thursday -> postponement to end of bid
-  local firstWeek = 1 + (3 * daySeconds) + (19 * hourSeconds)
-
-  local currentTime =  _func.currentTime()
-
-  -- Anzahl der Wochen seit 01.01.1970
-  -- Number of weeks since 01/01/1970
-  local week = math.floor(currentTime / weekSeconds) + additional
-  local beginnKiosk = firstWeek + (weekSeconds * week) + 60 * 60
-
   --[[
-  Rather then eliminate all of the code I will add this
-
   1: This fuction is not called using other parameters
   such as additional or day. If that changes this will
   not work
@@ -146,33 +116,18 @@ function _func.getKioskTime(which, additional, day)
   until the next trader flip.
   ]]--
   local _, weekCutoff = GetGuildKioskCycleTimes()
-  beginnKiosk = weekCutoff
 
   -- Gebots Ende
   -- Bidding end
   if (which == 1) then
-    beginnKiosk = beginnKiosk - 300
+    weekCutoff = weekCutoff - 300
   -- Ersatzhändler
   -- Replacement dealer
   elseif (which == 2) then
-    beginnKiosk = beginnKiosk + 300
+    weekCutoff = weekCutoff + 300
   end
 
-  -- Restliche Zeit in der Woche
-  -- Remaining time in the week
-  local restWeekTime = beginnKiosk - GetTimeStamp()
-
-  --[[
-  if (day) then
-    restWeekTime = beginnKiosk
-  end
-  ]]--
-
-  if restWeekTime < 0 then
-    restWeekTime = 7 * 86400 -- one week if guild store is offline
-  end
-
-  return restWeekTime
+  return weekCutoff
 end
 
 ShissuFramework["func"] = _func
