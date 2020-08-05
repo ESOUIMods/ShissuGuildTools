@@ -437,19 +437,25 @@ function _addon.pageFilter()
   _ui.count = createZOButton("SGT_History_Count","", 150, 750, 30, ZO_GuildHistory)    
 end
 
+
+
+
 --function GUILD_HISTORY:SetupGuildEvent(control, data, ...)
 --  SetupGuildEvent_Orig(self, control, data, ...)
 --  local oldTime = control:GetNamedChild("Time"):GetText()
-  
+
 --  local correction = GetSecondsSinceMidnight() - (GetTimeStamp() % 86400)
 --  if correction < -12*60*60 then correction = correction + 86400 end
-  
+
 --  local timestamp = GetTimeStamp() - data.secsSinceEvent - (GetFrameTimeSeconds() - data.timeStamp)
 --  local datestring = GetDateStringFromTimestamp(timestamp)
 --  local timestring = ZO_FormatTime((timestamp + correction) % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR)
 
 --  control:GetNamedChild("Time"):SetText(datestring .. " " .. timestring)
 --end
+
+
+
 
 function SGTOpenAllPages()
   EVENT_MANAGER:UnregisterForUpdate("ShissuGT_HistoryPage") 

@@ -261,7 +261,7 @@ function _addon.getKioskTime(which)
   local weekSeconds = 7 * daySeconds
   
   -- Erste Woche 1970 beginnt Donnerstag -> Verschiebung auf Gebotsende
-  local firstWeek = 1 + (3 * daySeconds) + (18 * hourSeconds)
+  local firstWeek = 1 + (3 * daySeconds) + (19 * hourSeconds)
 
   local currentTime = _addon.currentTime()                                
 
