@@ -41,7 +41,7 @@ ESO_Dialogs["SGT_EDIT"] = {
   title = { text = "TITEL", },
   mainText = { text = "TEXT", },
   editBox = { 
-    defaultText = "Liste",
+    defaultText = "",
   },
   buttons = {
     [1] = {

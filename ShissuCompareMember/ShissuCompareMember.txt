@@ -5,7 +5,7 @@
 ; You can read the full terms at https://account.elderscrollsonline.com/add-on-terms
 
 ## Title: |c82FA58Shissu|ceeeeee's CompareMember|r v1.1.0
-## APIVersion: 100028 100029
+## APIVersion: 100029
 ## Author: |c82FA58@Shissu|r [EU-SERVER]
 ## SavedVariables: shissuCompareMember
 ## DependsOn: ShissuFramework

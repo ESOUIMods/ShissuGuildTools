@@ -1,7 +1,7 @@
 ﻿-- Shissu Guild Tools Addon
 -- ShissuGuildHome
 --
--- Version: v1.3.0
+-- Version: v1.3.1
 -- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
@@ -25,7 +25,7 @@ local frameClose = 0
 local _addon = {}
 _addon.Name	= "ShissuGuildHome"
 _addon.formattedName	= stdColor .. "Shissu" .. white .. "'s GuildHome"
-_addon.Version = "1.3.0"
+_addon.Version = "1.3.1"
 _addon.buttons = {}
 
 _addon.settings = {
@@ -261,7 +261,7 @@ function _addon.getKioskTime(which)
   local weekSeconds = 7 * daySeconds
   
   -- Erste Woche 1970 beginnt Donnerstag -> Verschiebung auf Gebotsende
-  local firstWeek = 1 + (3 * daySeconds) + (19 * hourSeconds)
+  local firstWeek = 1 + (3 * daySeconds) + (18 * hourSeconds)
 
   local currentTime = _addon.currentTime()                                
 
