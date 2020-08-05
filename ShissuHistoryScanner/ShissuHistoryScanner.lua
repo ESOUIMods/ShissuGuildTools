@@ -338,9 +338,7 @@ function _addon.openHistoryPage()
       shissuHistoryScanner[guildName]["lastScans"] = {}
     end
 
-    historyPage = RequestGuildHistoryCategoryNewest(guildId, _addon.category)
-  else
-    historyPage = RequestGuildHistoryCategoryOlder(guildId, _addon.category)
+    historyPage = RequestMoreGuildHistoryCategoryEvents(guildId, _addon.category)
   end
 
   if (not historyPage) then

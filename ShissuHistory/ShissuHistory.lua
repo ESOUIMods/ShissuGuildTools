@@ -437,26 +437,26 @@ function _addon.pageFilter()
   _ui.count = createZOButton("SGT_History_Count","", 150, 750, 30, ZO_GuildHistory)    
 end
 
-function GUILD_HISTORY:SetupGuildEvent(control, data, ...)
-  SetupGuildEvent_Orig(self, control, data, ...)
-  local oldTime = control:GetNamedChild("Time"):GetText()
+--function GUILD_HISTORY:SetupGuildEvent(control, data, ...)
+--  SetupGuildEvent_Orig(self, control, data, ...)
+--  local oldTime = control:GetNamedChild("Time"):GetText()
   
-  local correction = GetSecondsSinceMidnight() - (GetTimeStamp() % 86400)
-  if correction < -12*60*60 then correction = correction + 86400 end
+--  local correction = GetSecondsSinceMidnight() - (GetTimeStamp() % 86400)
+--  if correction < -12*60*60 then correction = correction + 86400 end
   
-  local timestamp = GetTimeStamp() - data.secsSinceEvent - (GetFrameTimeSeconds() - data.timeStamp)
-  local datestring = GetDateStringFromTimestamp(timestamp)
-  local timestring = ZO_FormatTime((timestamp + correction) % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR)
+--  local timestamp = GetTimeStamp() - data.secsSinceEvent - (GetFrameTimeSeconds() - data.timeStamp)
+--  local datestring = GetDateStringFromTimestamp(timestamp)
+--  local timestring = ZO_FormatTime((timestamp + correction) % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR)
 
-  control:GetNamedChild("Time"):SetText(datestring .. " " .. timestring)
-end
+--  control:GetNamedChild("Time"):SetText(datestring .. " " .. timestring)
+--end
 
 function SGTOpenAllPages()
   EVENT_MANAGER:UnregisterForUpdate("ShissuGT_HistoryPage") 
   
   EVENT_MANAGER:RegisterForUpdate("ShissuGT_HistoryPage", 700, function()
     local count = table.getn(GUILD_HISTORY.masterList)
-    GUILD_HISTORY:RequestOlder()
+    RequestMoreGuildHistoryCategoryEvents()
                              
     zo_callLater(function()  
       local count2 = table.getn(GUILD_HISTORY.masterList)
@@ -464,7 +464,7 @@ function SGTOpenAllPages()
       if (count == count2) then
         EVENT_MANAGER:UnregisterForUpdate("ShissuGT_HistoryPage")  
       end
-    end, 500)
+    end, 1000)
   end)
 end
            
@@ -487,12 +487,12 @@ function _addon.optionControls()
   ZO_CheckButton_SetToggleFunction(_ui.optionKiosk2, function() _addon.refresh() end)      
   
   -- Alles Öffnen
-  _ui.optionAllPages = CreateControlFromVirtual("SGT_HistoryAllPages", SGT_HistoryOptionKiosk2, "ZO_CheckButton")
-  _ui.optionAllPages:SetAnchor(LEFT, SGT_HistoryOptionKiosk2, LEFT, 0, 30)
-  _ui.optionAllPages:SetHidden(false)
+--  _ui.optionAllPages = CreateControlFromVirtual("SGT_HistoryAllPages", SGT_HistoryOptionKiosk2, "ZO_CheckButton")
+--  _ui.optionAllPages:SetAnchor(LEFT, SGT_HistoryOptionKiosk2, LEFT, 0, 30)
+--  _ui.optionAllPages:SetHidden(false)
 
-  ZO_CheckButton_SetLabelText(_ui.optionAllPages, white .. _L("PAGES"))
-  ZO_CheckButton_SetToggleFunction(_ui.optionAllPages, SGTOpenAllPages)    
+--  ZO_CheckButton_SetLabelText(_ui.optionAllPages, white .. _L("PAGES"))
+--  ZO_CheckButton_SetToggleFunction(_ui.optionAllPages, SGTOpenAllPages)    
   
   _ui.optionLabel:SetHidden(false)
 end           
@@ -516,7 +516,7 @@ function _addon.initialized()
  _addon.optionControls()  
  _addon.refresh() 
 
- zo_callLater(function() GUILD_HISTORY:RequestOlder() end, 2000)
+ zo_callLater(function() RequestMoreGuildHistoryCategoryEvents() end, 2000)
 end                               
 
 function _addon.EVENT_ADD_ON_LOADED(_, addOnName)

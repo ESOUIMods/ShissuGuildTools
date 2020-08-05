@@ -245,6 +245,7 @@ end
 
 function _addon.core.createLinkURL(text)
   if (string.find(text, "www.") or string.find(text, "http://") or string.find(text, "https://")) then
+    local oldText = text
     local cache = 0  
     local cache2 = 0
     local cache3 = 0
@@ -268,7 +269,7 @@ function _addon.core.createLinkURL(text)
       
       preT, url, nextT = text:match( "(.+)%s+(https?%S+)%s+(.*)$" )
     end
-
+    if url~= nil then
     local stringLen = string.len(url)  
     local last = string.sub(url, stringLen, stringLen)
         
@@ -295,6 +296,9 @@ function _addon.core.createLinkURL(text)
     else
       text = urlLink
     end
+        else
+          return oldText
+        end
   end
     
   return text
@@ -414,8 +418,9 @@ function _addon.core.getGuildInfo(fromName, displayName)
           --gd(charName)
 
           local charAlliance = charInfo[5]
+          if charAlliance ~= nil and charAlliance ~= 0 then
           charAlliance = zo_iconFormat(GetAllianceBannerIcon(charAlliance), 24, 24)
-            
+          end  
           local rang = GetGuildRankSmallIcon(GetGuildRankIconIndex(guildId, accInfo[3]))
           rang = "|t24:24:" .. rang .. "|t"
           

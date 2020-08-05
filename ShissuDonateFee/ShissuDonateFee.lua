@@ -324,7 +324,7 @@ function _addon.repeatHistory()
       local showAllow = DoesPlayerHaveGuildPermission(GetGuildId(guildId), GUILD_PERMISSION_BANK_VIEW_DEPOSIT_HISTORY)
 
       if ( showAllow == true ) then
-        RequestGuildHistoryCategoryNewest(GetGuildId(guildId), GUILD_HISTORY_BANK)
+        RequestMoreGuildHistoryCategoryEvents(GetGuildId(guildId), GUILD_HISTORY_BANK)
       end
     end
   end, 1000)

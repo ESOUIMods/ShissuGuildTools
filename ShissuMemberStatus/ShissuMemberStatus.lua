@@ -114,7 +114,8 @@ function _addon.initialized()
   if (shissuMemberStatus["removed"] == nil) then shissuMemberStatus["removed"] = {} end
   
   for guildId=1, GetNumGuilds() do
-    local guildName = GetGuildName(guildId)  
+local xguildId = GetGuildId(guildId)
+    local guildName = GetGuildName(xguildId)  
     if (shissuMemberStatus["memberstatus"][guildName] == nil) then shissuMemberStatus["memberstatus"][guildName] = false end
     if (shissuMemberStatus["added"][guildName] == nil) then shissuMemberStatus["added"][guildName] = true end
     if (shissuMemberStatus["removed"][guildName] == nil) then shissuMemberStatus["removed"][guildName] = true end

@@ -402,7 +402,7 @@ end
 
 -- EVENT_GUILD_DESCRIPTION_CHANGED (integer eventCode, integer guildId) 
 function _addon.guildDescriptionChanged(_, guildId)
-  local guildId = GetGuildId(guildId)
+  --local guildId = GetGuildId(guildId)
   local guildName = GetGuildName(guildId)
   local guildDescription = GetGuildDescription(guildId)
   local guildAlliance = GetGuildAlliance(guildId)
@@ -493,7 +493,7 @@ function _addon.memberInSight(_, name)
 end    
 
 function _addon.memberRankChanged(_, guildId, displayName, rankIndex)
-  local guildId = GetGuildId(guildId)
+  --local guildId = GetGuildId(guildId)
   local guildName = GetGuildName(guildId)
   local guildAlliance = GetGuildAlliance(guildId)
   
