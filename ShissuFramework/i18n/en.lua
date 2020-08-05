@@ -2,8 +2,8 @@ ShissuLocalization = ShissuLocalization or {}
 
 ShissuLocalization["ShissuFramework"] = {
   DONATE =          "You like this addon and want to show your support? Then send a donation to @Shissu :-)",
-  LEFT =    "Linke Maustaste",
-  RIGHT =   "Rechte Maustaste",
+  LEFT =    "Left Mousebutton",
+  RIGHT =   "Right Mousebutton",
   TEXT =    "YOURTEXT",        
 }
 

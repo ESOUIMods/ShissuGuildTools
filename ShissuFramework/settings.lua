@@ -1,4 +1,4 @@
--- ZOS Objects
+﻿-- ZOS Objects
 local ZO = {
   sm = SCENE_MANAGER,
   cm = CALLBACK_MANAGER,
@@ -464,8 +464,8 @@ function ShissuCreateControl.guildCheckbox(parent, checkboxData)
   control.checkbox = {}
   
   for guildId = 1, numGuild do
-    guildId = GetGuildId(guildId)
-    local guildName = GetGuildName(guildId)
+    local xguildId = GetGuildId(guildId)
+    local guildName = GetGuildName(xguildId)
 
     control.guildLabel[guildId] = CreateControl(nil, control, CT_LABEL)
     control.guildLabel[guildId]:SetFont("ZoFontGame")

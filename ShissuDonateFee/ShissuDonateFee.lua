@@ -1,4 +1,4 @@
-local setPanel = ShissuFramework["setPanel"]
+﻿local setPanel = ShissuFramework["setPanel"]
 local _globals = ShissuFramework["globals"]
 local stdColor = _globals["stdColor"]
 local white = _globals["white"]
@@ -7,7 +7,7 @@ local goldSymbol = _globals["goldSymbol"]
 
 local _addon = {}
 _addon.Name = "ShissuDonateFee"
-_addon.Version = "1.0.11"
+_addon.Version = "1.1.0"
 _addon.formattedName	= stdColor .. "Shissu" .. white .. "'s Donate/Fee"
 
 local _L = ShissuFramework["func"]._L(_addon.Name)
@@ -79,6 +79,7 @@ function _addon.createSettings()
   local numGuild = GetNumGuilds()
     
   for guildId = 1, numGuild do
+    guildId = GetGuildId(guildId)
     local guildId = GetGuildId(guildId)
     local guildName = GetGuildName(guildId)  
 
@@ -147,6 +148,7 @@ function _addon.chatReminder()
     local numGuild = GetNumGuilds()
 
     for guildId = 1, numGuild do
+      guildId = GetGuildId(guildId)
       local guildId = GetGuildId(guildId)
       local guildName = GetGuildName(guildId)  
 
@@ -241,6 +243,7 @@ function _addon.openUI()
             local historyAllow = false
 
             for guildId=1, numGuilds do
+	      guildId = GetGuildId(guildId)
               local guildId = GetGuildId(guildId)
               local guildName2 = GetGuildName(guildId)
 
@@ -318,7 +321,7 @@ function _addon.repeatHistory()
     local numGuild = GetNumGuilds()
 
     for guildId = 1, numGuild do
-      local showAllow = DoesPlayerHaveGuildPermission(guildId, GUILD_PERMISSION_BANK_VIEW_DEPOSIT_HISTORY)
+      local showAllow = DoesPlayerHaveGuildPermission(GetGuildId(guildId), GUILD_PERMISSION_BANK_VIEW_DEPOSIT_HISTORY)
 
       if ( showAllow == true ) then
         RequestGuildHistoryCategoryNewest(GetGuildId(guildId), GUILD_HISTORY_BANK)

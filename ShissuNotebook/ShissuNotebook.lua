@@ -1,8 +1,8 @@
--- Shissu Guild Tools Addon
+﻿-- Shissu Guild Tools Addon
 -- ShissuNotebook
 --
--- Version: v2.4.5
--- Last Update: 24.03.2018
+-- Version: v2.5.0
+-- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
 
@@ -32,7 +32,7 @@ local notesDD = nil
 
 local _addon = {}
 _addon.Name	= "ShissuNotebook"
-_addon.Version = "2.4.4"
+_addon.Version = "2.5.0"
 _addon.formattedName = stdColor .. "Shissu" .. white .. "'s Notebook"
 _addon.hexColorPicker = nil
 

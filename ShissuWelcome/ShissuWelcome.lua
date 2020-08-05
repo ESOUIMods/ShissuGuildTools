@@ -1,7 +1,8 @@
 -- Shissu Guild Tools Addon
 -- ShissuWelcome
 --
--- Version: v1.1.4
+-- Version: v1.2.0
+-- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
 
@@ -13,7 +14,7 @@ local setPanel = ShissuFramework["setPanel"]
 
 local _addon = {}
 _addon.Name = "ShissuWelcome"
-_addon.Version = "1.1.4"
+_addon.Version = "1.2.0"
 _addon.formattedName = stdColor .. "Shissu" .. white .. "'s Welcome"
 _addon.controls = {}  
 _addon.settings = {
@@ -45,7 +46,8 @@ function _addon.createSettingMenu()
   }
     
   for guildId = 1, numGuild do
-    local name = GetGuildName(guildId)   
+    local xguildId = GetGuildId(guildId)
+    local name = GetGuildName(xguildId)
 
     controls[#controls+1] = {
       type = "description",
@@ -75,6 +77,7 @@ end
                                          
 -- Event: EVENT_GUILD_MEMBER_ADDED
 function _addon.guildMemberAdded(_, guildId, accName)
+--  local guildId = GetGuildId(guildId)
   local guildName = GetGuildName(guildId) 
   local allowInvite = shissuWelcome["invite"][guildName]
                         
@@ -89,7 +92,13 @@ function _addon.guildMemberAdded(_, guildId, accName)
     local chatMessage = string.gsub(chatMessageArray[rnd], "%%1", accName)
     chatMessage = string.gsub(chatMessage, "%%2", guildName)
     
-    local text = "/g" .. guildId .. " " .. chatMessage     
+giddy = 0
+for gi=1, GetNumGuilds() do
+ local gcheck = GetGuildId(gi)
+ if(guildId == gcheck) then giddy = gi end
+end
+
+    local text = "/g" .. giddy .. " " .. chatMessage     
     ZO_ChatWindowTextEntryEditBox:SetText(text)
   end                        
 end
@@ -101,7 +110,8 @@ function _addon.initialized()
   local welcomeString = "Welcome / Willkommen %1"
   
   for guildId=1, GetNumGuilds() do
-    local guildName = GetGuildName(guildId)  
+    local xguildId = GetGuildId(guildId)
+    local guildName = GetGuildName(xguildId)  
     if (shissuWelcome["invite"][guildName] == nil) then shissuWelcome["invite"][guildName] = true end
     if (shissuWelcome["message"][guildName] == nil) then shissuWelcome["message"][guildName] = welcomeString end
   end

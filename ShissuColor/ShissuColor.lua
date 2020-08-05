@@ -1,8 +1,8 @@
 -- Shissu Guild Tools Addon
 -- ShissuColor
 --
--- Version: v1.0.9
--- Last Update: 24.03.2018
+-- Version: v1.1.0
+-- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
 
@@ -14,7 +14,7 @@ local setPanel = ShissuFramework["setPanel"]
 
 local _addon = {}
 _addon.Name	= "ShissuColor"
-_addon.Version = "1.0.9"
+_addon.Version = "1.1.0"
 _addon.formattedName = stdColor .. "Shissu" .. white .. "'s Color"
 _addon.controls = {}
 

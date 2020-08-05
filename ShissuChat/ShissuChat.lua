@@ -1,8 +1,8 @@
--- Shissu Guild Tools Addon
+﻿-- Shissu Guild Tools Addon
 -- ShissuChat
 --
--- Version: v2.1.9
--- Last Update: 24.03.2018
+-- Version: v2.2.0
+-- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
 
@@ -15,7 +15,7 @@ local cutStringAtLetter = ShissuFramework["func"].cutStringAtLetter
 
 local _addon = {}
 _addon.Name = "ShissuChat"
-_addon.Version = "2.1.9"
+_addon.Version = "2.2.0"
 _addon.formattedName	= stdColor .. "Shissu" .. white .. "'s Chat"
 _addon.enabled = false
 _addon.LINK = "shissu"
@@ -1015,8 +1015,8 @@ function _addon.createSettingMenu()
 
   controls[#controls+1] = {
     type = "checkbox",
-    name = "Gildenchat Farben statt nutzen",
-    tooltip = "Statt einer benutzerdefinierte Farbe, wird die Farbe aus dem Gildenchat für die Darstellung im Chat genutzt [Einstellungen -> Soziales].",
+    name = "Use Guild Chat colors instead",
+    tooltip = "Instead of a custom color, the color from the guild chat are used for the presentation in the chat [Settings -> Social].",
     getFunc = shissuChat["stdGuildColor"],
     setFunc = function(_, value)
       shissuChat["stdGuildColor"] = value
@@ -1024,8 +1024,8 @@ function _addon.createSettingMenu()
   }
 
   for guildId=1, GetNumGuilds() do
-    guildId = GetGuildId(guildId)
-    guildName = GetGuildName(guildId) 
+    xxguildId = GetGuildId(guildId)
+    guildName = GetGuildName(xxguildId) 
 
     controls[#controls+1] = {
       type = "textbox",
@@ -1046,7 +1046,7 @@ function _addon.createGuildVars(saveVar, value)
     
     for guildId=1, numGuild do
       local guildId = GetGuildId(guildId)
-      local guildName = GetGuildName(guildId)  
+      local guildName = GetGuildName(GetGuildId(guildId))  
       
       if shissuChat[saveVar][guildName] == nil then shissuChat[saveVar][guildName] = value end
     end

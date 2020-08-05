@@ -1,7 +1,8 @@
 -- Shissu Guild Tools Addon
 -- ShissuTeleporterMap
 --
--- Version: v1.1.8
+-- Version: v1.2.0
+-- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
 
@@ -17,7 +18,7 @@ local ShissuMapLocations = ZO_MapLocations_Shared:Subclass()
 
 local _addon = {}
 _addon.Name = "ShissuTeleporterMap"
-_addon.Version = "1.1.8"
+_addon.Version = "1.2.0"
 _addon.formattedName	= stdColor .. "Shissu" .. white .. "'s TeleporterMap"
 _addon.core = {}
 

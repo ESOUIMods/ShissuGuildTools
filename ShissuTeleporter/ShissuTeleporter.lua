@@ -1,7 +1,8 @@
--- Shissu Guild Tools Addon
+﻿-- Shissu Guild Tools Addon
 -- ShissuTeleporter
 --
--- Version: v1.4.5
+-- Version: v1.5.0
+-- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
 
@@ -21,7 +22,7 @@ local saveWindowPosition = ShissuFramework["interface"].saveWindowPoition
 
 local _addon = {}
 _addon.Name = "ShissuTeleporter"
-_addon.Version = "1.4.5"
+_addon.Version = "1.5.0"
 _addon.formattedName	= stdColor .. "Shissu" .. white .. "'s Teleporter"                                                
 
 _addon.cache = {}
@@ -297,7 +298,7 @@ function _addon.getGuildsZones()
   
   for guildId = 1, GetNumGuilds() do
     if #availableZones == GetNumMaps() - 2 then break end
-    
+    guildId = GetGuildId(guildId)
     for memberId = 1, GetNumGuildMembers(guildId) do
       local _, _, memberZone, _, memberAlliance = GetGuildMemberCharacterInfo(guildId, memberId)
       local memberName, _, _ , memberStatus = GetGuildMemberInfo(guildId, memberId)

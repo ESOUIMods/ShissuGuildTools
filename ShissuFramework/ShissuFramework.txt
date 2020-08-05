@@ -1,5 +1,5 @@
-## Title: |c82FA58Shissu|ceeeeee's Framework|r 0.5.3
-## APIVersion: 100022
+## Title: |c82FA58Shissu|ceeeeee's Framework|r 0.6.0
+## APIVersion: 100027
 ## Author: |c82FA58@Shissu|r [EU-SERVER]
 ## SavedVariables: shissuFramework
 

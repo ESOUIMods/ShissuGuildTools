@@ -9,7 +9,7 @@ local white = _globals["white"]
 
 local _addon = {}
 _addon.Name = "ShissuDonateFee"
-_addon.Version = "1.0.11"
+_addon.Version = "1.1.0"
 _addon.formattedName	= stdColor .. "Shissu" .. white .. "'s Donate/Fee"
 
 ShissuDonateFeeUI.SORT_KEYS = {
@@ -50,6 +50,7 @@ function ShissuDonateFeeUI:BuildMasterList()
   local maxGold = {}
 
   for guildId = 1, numGuild do
+    guildId = GetGuildId(guildId)
     local guildName = GetGuildName(guildId)  
 
     maxGold[guildName] = 0

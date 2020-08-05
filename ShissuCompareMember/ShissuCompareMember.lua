@@ -1,8 +1,8 @@
 -- Shissu Guild Tools Addon
 -- ShissuCompareMember
 --
--- Version: v1.0.6
--- Last Update: 24.03.2018
+-- Version: v1.1.0
+-- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
 
@@ -15,7 +15,7 @@ local setPanel = ShissuFramework["setPanel"]
 
 local _addon = {}
 _addon.Name	= "ShissuCompareMember"
-_addon.Version = "1.0.6"
+_addon.Version = "1.1.0"
 _addon.formattedName = stdColor .. "Shissu" .. white .. "'s CompareMember"
 _addon.compares = {}
 _addon.guildData = {}
@@ -44,16 +44,16 @@ function _addon.scm_save(guildName)
   local found = 0
   
   for guildId = 1, numGuild do
-    local name = GetGuildName(guildId)    
+    local name = GetGuildName(GetGuildId(guildId))    
     
     if (name == guildName) then
-      local numMember = GetNumGuildMembers(guildId)
+      local numMember = GetNumGuildMembers(GetGuildId(guildId))
       found = 1
       
       shissuCompareMember[guildName] = {}  
 
       for memberId = 1, numMember do
-        local memberData = { GetGuildMemberInfo(guildId, memberId) }
+        local memberData = { GetGuildMemberInfo(GetGuildId(guildId), memberId) }
         local accName = memberData[1]  
         
         table.insert(shissuCompareMember[guildName], accName)

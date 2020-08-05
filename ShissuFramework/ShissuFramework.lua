@@ -1,8 +1,8 @@
-local _addon = {}  
+﻿local _addon = {}  
 
 _addon.Name = "ShissuFramework"
 _addon.formattedName	= "|c82FA58Shissu|ceeeeee's Framework"
-_addon.Version = "0.5.3"
+_addon.Version = "0.6.0"
 
 _addon._settings = {}
 

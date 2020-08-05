@@ -376,7 +376,7 @@ function _interface.initChatButton()
     local buttonText = ""
       
     if (SGT_Notebook ~= nil) then
-      buttonText = stdColor .. _L("LEFT") .. white .. " - " .. "Notizbuch"
+      buttonText = stdColor .. _L("LEFT") .. white .. " - " .. "Notebook"
     end
       
     if (ShissuTeleporter ~= nil) then                                                                  

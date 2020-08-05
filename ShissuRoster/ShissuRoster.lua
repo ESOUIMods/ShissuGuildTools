@@ -1,7 +1,7 @@
--- Shissu Guild Tools Addon
+﻿-- Shissu Guild Tools Addon
 -- ShissuRoster
 --
--- Version: v2.1.6
+-- Version: v2.2.0
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
 
@@ -28,7 +28,7 @@ local round = ShissuFramework["func"].round
 
 local _addon = {}                                                 
 _addon.Name	= "ShissuRoster"
-_addon.Version = "2.1.6"
+_addon.Version = "2.2.0"
 _addon.formattedName	= stdColor .. "Shissu" .. white .. "'s Roster"
 
 _addon.buttons = {}
@@ -192,7 +192,7 @@ function _addon.goldFilter()
           direct = "<"
         end
 
-        SGT_Roster_GoldDeposit:SetText(white .. "Gold eingezahlt " .. direct .. stdColor .. " " .. gold)
+        SGT_Roster_GoldDeposit:SetText(white .. "Gold paid " .. direct .. stdColor .. " " .. gold)
         _filter.gold = gold
         _roster.refreshFilters()
       end
@@ -298,7 +298,7 @@ function _roster.filterScrollList(self)
       if goldDeposit >= _filter.gold then
         if _filter.rang == "" or _filter.rang == ( " - " .. _L("ALL") )
         or _filter.rang == GetFinalGuildRankName(guildId, data.rankIndex) then 
-          if (_filter.Aldmeri == true and data.alliance == 1) or (_filter.Ebonheart == true and data.alliance == 2) or (_filter.Daggerfall == true and data.alliance == 3)then                                               
+          if (_filter.Aldmeri == true and data.alliance == 1) or (_filter.Ebonheart == true and data.alliance == 2) or (_filter.Daggerfall == true and data.alliance == 3) or data.alliance == 0 then                                               
             if _filter.Online and (data.status ==1 or data.status ==2 or data.status ==3) then
               GuildInfo.Choice = GuildInfo.Choice +1
               table.insert(scrollData, ZO_ScrollList_CreateDataEntry(1, data))
@@ -953,7 +953,7 @@ function SGT_GuildRosterManager:BuildMasterList()
   _addon.originalRosterBuildMasterList(self)
   
   local guildId = GUILD_ROSTER_MANAGER.guildId
-  guildId = GetGuildId(guildId)
+  --guildId = GetGuildId(guildId)
       
   for i = 1, #self.masterList do
     local data = self.masterList[i]
@@ -1064,7 +1064,7 @@ function SGT_GuildRosterManager:BuildMasterList()
     end  
     
     -- Spalte: Zone -> Offline seit?
-    if data.status == 4 then 
+    if data.status == 4 and data.alliance ~= 0 then
       data.formattedZone = _addon.secsToTime(data.secsSinceLogoff) .. "\n\n" .. data.formattedZone
     end
       

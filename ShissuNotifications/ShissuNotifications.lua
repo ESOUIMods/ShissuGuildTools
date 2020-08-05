@@ -1,7 +1,7 @@
--- Shissu Guild Tools Addon
+﻿-- Shissu Guild Tools Addon
 -- ShissuNotifications
 --
--- Version: v2.1.1
+-- Version: v2.2.0
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
 
@@ -16,7 +16,7 @@ local setPanel = ShissuFramework["setPanel"]
 
 local _addon = {}
 _addon.Name	= "ShissuNotifications"
-_addon.Version = "2.1.1"
+_addon.Version = "2.2.0"
 _addon.formattedName	= stdColor .. "Shissu" .. white .. "'s Notifications"            
 
 _addon.settings = {
@@ -591,17 +591,18 @@ function _addon.checkRankSinceOffline()
   if shissuNotifications["guildRank"] == false then return end
   
   for guildId=1, GetNumGuilds() do
-    local guildName = GetGuildName(guildId)  
+local xxguildId = GetGuildId(guildId)
+    local guildName = GetGuildName(xxguildId)  
   
     if (shissuNotifications["ownRank"][guildName] ~= nil) then 
-      local ownId = GetPlayerGuildMemberIndex(guildId)
-      local _, _, rankIndex = { GetGuildMemberInfo(guildId, ownId) }
+      local ownId = GetPlayerGuildMemberIndex(xxguildId)
+      local _, _, rankIndex = { GetGuildMemberInfo(xxguildId, ownId) }
   
       if (rankIndex ~=  shissuNotifications["ownRank"][guildName] ) then
-        local guildName = GetGuildName(guildId)
-        local allianceIcon = zo_iconFormat(GetAllianceBannerIcon(guildId), 24, 24)
-        local rankName = GetFinalGuildRankName(guildId, rankIndex)
-        local rankIcon = zo_iconFormat(GetGuildRankLargeIcon(GetGuildRankIconIndex(guildId, rankIndex)), 24, 24)
+        local guildName = GetGuildName(xxguildId)
+        local allianceIcon = zo_iconFormat(GetAllianceBannerIcon(xxguildId), 24, 24)
+        local rankName = GetFinalGuildRankName(xxguildId, rankIndex)
+        local rankIcon = zo_iconFormat(GetGuildRankLargeIcon(GetGuildRankIconIndex(xxguildId, rankIndex)), 24, 24)
                 
         _addon.createNotif(
           GetString(SI_GAMEPAD_GUILD_ROSTER_RANK_HEADER),

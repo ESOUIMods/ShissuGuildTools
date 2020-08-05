@@ -8,6 +8,6 @@ ShissuLocalization["ShissuCompareMember"] = {
   COUNT =         "Total: %s%s%s Matches",
   MEMBERS =       "The following players are in the comparative guilds",  
   SYNTAX =        "SYNTAX", 
-  NOGUILD =       "/scm guildname1,guildname2,... (Beispiel: /scm Tamrizon,Tamrilando)",
+  NOGUILD =       "/scm guildname1,guildname2,...",
   INFO =          "Compare 2 or more guilds and their members:",
 }

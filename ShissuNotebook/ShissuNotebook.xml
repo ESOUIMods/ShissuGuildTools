@@ -31,7 +31,7 @@
 	        <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>  
 		    </Button>
                                           			  	
-			  <Label name="$(parent)_RecipientLabel" font="ZoFontChat" wrapMode="ELLIPSIS" verticalAlignment="LEFT" text="Empfänger:">
+			  <Label name="$(parent)_RecipientLabel" font="ZoFontChat" wrapMode="ELLIPSIS" verticalAlignment="LEFT" text="Recipient:">
           <Dimensions x="100" y="25" />
 					<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="10" offsetY="45" />
 				</Label>
@@ -203,15 +203,15 @@
 		<!-- Notizblock | E-Mail Empfänger  <Anchor point="TOPLEFT" relativeTo="SGT_Notebook" relativePoint="TOPRIGHT"  offsetX="10" offsetY="-8" />  -->
     <TopLevelControl name="SGT_Notebook_MessagesRecipient" hidden="true" mouseEnabled="false" movable="true" clampedToScreen="true">  
       <Anchor point="TOPLEFT" relativeTo="SGT_Notebook" relativePoint="TOPRIGHT"  offsetX="15" offsetY="0" />
-      <Dimensions x="385" y="480" />
+      <Dimensions x="585" y="480" />
       <Controls>	
-			  <Control name="$(parent)_Guilds" width="100" inherits="ZO_StatsDropdownRow">
+			  <Control name="$(parent)_Guilds" width="200" inherits="ZO_StatsDropdownRow">
           <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="5" offsetY="45" />
 				</Control>
         
         <Backdrop name="$(parent)_Filter" inherits="ZO_EditBackdrop">
           <Anchor point="BOTTOMLEFT" relativeTo="$(parent)_Guilds" offsetX="0" offsetY="35" /> 
-          <Dimensions x="140" y="30" />
+          <Dimensions x="200" y="30" />
   			  <Controls>
             <EditBox name="$(parent)Text" inherits="ZO_DefaultEditForBackdrop"></EditBox>
   			  </Controls>
@@ -223,8 +223,8 @@
         </Texture>	        
 						
 				<Label name="$(parent)_Choice" font="SF_BUTTONFONT" wrapMode="ELLIPSIS" verticalAlignment="CENTER" text="Legacy of Heaven">
-					<Dimensions x="150" />
-					<Anchor point="TOPLEFT" relativeTo="$(parent)" offsetX="170" offsetY="42" />
+					<Dimensions x="250" />
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" offsetX="260" offsetY="42" />
 				</Label>       
 				<Label name="$(parent)_Choice2" font="SF_BUTTONFONT" wrapMode="ELLIPSIS" verticalAlignment="CENTER" text="...">
 					<Dimensions x="150" />
@@ -245,7 +245,7 @@
 				        
 				<!-- Fraktion Checkbox -->  
 				<Label name="$(parent)_FactionLabel" font="SF_BUTTONFONT" wrapMode="ELLIPSIS" verticalAlignment="CENTER" text="Fraktion">
-				  <Dimensions x="60" />
+				  <Dimensions x="70" />
 					<Anchor point="TOPLEFT" relativeTo="$(parent)_RanksLabel" relativePoint="TOPLEFT" offsetX="0" offsetY="35" />
 				</Label>
 		                		
@@ -279,8 +279,8 @@
 				  <Anchor point="TOPRIGHT" relativeTo="$(parent)_MemberSinceDir" relativePoint="TOPRIGHT" offsetX="20" offsetY="0" />
 				</Label>	    
                 
-				<Label name="$(parent)_GoldLabel" font="SF_BUTTONFONT" wrapMode="ELLIPSIS" mouseEnabled="true" verticalAlignment="CENTER" text="Gold">
-				  <Dimensions x="100" y="25" />
+				<Label name="$(parent)_GoldLabel" font="SF_BUTTONFONT" wrapMode="ELLIPSIS" mouseEnabled="true" verticalAlignment="CENTER" text="Gold Donated">
+				  <Dimensions x="200" y="25" />
 				  <Anchor point="TOPLEFT" relativeTo="$(parent)_MemberSinceLabel" relativePoint="TOPLEFT" offsetX="0" offsetY="25" />
 				</Label>	    
 				<Label name="$(parent)_GoldDir" font="SF_BUTTONFONT" wrapMode="ELLIPSIS" mouseEnabled="true" verticalAlignment="CENTER" text="H">
@@ -292,7 +292,7 @@
 				  <Anchor point="TOPRIGHT" relativeTo="$(parent)_GoldDir" relativePoint="TOPRIGHT" offsetX="20" offsetY="0" />
 				</Label>	   
         <Label name="$(parent)_GoldSinceLabel" font="SF_BUTTONFONT" wrapMode="ELLIPSIS" mouseEnabled="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT"  text="vor min. Tage:">
-				  <Dimensions x="95" y="25" />
+				  <Dimensions x="195" y="25" />
 				  <Anchor point="TOPRIGHT" relativeTo="$(parent)_GoldDir" relativePoint="TOPRIGHT" offsetX="-87" offsetY="25" />
 				</Label>	      
         <Label name="$(parent)_GoldSince" font="SF_BUTTONFONT" wrapMode="ELLIPSIS" mouseEnabled="true" verticalAlignment="CENTER" text="...">

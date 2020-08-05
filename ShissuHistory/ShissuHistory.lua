@@ -1,8 +1,8 @@
--- Shissu Guild Tools Addon
+﻿-- Shissu Guild Tools Addon
 -- ShissuHistory
 --
--- Version: v1.4.1
--- Last Update: 24.03.2018
+-- Version: v1.5.0
+-- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
   
@@ -31,7 +31,7 @@ local SetupGuildEvent_Orig = GUILD_HISTORY.SetupGuildEvent
                                         
 local _addon = {}
 _addon.Name	= "ShissuHistory"
-_addon.Version = "1.4.1"
+_addon.Version = "1.5.0"
 _addon.formattedName = stdColor .. "Shissu" .. white .. "'s History"
  
 local _cache = {}           
@@ -374,7 +374,7 @@ end
 -- Oberfläche
 function _addon.bankControls()
   -- GOLD
-  _ui.goldLabel = createLabel("SGT_HistoryGoldLabel", ZO_GuildHistoryCategories, white .. "GOLD", nil, {30, 250}, nil, nil, "ZoFontGameBold")
+  _ui.goldLabel = createLabel("SGT_HistoryGoldLabel", ZO_GuildHistoryCategories, white .. "GOLD", nil, {-190, 280}, nil, nil, "ZoFontGameBold")
   
   -- Einzahlung
   _ui.goldAddedLabel = createLabel("SGT_HistoryGoldAddedLabel", SGT_HistoryGoldLabel, _L("GOLDADDED"), nil, {-100, 30})
@@ -399,7 +399,7 @@ end
 
 function _addon.salesControls()
   -- VERKÄUFE
-  _ui.salesLabel = createLabel("SGT_HistorySalesLabel", ZO_GuildHistoryCategories, stdColor .. _L("SALES"), nil, {30, 250}, nil, nil, "ZoFontGameBold")
+  _ui.salesLabel = createLabel("SGT_HistorySalesLabel", ZO_GuildHistoryCategories, stdColor .. _L("SALES"), nil, {-190, 280}, nil, nil, "ZoFontGameBold")
    
   -- Intern 
   _ui.salesInternLabel = createLabel("SGT_HistorySalesInternLabel", SGT_HistorySalesLabel, _L("EXTERN"), nil, {-100, 30})
@@ -469,7 +469,7 @@ function SGTOpenAllPages()
 end
            
 function _addon.optionControls()
-  _ui.optionLabel = createLabel("SGT_HistoryOptionLabel", ZO_GuildHistoryCategories, _L("OPT"), nil, {30, 470}, nil, nil, "ZoFontGameBold")
+  _ui.optionLabel = createLabel("SGT_HistoryOptionLabel", ZO_GuildHistoryCategories, _L("OPT"), nil, {-190, 485}, nil, nil, "ZoFontGameBold")
   _ui.optionKiosk = CreateControlFromVirtual("SGT_HistoryOptionKiosk", SGT_HistoryOptionLabel, "ZO_CheckButton")
   _ui.optionKiosk:SetAnchor(LEFT, SGT_HistoryOptionKioskLabel, LEFT, 0, 30)
   _ui.optionKiosk:SetHidden(false)
@@ -488,7 +488,7 @@ function _addon.optionControls()
   
   -- Alles Öffnen
   _ui.optionAllPages = CreateControlFromVirtual("SGT_HistoryAllPages", SGT_HistoryOptionKiosk2, "ZO_CheckButton")
-  _ui.optionAllPages:SetAnchor(LEFT, SGT_HistoryOptionKiosk2, LEFT, -0, 30)
+  _ui.optionAllPages:SetAnchor(LEFT, SGT_HistoryOptionKiosk2, LEFT, 0, 30)
   _ui.optionAllPages:SetHidden(false)
 
   ZO_CheckButton_SetLabelText(_ui.optionAllPages, white .. _L("PAGES"))

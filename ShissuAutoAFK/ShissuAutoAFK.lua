@@ -1,8 +1,8 @@
 -- Shissu Guild Tools Addon
 -- ShissuAutoAFK
 --
--- Version: v1.3.3
--- Last Update: 24.03.2018
+-- Version: v1.4.0
+-- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
 
@@ -14,7 +14,7 @@ local setPanel = ShissuFramework["setPanel"]
 
 local _addon = {}
 _addon.Name	= "ShissuAutoAFK"
-_addon.Version = "1.3.3"
+_addon.Version = "1.4.0"
 _addon.formattedName = stdColor .. "Shissu" .. white .. "'s AutoAFK"
 _addon.controls = {}
 _addon.settings = {

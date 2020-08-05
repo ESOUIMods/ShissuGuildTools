@@ -1,8 +1,8 @@
 -- Shissu Guild Tools Addon
 -- ShissuMemberStatus
 --
--- Version: v1.2.11
--- Last Update: 26.09.2017
+-- Version: v1.3.0
+-- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
  
@@ -20,7 +20,7 @@ local setPanel = ShissuFramework["setPanel"]
 
 local _addon = {}
 _addon.Name = "ShissuMemberStatus"
-_addon.Version = "1.2.11"
+_addon.Version = "1.3.0"
 _addon.formattedName	= stdColor .. "Shissu" .. white .. "'s MemberStatus"
 _addon.settings = {
   added = {}, 

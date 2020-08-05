@@ -1,8 +1,8 @@
--- Shissu Guild Tools Addon
+﻿-- Shissu Guild Tools Addon
 -- ShissuNotebookMail
 --
--- Version: v1.4.1
--- Last Update: 30.10.2017
+-- Version: v1.5.0
+-- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
 
@@ -536,7 +536,7 @@ _mail.currentDropText = ""
 
 -- Ränge
 function _mail.rankSelected(_, statusText, choiceNumber)
-  local guildId = GetGuildId(_mail.currentGuild)
+  local guildId = _mail.currentGuild
 
   statusText = string.gsub(statusText, white, "")
 
@@ -557,6 +557,7 @@ function _mail.optionSelected(_, statusText, g)
   _mail.currentDropText = statusText
 
   for guildId = 1, GetNumGuilds() do
+	guildId = GetGuildId(guildId)
     if GetGuildName(guildId) == statusText then
       SGT_Notebook_MessagesRecipient_Choice:SetText(red .. statusText)
       _mail.currentGuild = guildId
@@ -862,23 +863,23 @@ function _addon.mail()
   createFlatWindow(
     "SGT_Notebook_MessagesRecipient",
     SGT_Notebook_MessagesRecipient,  
-    {385, 480}, 
+    {585, 480}, 
     nil,
     _L("TITLE")
   ) 
   
-  createBackdropBackground("SGT_Notebook_MessagesRecipient_Filter", SGT_Notebook_MessagesRecipient_Filter, {140, 30})
+  createBackdropBackground("SGT_Notebook_MessagesRecipient_Filter", SGT_Notebook_MessagesRecipient_Filter, {200, 30})
 
   _mail.indexPool = ZO_ObjectPool:New(_mail.createIndexButton, _mail.removeIndexButton)
-  _mail.list = createScrollContainer("SGT_Notebook_EMailList", 145, SGT_Notebook_MessagesRecipient, SGT_Notebook_MessagesRecipient_Line6, 10, 10, -10)
+  _mail.list = createScrollContainer("SGT_Notebook_EMailList", 200, SGT_Notebook_MessagesRecipient, SGT_Notebook_MessagesRecipient_Line6, 10, 10, -10)
   
-  _mail.button1 = createFlatButton("SGT_Notebook_NewSendListButton", SGT_Notebook_MessagesRecipient, {180, -20}, {90, 30}, white .. _L("CHOICE"), BOTTOMLEFT)   
-  _mail.button2 = createFlatButton("SGT_Notebook_NewSendChoiceButton", SGT_Notebook_NewSendListButton, {100, 0}, {90, 30}, white .. _L("LIST"), TOPRIGHT)   
+  _mail.button1 = createFlatButton("SGT_Notebook_NewSendListButton", SGT_Notebook_MessagesRecipient, {290, -20}, {110, 30}, white .. _L("CHOICE"), BOTTOMLEFT)   
+  _mail.button2 = createFlatButton("SGT_Notebook_NewSendChoiceButton", SGT_Notebook_NewSendListButton, {130, 0}, {110, 30}, white .. _L("LIST"), TOPRIGHT)   
  
   _checkBox["aldmeri"] = _addon.createFlatCheckBox(
     "SGT_Notebook_MessagesRecipient_FactionAldmeri", 
     SGT_Notebook_MessagesRecipient_FactionLabel, 
-    {20, 0}, 
+    {80, 0}, 
     TOPRIGHT, 
     function(value) _mail.fillScrollList() end, 
     {zo_iconFormat(GetAllianceSymbolIcon(ALLIANCE_ALDMERI_DOMINION), 24, 24), 30, 25}, nil, true)
@@ -907,7 +908,7 @@ function _addon.mail()
   _checkBox["online"] = _addon.createFlatCheckBox(
     "SGT_Notebook_MessagesRecipient_StatusOnline", 
     SGT_Notebook_MessagesRecipient_StatusLabel, 
-    {30, 0}, 
+    {98, 0}, 
     TOPRIGHT, 
     function(value) _mail.fillScrollList() end, 
     {zo_iconFormat(GetPlayerStatusIcon(PLAYER_STATUS_ONLINE), 24, 24), 30, 25},
@@ -928,7 +929,7 @@ function _addon.mail()
   _checkBox["kick"] = _addon.createFlatCheckBox(
     "SGT_Notebook_MessagesRecipient_CheckboxKick", 
     SGT_Notebook_MessagesRecipient, 
-    {-10, 320}, 
+    {-100, 320}, 
     TOPRIGHT, 
     function(value)   
     end
@@ -1022,15 +1023,15 @@ function _addon.mail()
   _mail.dropDownRanks:SetSelectedItem(yellow .. "-- " .. white .. _L())
   
   -- DropDown Menü "Gilde" befüllen   
-  SGT_Notebook_MessagesRecipient_Guilds:GetNamedChild("Dropdown"):SetWidth(120)
-  SGT_Notebook_MessagesRecipient_Guilds:SetWidth(120)  
+  SGT_Notebook_MessagesRecipient_Guilds:GetNamedChild("Dropdown"):SetWidth(200)
+  SGT_Notebook_MessagesRecipient_Guilds:SetWidth(200)  
   
   _mail.dropDownGuilds = SGT_Notebook_MessagesRecipient_Guilds.dropdown
   _mail.dropDownGuilds:SetSortsItems(false) 
   _mail.dropDownGuilds:AddItem(_mail.dropDownGuilds:CreateItemEntry(yellow .. _addon.friends, _mail.optionSelected))
 
   for guildId = 1, GetNumGuilds() do
-    _mail.dropDownGuilds:AddItem(_mail.dropDownGuilds:CreateItemEntry(white .. GetGuildName(guildId), _mail.optionSelected))
+    _mail.dropDownGuilds:AddItem(_mail.dropDownGuilds:CreateItemEntry(white .. GetGuildName(GetGuildId(guildId)), _mail.optionSelected))
   end  
   
   if (GetNumGuilds() > 0 ) then
