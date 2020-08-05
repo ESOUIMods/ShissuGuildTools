@@ -7,7 +7,7 @@
 ; Author: @Shissu on EU-Server!
  
 ## Title: |c82FA58Shissu|ceeeeee's TeleporterMap|r v1.2.0
-## APIVersion: 100030
+## APIVersion: 100030 100031
 ## Author: |c82FA58@Shissu|r [EU-SERVER]
 ## Description: None        
 ## DependsOn: ShissuFramework

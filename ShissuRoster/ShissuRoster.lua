@@ -1,7 +1,7 @@
 ﻿-- Shissu Guild Tools Addon
 -- ShissuRoster
 --
--- Version: v2.2.0
+-- Version: v2.2.1
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
 
@@ -28,7 +28,7 @@ local round = ShissuFramework["func"].round
 
 local _addon = {}                                                 
 _addon.Name	= "ShissuRoster"
-_addon.Version = "2.2.0"
+_addon.Version = "2.2.1"
 _addon.formattedName	= stdColor .. "Shissu" .. white .. "'s Roster"
 
 _addon.buttons = {}
@@ -192,7 +192,7 @@ function _addon.goldFilter()
           direct = "<"
         end
 
-        SGT_Roster_GoldDeposit:SetText(white .. "Gold paid " .. direct .. stdColor .. " " .. gold)
+        SGT_Roster_GoldDeposit:SetText(white .. "Total Gold Paid " .. direct .. stdColor .. " " .. gold)
         _filter.gold = gold
         _roster.refreshFilters()
       end
@@ -797,7 +797,7 @@ function _addon:InitRosterChanges()
       ZO_SortHeader_Initialize(goldDepositHeader, _L("DEPOSIT") .. " ", 'goldDeposit', ZO_SORT_ORDER_DOWN, TEXT_ALIGN_CENTER, 'ZoFontGameLargeBold')     
 
       goldDepositHeader:SetAnchor(TOPLEFT, zoneHeader, TOPRIGHT, 0, 0)
-      goldDepositHeader:SetDimensions(115, 32)
+      goldDepositHeader:SetDimensions(120, 32)
       goldDepositHeader:SetHidden(false)  
       
       GUILD_ROSTER_KEYBOARD.sortHeaderGroup:AddHeader(goldDepositHeader)
@@ -836,7 +836,7 @@ function GUILD_ROSTER_MANAGER:SetupEntry(control, data, selected)
       goldDeposit = control:CreateControl(controlName, CT_LABEL)
       goldDeposit:SetAnchor(LEFT, rowZone, RIGHT, 10, 0)
       goldDeposit:SetFont('ZoFontGame')
-      goldDeposit:SetWidth(100)
+      goldDeposit:SetWidth(105)
       goldDeposit:SetHidden(false)    
       goldDeposit:SetHorizontalAlignment(TEXT_ALIGN_RIGHT)    
     end  

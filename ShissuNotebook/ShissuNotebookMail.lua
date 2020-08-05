@@ -1,7 +1,7 @@
 ﻿-- Shissu Guild Tools Addon
 -- ShissuNotebookMail
 --
--- Version: v1.5.0
+-- Version: v2.5.1
 -- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
@@ -35,7 +35,7 @@ end
 
 local _addon = {}
 _addon.Name	= "ShissuNotebookMail"
-_addon.Version = "1.4.1"
+_addon.Version = "2.5.1"
 _addon.formattedName = stdColor .. "Shissu" .. white .. "'s Notebook"
 
 local _L = ShissuFramework["func"]._L(_addon.Name)
@@ -419,7 +419,7 @@ function _mail.checkBox(control, var)
 end
 
 function _mail.mailButtons(all, kick)
-  local sleepTime = 1600
+  local sleepTime = 3100
   local guildId = _mail.currentGuild                      
   local recipient = {}
   local i = 1
@@ -427,7 +427,7 @@ function _mail.mailButtons(all, kick)
   
   -- aktueller Titel (Betreff) + Text zwischenspeichern, damit aktiv weitergearbeitet werden kann im Notizbuch
   _mail.cache.title = SGT_Notebook_NoteTitleText:GetText()
-  _mail.cache.text = SGT_Notebook_NoteText:GetText() .. "\n\nSent via |c779cffShissu's|r GuildTools 3"
+  _mail.cache.text = SGT_Notebook_NoteText:GetText()
  
   if all == 1 then
     for i = 1, #_mail.guildList do
@@ -447,8 +447,8 @@ function _mail.mailButtons(all, kick)
     _mail.all = kick
   end         
   
-  if _checkBox["kick"].value == true then sleepTime = 500 end
-  if _checkBox["demote"].value == true then sleepTime = 2000 end
+  if _checkBox["kick"].value == true then sleepTime = 2500 end
+  if _checkBox["demote"].value == true then sleepTime = 2500 end
   
   _mail.isSend = true
   if _mail.isOpen == false then RequestOpenMailbox() end 
