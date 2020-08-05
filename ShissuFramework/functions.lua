@@ -111,9 +111,14 @@ end
 function _func.days_last_kiosk()
   local days_last_kiosk
   if GetTimeStamp() > 1597172400 then -- proposed flip begining Tuesday Aug 11
-    days_last_kiosk = 604800 -- 7 days if after Aug 11
+    days_last_kiosk = 604800 -- 7 days
   else
-    days_last_kiosk = 777600 + 3600 -- 9 days 1 Hour to reflect old cuttof of 6:00-- PM Pacific
+    days_last_kiosk = 777600 -- 9 days
+  end
+  if GetWorldName() == 'EU Megaserver' then
+    days_last_kiosk = days_last_kiosk - (3600 * 5)
+  else
+    days_last_kiosk = days_last_kiosk - (3600 * 6)
   end
   return days_last_kiosk
 end
