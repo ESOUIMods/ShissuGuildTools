@@ -862,6 +862,7 @@ function _settings.CreateAddonSettingsMenuEntry()
 	end
 
 	ZO_GameMenu_AddSettingPanel(panelData)
+	KEYBOARD_OPTIONS.controlTable[panelData.id] = {}
 end
 
 function _settings.GetModulSettingsFragment()

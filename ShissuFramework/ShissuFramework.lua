@@ -2,7 +2,7 @@
 
 _addon.Name = "ShissuFramework"
 _addon.formattedName	= "|c82FA58Shissu|ceeeeee's Framework"
-_addon.Version = "0.6.2"
+_addon.Version = "0.6.3"
 
 _addon._settings = {}
 
