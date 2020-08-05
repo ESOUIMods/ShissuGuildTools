@@ -7,7 +7,7 @@
 ; Author: @Shissu on EU-Server!
  
 ## Title: |c82FA58Shissu|ceeeeee's BlackList|r v1.4.0
-## APIVersion: 100029
+## APIVersion: 100030
 ## Author: |c82FA58@Shissu|r [EU-SERVER]
 ## Description: None
 ## SavedVariables: shissuBlackList

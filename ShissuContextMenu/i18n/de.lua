@@ -14,4 +14,6 @@ ShissuLocalization["ShissuContextMenu"] = {
   FORWARD_PREFIX =  "WG",
   ANSWER_PREFIX =   "AW",
   ADDON =           "Erweiterungen",
+  PROMOTE =         "Fördern",  
+  DEMOTE =          "Degradieren",  
 }

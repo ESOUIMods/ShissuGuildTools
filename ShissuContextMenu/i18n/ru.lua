@@ -14,4 +14,6 @@ ShissuLocalization["ShissuContextMenu"] = {
   FORWARD_PREFIX =  "FWD",
   ANSWER_PREFIX =   "RE",
   ADDON =           "Модификации",  
+  PROMOTE =         "содействовать",  
+  DEMOTE =          "Понизить",  
 }

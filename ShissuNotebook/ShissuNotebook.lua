@@ -481,6 +481,7 @@ function _addon.initialized()
   -- Slash Command      
   SLASH_COMMANDS["/note"] = _addon.cmdSlash
   SLASH_COMMANDS["/no"] = _addon.cmdSlash
+  SLASH_COMMANDS["/n"] = _addon.cmdSlash
   SLASH_COMMANDS["/notebook"] = function() 
     SGT_Notebook:SetHidden(false) 
     

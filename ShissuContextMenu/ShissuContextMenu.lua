@@ -1,7 +1,7 @@
 ﻿-- Shissu Guild Tools Addon
 -- ShissuContextMenu
 --
--- Version: v1.2.0
+-- Version: v1.2.1
 -- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
@@ -19,7 +19,7 @@ local setPanel = ShissuFramework["setPanel"]
 
 local _addon = {}
 _addon.Name	= "ShissuContextMenu"
-_addon.Version = "1.2.0"
+_addon.Version = "1.2.1"
 _addon.formattedName = stdColor .. "Shissu" .. white .. "'s Contextmenu"
 
 local _L = ShissuFramework["func"]._L(_addon.Name)
@@ -149,12 +149,55 @@ function _addon.GuildRosterRow_OnMouseUp(self, control, button, upInside)
   data.characterName = string.gsub(data.characterName, white, "")
   ZOS_GUILD_ROSTER_KEYBOARD(self, control, button, upInside)
 
-  if (button ~= MOUSE_BUTTON_INDEX_RIGHT and not upInside) then return end
-  
-  --ClearMenu()
+  if (button ~= MOUSE_BUTTON_INDEX_RIGHT --[[and not upInside]]) then return end
   
   if data then 
     if (shissuRoster) then
+
+            local guildId = GUILD_ROSTER_MANAGER:GetGuildId()
+            local guildName = GUILD_ROSTER_MANAGER:GetGuildName()
+            local guildAlliance = GUILD_ROSTER_MANAGER:GetGuildAlliance()
+            local dataIndex = data.index
+            local playerIndex = GetPlayerGuildMemberIndex(guildId)
+            local masterList = GUILD_ROSTER_MANAGER:GetMasterList()
+            local playerData = masterList[playerIndex]
+            local playerHasHigherRank = playerData.rankIndex < data.rankIndex
+            local playerIsGuildmaster = IsGuildRankGuildMaster(guildId, playerData.rankIndex)
+            local playerIsPendingInvite = data.rankId == DEFAULT_INVITED_RANK
+            local ALLIANCE_ICON_SIZE = 17
+
+            if DoesPlayerHaveGuildPermission(guildId, GUILD_PERMISSION_PROMOTE) and not playerIsPendingInvite then
+                if data.rankIndex > 1 then
+                    local newRankIndex = data.rankIndex - 1
+                    if playerData.rankIndex < newRankIndex then
+                        AddMenuItem(_L("PROMOTE"),
+                                    function()
+                                        GuildPromote(guildId, data.displayName)
+                                        PlaySound(SOUNDS.GUILD_ROSTER_PROMOTE)
+                                    end)
+                    elseif playerIsGuildmaster then
+                        AddMenuItem(_L("PROMOTE"),
+                                    function()
+                                        local allianceIcon = zo_iconFormat(GetAllianceSymbolIcon(guildAlliance), ALLIANCE_ICON_SIZE, ALLIANCE_ICON_SIZE)
+                                        local rankName = GetFinalGuildRankName(guildId, 2)
+                                        ZO_Dialogs_ShowDialog("PROMOTE_TO_GUILDMASTER", { guildId = guildId, displayName = data.displayName}, { mainTextParams = { data.displayName, allianceIcon, guildName, rankName }})
+                                    end)
+                    end
+                end
+            end
+
+            if DoesPlayerHaveGuildPermission(guildId, GUILD_PERMISSION_DEMOTE) and not playerIsPendingInvite then
+                if data.rankIndex < GetNumGuildRanks(guildId) then
+                    if playerHasHigherRank then
+                        AddMenuItem(_L("DEMOTE"),
+                                    function()
+                                        GuildDemote(guildId, data.displayName)
+                                        PlaySound(SOUNDS.GUILD_ROSTER_DEMOTE)                                 
+ 			            end)
+                    end
+                end
+            end
+
       if (shissuRoster["colNote"]) or shissuContextMenu["guild"] then
         _addon.contextHead(1, self:ShowMenu(control))
       end
