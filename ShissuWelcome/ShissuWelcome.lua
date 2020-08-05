@@ -98,8 +98,10 @@ for gi=1, GetNumGuilds() do
  if(guildId == gcheck) then giddy = gi end
 end
 
+if (GetGuildMemberIndexFromDisplayName(guildId, accName) ~= nil) then 
     local text = "/g" .. giddy .. " " .. chatMessage     
     ZO_ChatWindowTextEntryEditBox:SetText(text)
+end
   end                        
 end
 

@@ -7,7 +7,7 @@
 ; Author: @Shissu on EU-Server!
  
 ## Title: |c82FA58Shissu|ceeeeee's AutoAFK|r v1.4.0
-## APIVersion: 100028
+## APIVersion: 100028 100029
 ## Author: |c82FA58@Shissu|r [EU-SERVER]
 ## Description: None
 ## SavedVariables: shissuAutoAFK

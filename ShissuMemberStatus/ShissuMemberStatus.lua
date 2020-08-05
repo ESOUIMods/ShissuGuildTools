@@ -1,7 +1,7 @@
 -- Shissu Guild Tools Addon
 -- ShissuMemberStatus
 --
--- Version: v1.3.0
+-- Version: v1.3.1
 -- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
@@ -20,7 +20,7 @@ local setPanel = ShissuFramework["setPanel"]
 
 local _addon = {}
 _addon.Name = "ShissuMemberStatus"
-_addon.Version = "1.3.0"
+_addon.Version = "1.3.1"
 _addon.formattedName	= stdColor .. "Shissu" .. white .. "'s MemberStatus"
 _addon.settings = {
   added = {}, 
@@ -41,9 +41,13 @@ function _addon.playerAdded(_, guildId, accName)
   local guildName = GetGuildName(guildId)
   
   if shissuMemberStatus["added"][guildName] == false then return end
-
-  text = stdColor .. guildName .. ": " .. white .. accName .. " - " .. green .. _L("ADDED")
-  d(text)
+    if (GetGuildMemberIndexFromDisplayName(guildId, accName) ~= nil) then 
+       text = stdColor .. guildName .. ": " .. white .. accName .. " - " .. green .. _L("FULLYADDED")
+       d(text)
+  else
+       text = stdColor .. guildName .. ": " .. white .. accName .. " - " .. yellow .. _L("ADDED")
+       d(text)
+  end
 end
 
 -- Event: EVENT_GUILD_MEMBER_REMOVED
