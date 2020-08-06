@@ -117,9 +117,9 @@ function _addon.filterScrollList(self)
   local tax = 0
 
   local currentTime = GetTimeStamp()
-  local nextKiosk = ShissuFramework["func"].getKioskTime()
-  local lastKiosk = nextKiosk - ShissuFramework["func"].days_last_kiosk()
-  local previousKiosk = lastKiosk - 604800
+  local nextKiosk = ShissuFramework["globals"].next_kiosk_change
+  local lastKiosk = ShissuFramework["globals"].last_kiosk_change
+  local previousKiosk = ShissuFramework["globals"].previous_kiosk_change
 
 --  d("1: " .. GetDateStringFromTimestamp(lastKioskTime) .. " - " .. ZO_FormatTime((lastKioskTime) % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR))
  -- d("2: " .. GetDateStringFromTimestamp(lastKioskTime2) .. " - " .. ZO_FormatTime((lastKioskTime2) % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR))

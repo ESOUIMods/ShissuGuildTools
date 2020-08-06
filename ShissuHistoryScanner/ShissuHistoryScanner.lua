@@ -48,7 +48,18 @@ function _addon.getData(eventType, guildName, displayName)
       end
     end
   end
-
+  -- date time 1596684136
+  --sf_internal.v(string.format("%s %s", "getData timeFirst ", timeFirst))
+  -- date time 1596684136
+  --sf_internal.v(string.format("%s %s", "getData timeLast ", timeLast))
+  -- Total gold, but not sure the time span 5002 was current and previous day
+  --sf_internal.v(string.format("%s %s", "getData total ", total))
+  -- current day's deposits 5000
+  --sf_internal.v(string.format("%s %s", "getData last ", last))
+  -- total gold deposit since Kiosk Flip
+  --sf_internal.v(string.format("%s %s", "getData currentNPC ", currentNPC))
+  -- total gold deposit for previous Kiosk Flip
+  --sf_internal.v(string.format("%s %s", "getData previousNPC ", previousNPC))
   return {timeFirst, timeLast, total, last, currentNPC, previousNPC}
 end
 
@@ -85,7 +96,7 @@ function _addon.copyCurrentDateToLast()
   end
 end
 
-function _addon.previousTime(guildName, category)
+function _addon.previousTime(guildId, guildName, category)
   local t = 1500000000
 
   -- ~=
@@ -137,14 +148,14 @@ function _addon.processEvents(guildId, category)
   local last = 1
   local inc = -1
 
-  local nextKiosk = ShissuFramework["func"].getKioskTime()
-  local lastNPC = nextKiosk - ShissuFramework["func"].days_last_kiosk()
-  local previousKiosk = lastNPC - 604800
+  local nextKiosk = ShissuFramework["globals"].next_kiosk_change
+  local lastNPC = ShissuFramework["globals"].last_kiosk_change
+  local previousKiosk = ShissuFramework["globals"].previous_kiosk_change
 
   --sf_internal.v("process: " .. guildId .. " " .. guildName)
 
   --sf_internal.v("NEXT Kiosk: " .. GetDateStringFromTimestamp(nextKiosk) .. " - " .. ZO_FormatTime((nextKiosk) % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR))
-  --sf_internal.v("LAST NPC: " .. GetDateStringFromTimestamp(lastNPC) .. " - " .. ZO_FormatTime((lastNPC) % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR))
+  --sf_internal.v("Last NPC: " .. GetDateStringFromTimestamp(lastNPC) .. " - " .. ZO_FormatTime((lastNPC) % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR))
   --sf_internal.v("Previous Kiosk: " .. GetDateStringFromTimestamp(previousKiosk) .. " - " .. ZO_FormatTime((previousKiosk) % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR))
 
   -- If the last recalculated NPC has a deviation from the saved last one,
@@ -167,18 +178,30 @@ function _addon.processEvents(guildId, category)
 
   -- Process the event
   for eventId = first, last, inc do
+    -- eventTime is seconds since event
     local eventType, eventTime, displayName, eventGold = GetGuildEventInfo(guildId, category, eventId)
+    --[[
+    timeStamp should end up being the time the event occured
+    by deducting the seconds from the current time
+    1596688008 - 11153 = 1596676855
+    currentTime would have been a bit off at
+    1596749208
+    ]]--
     local timeStamp = GetTimeStamp() - eventTime
+    --sf_internal.v(string.format("%s %s", "processEvents currentTime ", ShissuFramework["func"].currentTime()))
+    --sf_internal.v(string.format("%s %s", "processEvents eventTime ", eventTime))
+    --sf_internal.v(string.format("%s %s", "processEvents GetTimeStamp ", GetTimeStamp()))
+    --sf_internal.v(string.format("%s %s", "processEvents timeStamp ", timeStamp))
 
     -- TimeStamp from the oldest event
-    local oldestEvent = _addon.previousTime(guildName, category)
+    local oldestEvent = _addon.previousTime(guildId, guildName, category)
 
     --sf_internal.v("OLDEST: " .. GetDateStringFromTimestamp(oldestEvent) .. " - " .. ZO_FormatTime((oldestEvent) % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR))
 
     -- Event time > 0
     -- oldest event > selected event
     if ( timeStamp > 0 ) and ( (oldestEvent == 0) or (oldestEvent > timeStamp) ) then
- --     if (oldestEvent == 0) or (oldestEvent > timeStamp) then
+      -- if (oldestEvent == 0) or (oldestEvent > timeStamp) then
       if shissuHistoryScanner[guildName] ~= nil then
         if shissuHistoryScanner[guildName]["oldestEvent"] ~= nil then
           shissuHistoryScanner[guildName]["oldestEvent"][category] = timeStamp
@@ -228,6 +251,17 @@ function _addon.processEvents(guildId, category)
          -- sf_internal.v(guildName)
          -- sf_internal.v(displayName)
          -- sf_internal.v(getData)
+            --sf_internal.v(string.format("%s %s", "processEvents timeStamp ", timeStamp))
+            --sf_internal.v(string.format("%s %s", "processEvents math.abs ", (timeLast - timeStamp)))
+            --[[
+            ranges I saw durring testing were from 0 to 10 and one
+            occurance of 48500.
+            I don't know the significance
+            ]]--
+            --[[
+            the question is why does the result of mat.abs need to
+            be greater then 2. Seconds maybe?
+            ]]--
            if (timeLast < timeStamp) and (math.abs(timeLast - timeStamp) > 2) then
             _addon.createDisplayNameData(guildName, displayName)
 
@@ -235,20 +269,24 @@ function _addon.processEvents(guildId, category)
               shissuHistoryScanner[guildName][displayName][eventType] = {}
             end
 
+            -- this adds the gold from the history to the total gold scanned
             shissuHistoryScanner[guildName][displayName][eventType].total = total + eventGold
+            -- this adds is the gold found from the last event scanned
             shissuHistoryScanner[guildName][displayName][eventType].last = eventGold
+            -- this is the time stamp of the last event found
             shissuHistoryScanner[guildName][displayName][eventType].timeLast = timeStamp
 
-            -- since NPC
+            -- since lastNPC seems to mean since the Kiosk flipped for this week
             if timeStamp > lastNPC then
               --sf_internal.v("CURRENTNPC")
               --sf_internal.v(displayName)
               --sf_internal.v(currentNPC)
-              --sf_internal.v(eventGold)
+              sf_internal.v(eventGold)
               shissuHistoryScanner[guildName][displayName][eventType].currentNPC = currentNPC + eventGold
               --sf_internal.v(shissuHistoryScanner[guildName][displayName][eventType].currentNPC)
             end
 
+            -- since previousKiosk seems to mean since the previous week
             if timeStamp > previousKiosk and timeStamp < lastNPC then
               shissuHistoryScanner[guildName][displayName][eventType].previousNPC = previousNPC + eventGold
             end
@@ -257,18 +295,24 @@ function _addon.processEvents(guildId, category)
            -- sf_internal.v(displayName)
            -- sf_internal.v(eventType)
 
+             --[[
+             these next two, "table" and 0 seem to take care of when
+             there is no hisotry maybe?
+             ]]--
             if (type(timeFirst) == "table") then
              -- sf_internal.v("TABLE")
               timeFirst = 0
             end
 
-            --sf_internal.v("2: " .. timeStamp)
-
             if (timeFirst == 0) then
               shissuHistoryScanner[guildName][displayName][eventType].timeFirst = timeStamp
             end
 
-
+             --[[
+             this seems to be saying if the oldest time is less
+             then the current event found then assign it the current
+             timestamp of the event found
+             ]]--
             if ( timeFirst < timeStamp ) then
               shissuHistoryScanner[guildName][displayName][eventType].timeFirst = timeStamp
             end

@@ -184,7 +184,7 @@ function _addon.goldFilter()
   ESO_Dialogs["SGT_EDIT"].buttons[1].callback = function(dialog)
     local gold = dialog:GetNamedChild("EditBox"):GetText()
     gold = tonumber(gold)
-    local direct = ">"
+    local direct = " >"
 
     if (gold ~= nil) then
       if (type(gold) == "number") then
@@ -192,7 +192,7 @@ function _addon.goldFilter()
           direct = "<"
         end
 
-        SGT_Roster_GoldDeposit:SetText(white .. "Total Gold Paid " .. direct .. stdColor .. " " .. gold)
+        SGT_Roster_GoldDeposit:SetText(white .. _L("DEPOSIT3") .. direct .. stdColor .. " " .. gold)
         _filter.gold = gold
         _roster.refreshFilters()
       end
@@ -411,7 +411,6 @@ function _addon.buildTooltip(guildName, displayName, tooltip, eventType, titleTe
 end
 
 function _roster.getTotalGold()
-  local start_of_day = ShissuFramework["func"].getDay()
   local guildId = GUILD_SELECTOR.guildId
   if guildId == nil then return "" end
 
@@ -421,8 +420,7 @@ function _roster.getTotalGold()
   local goldDeposit = 0
 
   for memberId = 1, numMember, 1 do
-    local memberData = { GetGuildMemberInfo(guildId, memberId) }
-    local displayName = memberData[1]
+    local displayName = GetGuildMemberInfo(guildId, memberId)
 
     local historyData = _addon.getHistoryData(guildName, displayName, GUILD_EVENT_BANKGOLD_ADDED)
 
@@ -432,26 +430,44 @@ function _roster.getTotalGold()
     local currentNPC = historyData[5]
     local previousNPC = historyData[6]
 
-    -- Heute
+    --sf_internal.v(string.format("%s %s", "GetGuildFoundedDate ", GetGuildFoundedDate(guildId) ))
+    --[[Testing:
+    GetNumGuildHistoryCategories = 5
+    ]]--
+
+    --sf_internal.v(string.format("%s %s", "lastGold ", lastGold))
+    --sf_internal.v(string.format("%s %s", "totalGold ", totalGold))
+    --sf_internal.v(string.format("%s %s", "currentNPC ", currentNPC))
+    --sf_internal.v(string.format("%s %s", "previousNPC ", previousNPC))
+
+
+    --sf_internal.v(string.format("%s %s", "getTotalGold timelast ", timeLast))
+    --[[
+    timeLast seems to be the time the event occured. It does not seem
+    to be the seconds since the event occured like GetGuildEventInfo
+    says in the wiki.
+    ]]--
+    --sf_internal.v(string.format("%s %s", "getTotalGold shissuRoster ", shissuRoster["gold"]))
+    -- today
     if (shissuRoster["gold"] == _L("TODAY")) then
-      if ( timeLast > start_of_day) then
+      if ( timeLast > ShissuFramework["globals"].start_of_day) then
         goldDeposit = goldDeposit + lastGold
       end
-    -- Gestern
+    -- Yesterday
     elseif (shissuRoster["gold"] == _L("YESTERDAY")) then
-      if ( timeLast > (start_of_day - 86400) and timeLast < start_of_day) then
+      if ( timeLast > ShissuFramework["globals"].yesterday and timeLast < ShissuFramework["globals"].start_of_day) then
         goldDeposit = goldDeposit + lastGold
       end
-    -- Zuletzt
+    -- Last guild history entry found
     elseif (shissuRoster["gold"] == _L("LAST")) then
       goldDeposit = goldDeposit + lastGold
-      -- seit Gildenhändler
-    elseif (shissuRoster["gold"] == _L("SINCE")) then
+      -- since guild trader
+    elseif (shissuRoster["gold"] == _L("THISWEEK")) then
       goldDeposit = goldDeposit + currentNPC
-    -- Letzte Woche
+    -- Last week
     elseif (shissuRoster["gold"] == _L("LASTWEEK")) then
       goldDeposit = goldDeposit + previousNPC
-    -- Gesamt
+    -- total
     else
       goldDeposit = goldDeposit + totalGold
     end
@@ -616,7 +632,7 @@ function _addon.rosterUI()
   _roster.gold:AddItem(_roster.gold:CreateItemEntry(_L("LAST"), _roster.selectGold))
   _roster.gold:AddItem(_roster.gold:CreateItemEntry(_L("TODAY"), _roster.selectGold))
   _roster.gold:AddItem(_roster.gold:CreateItemEntry(_L("YESTERDAY"), _roster.selectGold))
-  _roster.gold:AddItem(_roster.gold:CreateItemEntry(_L("SINCE"), _roster.selectGold))
+  _roster.gold:AddItem(_roster.gold:CreateItemEntry(_L("THISWEEK"), _roster.selectGold))
   _roster.gold:AddItem(_roster.gold:CreateItemEntry(_L("LASTWEEK"), _roster.selectGold))
   _roster.gold:AddItem(_roster.gold:CreateItemEntry(_L("TOTAL"), _roster.selectGold))
 
@@ -936,8 +952,6 @@ function _addon.getHistoryData(guildName, displayName, eventType)
 end
 
 function SGT_GuildRosterManager:BuildMasterList()
-  local start_of_day = ShissuFramework["func"].getDay()
-
   --MM Bypass
   if not (self.masterList) then
     self.masterList = GUILD_ROSTER_MANAGER:GetMasterList()
@@ -1005,19 +1019,19 @@ function SGT_GuildRosterManager:BuildMasterList()
 
       -- Heute
       if (shissuRoster["gold"] == _L("TODAY")) then
-        if ( timeLast > start_of_day) then
+        if ( timeLast > ShissuFramework["globals"].start_of_day) then
           goldDeposit = lastGold
         end
       -- Gestern
       elseif (shissuRoster["gold"] == _L("YESTERDAY")) then
-        if (timeLast > (start_of_day - 86400) and timeLast < start_of_day) then
+        if ( timeLast > ShissuFramework["globals"].yesterday and timeLast < ShissuFramework["globals"].start_of_day) then
           goldDeposit = lastGold
         end
       -- Zuletzt
       elseif (shissuRoster["gold"] == _L("LAST")) then
         goldDeposit = lastGold
       -- seit Gildenhändler
-      elseif (shissuRoster["gold"] == _L("SINCE")) then
+      elseif (shissuRoster["gold"] == _L("THISWEEK")) then
         goldDeposit = currentNPC
       -- Letzte Woche
       elseif (shissuRoster["gold"] == _L("LASTWEEK")) then

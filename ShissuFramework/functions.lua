@@ -103,24 +103,12 @@ function _func.isStringEmpty(text)
   return text == nil or text == ''
 end
 
-function _func.getDay()
-  local start_of_day = GetTimeStamp() - GetSecondsSinceMidnight()
-  return start_of_day
-end
+-- For testing and comparison only, this is not to be used.
+function _func.currentTime()
+  local correction = GetSecondsSinceMidnight() - (GetTimeStamp() % 86400)
+  if correction < -12*60*60 then correction = correction + 86400 end
 
-function _func.days_last_kiosk()
-  local days_last_kiosk
-  if GetTimeStamp() > 1597172400 then -- proposed flip begining Tuesday Aug 11
-    days_last_kiosk = 604800 -- 7 days
-  else
-    days_last_kiosk = 777600 -- 9 days
-  end
-  if GetWorldName() == 'EU Megaserver' then
-    days_last_kiosk = days_last_kiosk - (3600 * 5)
-  else
-    days_last_kiosk = days_last_kiosk - (3600 * 6)
-  end
-  return days_last_kiosk
+  return GetTimeStamp() + correction
 end
 
 -- Zeit bis zum nächsten Gildenhändler???
