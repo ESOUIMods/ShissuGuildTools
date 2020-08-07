@@ -12,6 +12,7 @@
 ## Description: None
 ## SavedVariables: shissuGuildHome
 ## DependsOn: ShissuFramework ShissuColor
+## OptionalDependsOn: GuildHallButton
 
 # Libs, Language, Depends
 i18n\EN.lua

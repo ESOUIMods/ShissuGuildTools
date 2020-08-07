@@ -281,7 +281,7 @@ function _addon.processEvents(guildId, category)
               --sf_internal.v("CURRENTNPC")
               --sf_internal.v(displayName)
               --sf_internal.v(currentNPC)
-              sf_internal.v(eventGold)
+              --sf_internal.v(eventGold)
               shissuHistoryScanner[guildName][displayName][eventType].currentNPC = currentNPC + eventGold
               --sf_internal.v(shissuHistoryScanner[guildName][displayName][eventType].currentNPC)
             end
