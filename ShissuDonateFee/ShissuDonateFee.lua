@@ -22,64 +22,63 @@ local SDF_MANUAL = 0
 local SDF_AUTO = 1
 
 function _addon.createGuildVar(guildName)
-  if shissuDonateFee[guildName] == nil then 
+  if shissuDonateFee[guildName] == nil then
     shissuDonateFee[guildName] = {}
   end
 end
 
 function _addon.createSettings()
-  local controls = _addon.controls 
-  
+  local controls = _addon.controls
+
   -- Beschreibung
   controls[#controls+1] = {
     type = "description",
     text = string.format(_L("DESC1"), stdColor, "|cFA8072"),
-  }   
+  }
   controls[#controls+1] = {
     type = "description",
     text = _L("DESC2"),
-  } 
+  }
   controls[#controls+1] = {
     type = "description",
     text = stdColor .. _L("DESC3"),
-  } 
+  }
   controls[#controls+1] = {
     type = "description",
     text = _L("DESC4"),
-  } 
+  }
 
   -- Allgemeines
   controls[#controls+1] = {
     type = "title",
     name = _L("GENERAL"),
-  } 
+  }
 
   if (shissuDonateFee["chatReminderHour"] == nil ) then
     shissuDonateFee["chatReminderHour"] = 1
   end
 
   controls[#controls+1] = {
-    type = "slider", 
+    type = "slider",
     name = _L("SET_CHAT2"),
     minimum = 1,
     maximum = 120,
     steps = 1,
     getFunc = shissuDonateFee["chatReminderHour"],
     setFunc = function(value)
-      shissuDonateFee["chatReminderHour"] = value      
+      shissuDonateFee["chatReminderHour"] = value
     end,
-  }      
+  }
 
   -- Turnus
   controls[#controls+1] = {
     type = "title",
     name = _L("SET_FREQ"),
-  } 
+  }
 
-  local numGuild = GetNumGuilds()
-    
-  for guildId = 1, numGuild do
-    local guildName = GetGuildName(GetGuildId(guildId))  
+  for i = 1, GetNumGuilds() do
+    local guildId = GetGuildId(i)
+    local guildName = GetGuildName(guildId)
 
     controls[#controls+1] = {
       type = "title",
@@ -97,19 +96,19 @@ function _addon.createSettings()
     end
 
     controls[#controls+1] = {
-      type = "checkbox",                                                                            
+      type = "checkbox",
       name = _L("SET_AUTO"),
       tooltip = string.format(_L("SET_AUTO_TT"), stdColor .. guildName .. "|r"),
       getFunc = guildEnabled,
-      setFunc = function(_, value)   
+      setFunc = function(_, value)
         _addon.createGuildVar(guildName)
 
         shissuDonateFee[guildName]["enabled"] = value
       end,
-    }  
+    }
 
     controls[#controls+1] = {
-      type = "sliderEditbox", 
+      type = "sliderEditbox",
       name = _L("SET_TIME"),
       tooltip = _L("SET_TIME_TT"),
       minimum = 1,
@@ -119,17 +118,17 @@ function _addon.createSettings()
       setFunc = function(value)
         _addon.createGuildVar(guildName)
 
-        shissuDonateFee[guildName]["days"] = value      
+        shissuDonateFee[guildName]["days"] = value
       end,
-    }      
+    }
   end
 end
- 
+
 function _addon.refreshUI()
   if ( SHISSUDONATEFEEUI_MASTER ~= nil ) then
-    zo_callLater(function() 
+    zo_callLater(function()
       if (SHISSUDONATEFEEUI_MASTER.Refresh ~= nil) then
-        SHISSUDONATEFEEUI_MASTER:Refresh() 
+        SHISSUDONATEFEEUI_MASTER:Refresh()
       end
     end, 2000)
   end
@@ -143,23 +142,23 @@ end
 function _addon.chatReminder()
  -- if (shissuDonateFee["chatReminder"] == true ) then
     local timeStamp = GetTimeStamp()
-    local numGuild = GetNumGuilds()
 
-    for guildId = 1, numGuild do
-      local guildName = GetGuildName(GetGuildId(guildId))  
+    for i = 1, GetNumGuilds() do
+      local guildId = GetGuildId(i)
+      local guildName = GetGuildName(guildId)
 
       if ( shissuDonateFee[guildName] ~= nil ) then
         if ( shissuDonateFee[guildName]["enabled"] == true and shissuDonateFee[guildName]["nextAutoPay"] ~= nil ) then
-          if ( shissuDonateFee[guildName]["data"] ~= nil ) then 
+          if ( shissuDonateFee[guildName]["data"] ~= nil ) then
             local gold = shissuDonateFee[guildName]["gold"] or 0
             local days = shissuDonateFee[guildName]["days"] or 0
             local dataLength = #shissuDonateFee[guildName]["data"]
-            local data = shissuDonateFee[guildName]["data"][dataLength]  
+            local data = shissuDonateFee[guildName]["data"][dataLength]
 
             if ( timeStamp >= shissuDonateFee[guildName]["nextAutoPay"]) then --shissuDonateFee[guildName]["nextAutoPay"]] ) then
               --local manual = _addon.getManualGold(guildName)
               --local payedFor = 0
-              
+
               -- Vorauszahlungen berücksichtigen
              -- if (shissuDonateFee[guildName]["lastAutoPay"] ~= nil) then
               --  payedFor = math.floor ( manual / gold )
@@ -168,7 +167,7 @@ function _addon.chatReminder()
               -- Wenn payedFor kleiner 1, fand bisher keine Einzahlung oder zu wenig statt!
            --   if (payedFor < 1 and payedFor > 0) then
              --   local restGold = ( shissuDonateFee[guildName]["gold"] - manual)
-             --   local textString = "|cAFD3FF[SDF] |cFA8072" .. _L("REMINDER") .. " |ceeeeee%s: " .. _L(CHAT_AUTO1) 
+             --   local textString = "|cAFD3FF[SDF] |cFA8072" .. _L("REMINDER") .. " |ceeeeee%s: " .. _L(CHAT_AUTO1)
 
             --    d(string.format(textString, guildName, manual .. goldSymbol, "|cFA8072" .. restGold .. goldSymbol))
 
@@ -178,10 +177,10 @@ function _addon.chatReminder()
 
                 if ( SHISSUDONATEFEEUI_MASTER ~= nil ) then
                   if (SHISSUDONATEFEEUI_MASTER.Refresh ~= nil) then
-                    SHISSUDONATEFEEUI_MASTER:Refresh() 
+                    SHISSUDONATEFEEUI_MASTER:Refresh()
                   end
                 end
-                
+
              -- end
             end
           end
@@ -195,9 +194,9 @@ function _addon.getManualGold(guildName)
   local manualGold = 0
 
   if ( shissuDonateFee[guildName] ~= nil ) then
-    if ( shissuDonateFee[guildName]["data"] ~= nil and shissuDonateFee[guildName]["lastAutoPay"] ~= nil) then 
+    if ( shissuDonateFee[guildName]["data"] ~= nil and shissuDonateFee[guildName]["lastAutoPay"] ~= nil) then
       local dataLength = #shissuDonateFee[guildName]["data"]
-        
+
       for dataId = 1, dataLength do
         data = shissuDonateFee[guildName]["data"][dataId]
 
@@ -231,26 +230,25 @@ function _addon.openUI()
       if ( GUILD_BANKCurrencyTransferDialog["info"]["buttons"] ~= nil ) then
         if ( GUILD_BANKCurrencyTransferDialog["info"]["buttons"][1] ~= nil ) then
           depositAllow = false
-          
-          
+
+
           if (ZO_KeybindStripButtonTemplate2NameLabel ~= nil ) then
             local guildName = ZO_KeybindStripButtonTemplate2NameLabel:GetText()
-            local numGuilds = GetNumGuilds()
             local historyAllow = false
 
-            for guildId=1, numGuilds do
-              local guildsId = GetGuildId(guildId)
-              local guildName2 = GetGuildName(guildsId)
+            for i=1, GetNumGuilds() do
+              local guildId = GetGuildId(i)
+              local guildName2 = GetGuildName(guildId)
 
               if ( guildName2 == guildName ) then
-    	          depositAllow = DoesPlayerHaveGuildPermission(guildsId, GUILD_PERMISSION_BANK_DEPOSIT)
+    	          depositAllow = DoesPlayerHaveGuildPermission(guildId, GUILD_PERMISSION_BANK_DEPOSIT)
                 --
                 break
               end
             end
 
             local titleText = GUILD_BANKCurrencyTransferDialog["info"]["buttons"][1].text
-              
+
             if ( overrideZOSDialog == false and titleText == 6313 and depositAllow == true) then -- Einlagern
               local ZOS_CALLBACK = GUILD_BANKCurrencyTransferDialog["info"]["buttons"][1].callback
 
@@ -266,13 +264,13 @@ function _addon.openUI()
                 local data = shissuDonateFee[guildName]["data"]
 
                 table.insert(data, {timeStamp, gold, SDF_MANUAL})
-                
-                if (shissuDonateFee[guildName]["days"] == nil ) then 
+
+                if (shissuDonateFee[guildName]["days"] == nil ) then
                   shissuDonateFee[guildName]["days"] = 7
                 end
 
                 shissuDonateFee[guildName]["nextAutoPay"] = timeStamp + ( shissuDonateFee[guildName]["days"] * ( 60 * 60 * 24) )
-                
+
                 if (SHISSUDONATEFEEUI_MASTER) then
                   SHISSUDONATEFEEUI_MASTER:Refresh()
                 end
@@ -313,33 +311,32 @@ end
 
 function _addon.repeatHistory()
   zo_callLater(function()
-    local numGuild = GetNumGuilds()
-
-    for guildId = 1, numGuild do
-      local showAllow = DoesPlayerHaveGuildPermission(GetGuildId(guildId), GUILD_PERMISSION_BANK_VIEW_DEPOSIT_HISTORY)
+    for i = 1, GetNumGuilds() do
+      local guildId = GetGuildId(i)
+      local showAllow = DoesPlayerHaveGuildPermission(guildId, GUILD_PERMISSION_BANK_VIEW_DEPOSIT_HISTORY)
 
       if ( showAllow == true ) then
-        RequestMoreGuildHistoryCategoryEvents(GetGuildId(guildId), GUILD_HISTORY_BANK)
+        RequestMoreGuildHistoryCategoryEvents(guildId, GUILD_HISTORY_BANK)
       end
     end
-  end, 1000)
+  end, 3000)
 end
 
 function _addon.historyResponseReceived(eventCode, guildId, category)
-  if (category ~= GUILD_HISTORY_BANK) and guildId ~= nil then 
-    return 
+  if (category ~= GUILD_HISTORY_BANK) and guildId ~= nil then
+    return
   end
 
-  local numEvents = GetNumGuildEvents(guildId, category)  
+  local numEvents = GetNumGuildEvents(guildId, category)
   local showAllow = DoesPlayerHaveGuildPermission(guildId, GUILD_PERMISSION_BANK_VIEW_DEPOSIT_HISTORY)
-   
+
   if ( showAllow == false ) then return end
   if (numEvents == 0) then return end
 
   local guildName = GetGuildName(guildId)
   local last = 1
   local inc = -1
- 
+
   -- Einzelne Events in den Aufzeichnungen abarbeiten
   for eventId = numEvents, 1, -1 do
     local eventType, eventTime, displayName, eventGold = GetGuildEventInfo(guildId, category, eventId)
@@ -354,7 +351,7 @@ function _addon.historyResponseReceived(eventCode, guildId, category)
       _addon.createGuildVar(guildName)
       shissuDonateFee[guildName]["data"] = shissuDonateFee[guildName]["data"] or {}
       local data = shissuDonateFee[guildName]["data"]
-      
+
       if ( data ~= nil ) then
         for dataId = 1, #data do
           if ( ( data[dataId][1] == timeStamp ) or ( data[dataId][1] >= timeStamp - 10 and data[dataId][1] <= timeStamp + 10 ) ) then
@@ -362,17 +359,17 @@ function _addon.historyResponseReceived(eventCode, guildId, category)
             --d("GEFUNDEN HISTORY")
             data[dataId][4] = 1
             end
-          end     
+          end
         end
       end
     end
   end
-end 
+end
 
 function _addon.initialized()
   -- Einstellungen in Zusammenarbeit mit ShissuSuiteManager
   _addon.createSettings()
-  
+
   -- Initialisierung Grundfunktion: Automatisches Einzahlen bei geöffneter Gildenbank
   _addon.initTimers()
   _addon.initHistoryCheck()
@@ -383,15 +380,15 @@ function _addon.EVENT_ADD_ON_LOADED(_, addOnName)
 
   shissuDonateFee = shissuDonateFee or {}
 
-  zo_callLater(function()               
+  zo_callLater(function()
     ShissuFramework._settings[_addon.Name] = {}
-    ShissuFramework._settings[_addon.Name].panel = _addon.panel                                       
-    ShissuFramework._settings[_addon.Name].controls = _addon.controls  
+    ShissuFramework._settings[_addon.Name].panel = _addon.panel
+    ShissuFramework._settings[_addon.Name].controls = _addon.controls
 
     ShissuFramework.initAddon(_addon.Name, _addon.initialized, _addon.formattedName .. " " .. _addon.Version)
-  end, 150) 
-                                 
+  end, 150)
+
   EVENT_MANAGER:UnregisterForEvent(_addon.Name, EVENT_ADD_ON_LOADED)
-end 
+end
 
 EVENT_MANAGER:RegisterForEvent(_addon.Name, EVENT_ADD_ON_LOADED, _addon.EVENT_ADD_ON_LOADED)

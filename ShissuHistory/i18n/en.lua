@@ -1,6 +1,6 @@
 ShissuLocalization = ShissuLocalization or {}
 
-ShissuLocalization["ShissuHistory"] = {       
+ShissuLocalization["ShissuHistory"] = {
   TITLE         =  "Guild: " .. GetString(SI_WINDOW_TITLE_GUILD_HISTORY),
   FILTER        = "Filter",
   INFO          = "Additional Information",

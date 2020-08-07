@@ -559,9 +559,10 @@ end
 function _mail.optionSelected(_, statusText, g)
   _mail.currentDropText = statusText
 
-  for guildId = 1, GetNumGuilds() do
-	guildId = GetGuildId(guildId)
-    if GetGuildName(guildId) == statusText then
+  for i = 1, GetNumGuilds() do
+    local guildId = GetGuildId(i)
+    local guildName = GetGuildName(guildId)
+    if guildName == statusText then
       SGT_Notebook_MessagesRecipient_Choice:SetText(red .. statusText)
       _mail.currentGuild = guildId
 
@@ -679,9 +680,9 @@ function _mail.buildMailList()
   end
   end
 
-  for guildId = 1, GetNumGuilds() do
-    local gId = GetGuildId(guildId)
-    _mail.dropDownGuilds:AddItem(_mail.dropDownGuilds:CreateItemEntry(GetGuildName(gId), _mail.optionSelected))
+  for i = 1, GetNumGuilds() do
+    local guildId = GetGuildId(i)
+    _mail.dropDownGuilds:AddItem(_mail.dropDownGuilds:CreateItemEntry(GetGuildName(guildId), _mail.optionSelected))
   end
 end
 
@@ -1033,13 +1034,20 @@ function _addon.mail()
   _mail.dropDownGuilds:SetSortsItems(false)
   _mail.dropDownGuilds:AddItem(_mail.dropDownGuilds:CreateItemEntry(yellow .. _addon.friends, _mail.optionSelected))
 
-  for guildId = 1, GetNumGuilds() do
-    _mail.dropDownGuilds:AddItem(_mail.dropDownGuilds:CreateItemEntry(white .. GetGuildName(GetGuildId(guildId)), _mail.optionSelected))
+  for i = 1, GetNumGuilds() do
+    local guildId = GetGuildId(i)
+    local guildName = GetGuildName(guildId)
+    _mail.dropDownGuilds:AddItem(_mail.dropDownGuilds:CreateItemEntry(white .. guildName, _mail.optionSelected))
   end
 
+  --[[ investigate, the original code only checks the number of
+  guilds and then choose the first guild using GetGuildId(1)
+  ]]--
   if (GetNumGuilds() > 0 ) then
-    _mail.dropDownGuilds:SetSelectedItem(GetGuildName(1))
-    SGT_Notebook_MessagesRecipient_Choice:SetText(red .. GetGuildName(1))
+    local guildId = GetGuildId(1)
+    local guildName = GetGuildName(guildId)
+    _mail.dropDownGuilds:SetSelectedItem(guildName)
+    SGT_Notebook_MessagesRecipient_Choice:SetText(red .. guildName)
   end
 
     -- EmpfängerListe

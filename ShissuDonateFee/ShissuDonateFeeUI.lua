@@ -29,28 +29,27 @@ function ShissuDonateFeeUI:New(...)
   return ZO_SocialListKeyboard.New(self, ...)
 end
 
-function ShissuDonateFeeUI:Initialize(control)     
+function ShissuDonateFeeUI:Initialize(control)
   ZO_SocialListKeyboard.Initialize(self, control)
 
   control:SetHandler("OnEffectivelyHidden", function() self:OnEffectivelyHidden() end)
 
   ZO_ScrollList_AddDataType(self.list, 1, "ShissuDonateFeeUIRow", 30, function(control, data) self:SetupRow(control, data) end)
   ZO_ScrollList_EnableHighlight(self.list, "ZO_ThinListHighlight")
-  
+
   self.sortFunction = function(listEntry1, listEntry2) return ZO_TableOrderingFunction(listEntry1.data, listEntry2.data, self.currentSortKey, self.SORT_KEYS, self.currentSortOrder) end
   self:SetAlternateRowBackgrounds(true)
   self:SetEmptyText("NO DATA")
-  self.sortHeaderGroup:SelectHeaderByKey("date") 
+  self.sortHeaderGroup:SelectHeaderByKey("date")
 end
 
 function ShissuDonateFeeUI:BuildMasterList()
-  self.masterList = {} 
-  
-  local numGuild = GetNumGuilds()
+  self.masterList = {}
   local maxGold = {}
 
-  for guildId = 1, numGuild do
-    local guildName = GetGuildName(GetGuildId(guildId))  
+  for i = 1, GetNumGuilds() do
+    local guildId = GetGuildId(i)
+    local guildName = GetGuildName(guildId)
 
     maxGold[guildName] = 0
 
@@ -62,7 +61,7 @@ function ShissuDonateFeeUI:BuildMasterList()
 
         for dataId=1, dataLength do
           local rowData = {}
-          
+
           rowData["index"] = dataId
           rowData["date"] = data[dataId][1]
           rowData["gold"] = data[dataId][2]
@@ -87,8 +86,8 @@ function ShissuDonateFeeUI:BuildMasterList()
         rowData["affirmed"] = 0
 
         if ( maxGold[guildName] ~= 0 ) then
-          table.insert(self.masterList, rowData)   
-        end 
+          table.insert(self.masterList, rowData)
+        end
       end
     end
   end
@@ -97,7 +96,7 @@ end
 function ShissuDonateFeeUI:FilterScrollList()
   local scrollData = ZO_ScrollList_GetDataList(self.list)
   ZO_ClearNumericallyIndexedTable(scrollData)
-    
+
   for i = 1, #self.masterList do
     if ((self.masterList[i].hidden == nil) or (self.masterList[i].hidden == false)) then
       local entry = self.masterList[i]
@@ -106,10 +105,10 @@ function ShissuDonateFeeUI:FilterScrollList()
   end
 end
 
-function ShissuDonateFeeUI:GetGuildColor(guildName)
+function ShissuDonateFeeUI:GetGuildColor(name)
   local color = ""
 
-  if ((guildName == nil) or (guildName == "")) then
+  if ((name == nil) or (name == "")) then
     return color
 	end
 
@@ -122,13 +121,13 @@ function ShissuDonateFeeUI:GetGuildColor(guildName)
 
   for i = 1, GetNumGuilds() do
     local guildId = GetGuildId(i)
-      if (GetGuildName(guildId) == guildName) then
-        color = ZO_ColorDef:New(1, 1, 1, 1)
-        color:SetRGB(GetChatCategoryColor(guildChatCategories[i]))
-        
-        color = RGBtoHex(color["r"], color["g"], color["b"])
-        break
-      end
+    local guildName = GetGuildName(guildId)
+    if (guildName == name) then
+      color = ZO_ColorDef:New(1, 1, 1, 1)
+      color:SetRGB(GetChatCategoryColor(guildChatCategories[i]))
+      color = RGBtoHex(color["r"], color["g"], color["b"])
+      break
+    end
   end
 
   return color
@@ -143,7 +142,7 @@ function ShissuDonateFeeUI:SetupRow(control, data)
 
   local guildControl = control:GetNamedChild('Guild')
   color = ShissuDonateFeeUI:GetGuildColor(data.guild)
-  guildControl:SetText(color .. data.guild) 
+  guildControl:SetText(color .. data.guild)
 
   local dateControl = control:GetNamedChild('Date')
 
@@ -154,23 +153,23 @@ function ShissuDonateFeeUI:SetupRow(control, data)
   end
 
   local goldControl = control:GetNamedChild('Gold')
-  goldControl:SetText(ZO_LocalizeDecimalNumber(data.gold) .. " " .. goldSymbol) 
-  
+  goldControl:SetText(ZO_LocalizeDecimalNumber(data.gold) .. " " .. goldSymbol)
+
   local affirmedControl = control:GetNamedChild('Affirmed')
-  affirmedControl:SetTexture("/esoui/art/buttons/accept_up.dds") --SetText("|t16:16:/esoui/art/buttons/accept_up.dds|t") 
+  affirmedControl:SetTexture("/esoui/art/buttons/accept_up.dds") --SetText("|t16:16:/esoui/art/buttons/accept_up.dds|t")
   affirmedControl:SetColor( ShissuFramework["interface"].getThemeColor())
   affirmedControl:SetDimensions(28, 28)
 
   if ( data.affirmed == 1 ) then
     affirmedControl:SetHidden(false)
-    
-    affirmedControl:SetHandler("OnMouseEnter", function(self) ZO_Tooltips_ShowTextTooltip(self, TOPRIGHT,  _L("AFFIRMED")) end)     
-    affirmedControl:SetHandler("OnMouseExit", function(self) ZO_Tooltips_HideTextTooltip() end)  
+
+    affirmedControl:SetHandler("OnMouseEnter", function(self) ZO_Tooltips_ShowTextTooltip(self, TOPRIGHT,  _L("AFFIRMED")) end)
+    affirmedControl:SetHandler("OnMouseExit", function(self) ZO_Tooltips_HideTextTooltip() end)
   else
     affirmedControl:SetHidden(true)
   end
 end
-        
+
 function ShissuDonateFeeUI:SortScrollList()
   if (self.currentSortKey ~= nil and self.currentSortOrder ~= nil) then
     local scrollData = ZO_ScrollList_GetDataList(self.list)
@@ -192,18 +191,18 @@ function ShissuDonateFeeUI:OnEffectivelyHidden()
   ClearMenu()
 end
 
--- * Initialisierung                                                                         
+-- * Initialisierung
 function _addon.initialized()
   local control = GetControl("ShissuDonateFeeUI")
 
   createFlatWindow(
     "ShissuDonateFeeUI",
-    control,  
-    {580, 480}, 
+    control,
+    {580, 480},
     function() control:SetHidden(true) end,
     _L("TITLE")
-  ) 
-  
+  )
+
   ShissuDonateFeeUI_Version:SetText(_addon.formattedName .. " " .. _addon.Version)
 
   SLASH_COMMANDS["/sdf"] = function()
@@ -215,14 +214,14 @@ function _addon.initialized()
       control:SetHidden(true)
     end
   end
-  
+
   ShissuDonateFeeUIHeadersDateName:SetText(stdColor .. _L("DATE"))
   ShissuDonateFeeUIHeadersGuildName:SetText(stdColor .. _L("GUILD"))
   ShissuDonateFeeUIHeadersGoldName:SetText(stdColor .. _L("GOLD"))
 
   ShissuDonateFeeUI = ShissuDonateFeeUI:New(control)
   ShissuDonateFeeUI:BuildMasterList()
-  ShissuDonateFeeUI:Refresh()     
+  ShissuDonateFeeUI:Refresh()
 
   SHISSUDONATEFEEUI_MASTER = ShissuDonateFeeUI
 end
@@ -232,9 +231,9 @@ function _addon.waitToSaveVar()
 
   if (shissuDonateFee == {}) then
     zo_callLater(_addon.waitToSaveVar, 1000)
-  else 
+  else
     _addon.initialized()
-  end 
+  end
 end
 
 zo_callLater(_addon.waitToSaveVar, 5000)

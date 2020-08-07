@@ -81,8 +81,8 @@ function _addon.copyCurrentToPrev(guildName, displayName, eventType)
 end
 
 function _addon.copyCurrentDateToLast()
-  for guildId=1, GetNumGuilds() do
-    guildId = GetGuildId(guildId)
+  for i=1, GetNumGuilds() do
+    local guildId = GetGuildId(i)
     local guildName = GetGuildName(guildId)
 
     for displayName, _ in pairs(shissuHistoryScanner[guildName]) do

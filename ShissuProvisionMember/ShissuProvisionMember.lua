@@ -3,40 +3,38 @@ _SGTguildMemberList = {}
 local _addon = {}
 _addon.Name = "ShissuProvisionMember"
 
-function _addon.createGuildVars(name, memberId, guildId) 
+function _addon.createGuildVars(name, memberId, guildId)
   if _SGTguildMemberList[name] == nil then
     _SGTguildMemberList[name] = {}
-    _SGTguildMemberList[name]["guilds"] = {} 
-        
+    _SGTguildMemberList[name]["guilds"] = {}
+
     _SGTguildMemberList[name].id = memberId
     _SGTguildMemberList[name].gid = guildId
-  end          
+  end
 end
 
 function _addon.createGuildMemberList()
   _SGTguildMemberList = {}
 
-  local numGuilds = GetNumGuilds()
-  
-  for i = 1, numGuilds do
+  for i = 1, GetNumGuilds() do
     local guildId = GetGuildId(i)
     local guildName = GetGuildName(guildId)
     local numMembers = GetNumGuildMembers(guildId)
-    
+
     for memberId = 1, numMembers, 1 do
       local charData = { GetGuildMemberCharacterInfo(guildId, memberId) }
       local memberData = { GetGuildMemberInfo(guildId, memberId) }
-      local accName = memberData[1]  
-      local charName = charData[2]            
-      
-      _addon.createGuildVars(charName, memberId, guildId) 
-      _addon.createGuildVars(accName, memberId, guildId) 
-                                                                                       
+      local accName = memberData[1]
+      local charName = charData[2]
+
+      _addon.createGuildVars(charName, memberId, guildId)
+      _addon.createGuildVars(accName, memberId, guildId)
+
       local charList = _SGTguildMemberList[charName]["guilds"]
-      charList[#charList +1] = { guildName, guildId, memberId }    
+      charList[#charList +1] = { guildName, guildId, memberId }
 
       local accList = _SGTguildMemberList[accName]["guilds"]
-      accList[#accList + 1] = { guildName, guildId, memberId }   
+      accList[#accList + 1] = { guildName, guildId, memberId }
     end
   end
 end
@@ -48,7 +46,7 @@ end
 --  d("Diff: " .. mse - mss .. " ms")
 --end
 
-function _addon.removedMember(_, guildId, accName)
+function _addon.removedMember(_, guild_id, accName)
   local mss = GetGameTimeMilliseconds()
   local memberId = -1
   local gId = -1
@@ -56,7 +54,7 @@ function _addon.removedMember(_, guildId, accName)
   local numGuilds = 0
   local gId2 = -1
 
-  guildId = GetGuildId(guildId)
+  local guildId = GetGuildId(guild_id)
   local guildName = GetGuildName(guildId)
 
   if ( _SGTguildMemberList[accName] ~= nil ) then
@@ -66,21 +64,21 @@ function _addon.removedMember(_, guildId, accName)
       if ( data["guilds"] ~= nil ) then
         numGuilds = #data["guilds"]
 
-        if ( numGuilds == 1 ) then 
+        if ( numGuilds == 1 ) then
           gName = data["guilds"][1][1]
-          memberId = data["guilds"][1][3] 
+          memberId = data["guilds"][1][3]
           gId = data["guilds"][1][2]
-          --d("NUR EINE GILDE")
+          --sf_internal.v("ONLY ONE GUILD")
         else
-          --d("MEHR ALS EINE GILDE")
+          --sf_internal.v("MORE THAN A GUILD")
           for guildIndex = 1, numGuilds do
             if ( data["guilds"][guildIndex][1] == guildName ) then
               gName = data["guilds"][guildIndex][1]
               gId = data["guilds"][guildIndex][2]
-              memberId = data["guilds"][guildIndex][3] 
+              memberId = data["guilds"][guildIndex][3]
               gId2 = guildIndex
 
-              --d("GILDE GEFUNDEN")
+              --sf_internal.v("GUILD FOUND")
               break
             end
           end
@@ -90,16 +88,16 @@ function _addon.removedMember(_, guildId, accName)
   end
 
   if ( numGuilds > 1 and memberId ~= -1 ) then
-    --d("MUSS NUR EINS LÖSCHEN")
+    --sf_internal.v("ONLY NEED TO DELETE ONE")
 
     local charName = ""
-    for name, nameData in pairs(_SGTguildMemberList) do 
+    for name, nameData in pairs(_SGTguildMemberList) do
       if ( nameData["guilds"] ~= nil ) then
         local num = #nameData["guilds"]
 
         for i = 1, GetNumGuilds() do
           if ( nameData["guilds"][1][1] == gName and nameData["guilds"][1][2] == gId and nameData["guilds"][1][3] == memberId ) then
-            --d("GILDE UND CHARNAME GEFUNDEN")
+            --sf_internal.v("GUILD AND CHARNAME FOUND")
             charName = name
             break
           end
@@ -110,24 +108,24 @@ function _addon.removedMember(_, guildId, accName)
         end
       end
     end
-  
+
     if ( charName ~= "") then
-      --d("GELÖSCHT")
+      --sf_internal.v("DELETED")
       _SGTguildMemberList[accName] = nil
-      _SGTguildMemberList[charName] = nil 
+      _SGTguildMemberList[charName] = nil
     end
 
   elseif ( numGuilds > 1 and memberId ~= -1 ) then
-    --d("MEHR ALS EINE GILDE")
+    --sf_internal.v("MORE THAN A GUILD")
 
     local charName = ""
-    for name, nameData in pairs(_SGTguildMemberList) do 
+    for name, nameData in pairs(_SGTguildMemberList) do
       if ( nameData["guilds"] ~= nil ) then
         local num = #nameData["guilds"]
 
         if ( num == 1 ) then
           if ( nameData["guilds"][1][1] == gName and nameData["guilds"][1][2] == gId and nameData["guilds"][1][3] == memberId ) then
-            --d("GILDE UND CHARNAME GEFUNDEN")
+            --sf_internal.v("GUILD AND CHARNAME FOUND")
             charName = name
             break
           end
@@ -136,59 +134,59 @@ function _addon.removedMember(_, guildId, accName)
     end
 
     if ( charName ~= "") then
-      --d("GELÖSCHT")
+      --sf_internal.v("DELETED")
        _SGTguildMemberList[accName]["guilds"][gId2] = nil
        _SGTguildMemberList[charName]["guilds"][gId2] = nil
-    end   
+    end
   else
-    --d("EINFACH NEUBAUEN")
+    --sf_internal.v("SIMPLY BUILD NEW")
     _addon.createGuildMemberList()
   end
 
   --local mse = GetGameTimeMilliseconds()
-  --d("Diff: " .. mse - mss .. " ms")
+  --sf_internal.v("Time Elapsed: " .. mse - mss .. " ms")
 end
 
-function _addon.addedMember(_, guildId, accName)
+function _addon.addedMember(_, guild_id, accName)
   --local mss = GetGameTimeMilliseconds()
 
-  guildId = GetGuildId(guildId)
+  local guildId = GetGuildId(guild_id)
   local guildName = GetGuildName(guildId)
   local numMembers = GetNumGuildMembers(guildId)
 
   for memberId = 1, numMembers, 1 do
     local charData = { GetGuildMemberCharacterInfo(guildId, memberId) }
     local memberData = { GetGuildMemberInfo(guildId, memberId) }
-    local accName2 = memberData[1]  
-    local charName = charData[2]            
+    local accName2 = memberData[1]
+    local charName = charData[2]
 
     if ( accName == accName2 ) then
-      _addon.createGuildVars(charName, memberId, guildId) 
-      _addon.createGuildVars(accName, memberId, guildId) 
-                                                                                       
+      _addon.createGuildVars(charName, memberId, guildId)
+      _addon.createGuildVars(accName, memberId, guildId)
+
       local charList = _SGTguildMemberList[charName]["guilds"]
-      charList[#charList +1] = { guildName, guildId, memberId }    
+      charList[#charList +1] = { guildName, guildId, memberId }
 
       local accList = _SGTguildMemberList[accName]["guilds"]
-      accList[#accList + 1] = { guildName, guildId, memberId }   
+      accList[#accList + 1] = { guildName, guildId, memberId }
       break
     end
   end
 
   --local mse = GetGameTimeMilliseconds()
-  --d("Diff: " .. mse - mss .. " ms")
+  --sf_internal.v("Time Elapsed: " .. mse - mss .. " ms")
 end
 
 function _addon.EVENT_ADD_ON_LOADED(_, addOnName)
   if addOnName ~= _addon.Name then return end
 
-  zo_callLater(function()               
+  zo_callLater(function()
     _addon.createGuildMemberList()
 
     EVENT_MANAGER:RegisterForEvent(_addon.Name, EVENT_GUILD_MEMBER_REMOVED, _addon.removedMember)
     EVENT_MANAGER:RegisterForEvent(_addon.Name, EVENT_GUILD_MEMBER_ADDED, _addon.addedMember)
-  end, 150) 
-                                 
+  end, 150)
+
   EVENT_MANAGER:UnregisterForEvent(_addon.Name, EVENT_ADD_ON_LOADED)
 end
 

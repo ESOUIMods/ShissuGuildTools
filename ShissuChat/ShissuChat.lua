@@ -1048,9 +1048,9 @@ function _addon.createSettingMenu()
     end,
   }
 
-  for guildId=1, GetNumGuilds() do
-    xxguildId = GetGuildId(guildId)
-    guildName = GetGuildName(xxguildId)
+  for i=1, GetNumGuilds() do
+    guildId = GetGuildId(i)
+    guildName = GetGuildName(guildId)
 
     controls[#controls+1] = {
       type = "textbox",
@@ -1069,8 +1069,9 @@ function _addon.createGuildVars(saveVar, value)
   if shissuChat[saveVar] ~= nil then
     local numGuild = GetNumGuilds()
 
-    for guildId=1, numGuild do
-      local guildName = GetGuildName(GetGuildId(guildId))
+    for i=1, numGuild do
+      local guildId = GetGuildId(i)
+      local guildName = GetGuildName(guildId)
 
       if shissuChat[saveVar][guildName] == nil then shissuChat[saveVar][guildName] = value end
     end

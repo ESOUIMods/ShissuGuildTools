@@ -5,9 +5,9 @@
 ; You can read the full terms at https://account.elderscrollsonline.com/add-on-terms
 
 ; Author: @Shissu on EU-Server!
- 
+
 ## Title: |c82FA58Shissu's|r|ceeeeee HistoryScanner|r v1.4.0
-## APIVersion: 100030 100031
+## APIVersion: 100031 100032
 ## Author: |c82FA58@Shissu|r [EU-SERVER]
 ## Description: None
 ## SavedVariables: shissuHistoryScanner

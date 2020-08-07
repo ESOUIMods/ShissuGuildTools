@@ -1,7 +1,7 @@
 ﻿-- Shissu Guild Tools Addon
 -- ShissuRoster
 --
--- Version: v2.2.1
+-- Version: v2.2.2
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
 
@@ -28,7 +28,7 @@ local round = ShissuFramework["func"].round
 
 local _addon = {}
 _addon.Name	= "ShissuRoster"
-_addon.Version = "2.2.1"
+_addon.Version = "2.2.2"
 _addon.formattedName	= stdColor .. "Shissu" .. white .. "'s Roster"
 
 _addon.buttons = {}

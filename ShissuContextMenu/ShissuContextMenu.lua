@@ -5,7 +5,7 @@
 -- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
- 
+
 local ZOS_ShowPlayerContextMenu = CHAT_SYSTEM.ShowPlayerContextMenu
 local ZOS_MailInboxRow_OnMouseUp = ZO_MailInboxRow_OnMouseUp
 local ZOS_GUILD_ROSTER_KEYBOARD = GUILD_ROSTER_KEYBOARD.GuildRosterRow_OnMouseUp
@@ -33,45 +33,45 @@ _addon.settings = {
 }
 
 local _personalNote = {}
-                                                                                                      
+
 _addon.panel = setPanel(_L("TITLE"), _addon.formattedName, _addon.Version)
 _addon.controls = {}
 
-function _addon.guildInvite(displayName)     
+function _addon.guildInvite(displayName)
   for i = 1, GetNumGuilds() do
     local guildId = GetGuildId(i)
-        
+
     if DoesPlayerHaveGuildPermission(guildId, GUILD_PERMISSION_INVITE) then
       local GuildName = GetGuildName(guildId)
-      
-      AddMenuItem(string.gsub(_L("INVITEC"), "%%1", GuildName), function() 
-        GuildInvite(guildId, displayName) 
+
+      AddMenuItem(string.gsub(_L("INVITEC"), "%%1", GuildName), function()
+        GuildInvite(guildId, displayName)
 
         if (shissuWelcome ~= nil) then
           if (shissuWelcome["invite"] ~= nil) then
             local allowInvite = shissuWelcome["invite"][GuildName]
-                
-            if allowInvite then 
+
+            if allowInvite then
               local currentText = CHAT_SYSTEM.textEntry:GetText()
-      
+
               if string.len(currentText) < 1 then
                 local welcomeString = shissuWelcome["message"][GuildName]
-                
+
                   if welcomeString then
                     local chatMessageArray = splitToArray(welcomeString, "|")
-                    local rnd = math.random(#chatMessageArray) 
+                    local rnd = math.random(#chatMessageArray)
                     local chatMessage = string.gsub(chatMessageArray[rnd], "%%1", displayName)
                     chatMessage = string.gsub(chatMessage, "%%2", GuildName)
-      
-                    local text = "/g" .. i .. " " .. chatMessage     
+
+                    local text = "/g" .. i .. " " .. chatMessage
                     ZO_ChatWindowTextEntryEditBox:SetText(text)
                 end
-              end                 
+              end
             end
           end
-        end       
+        end
       end)
-    end 
+    end
   end
 end
 
@@ -87,18 +87,18 @@ end
 function _addon.chat()
   CHAT_SYSTEM.ShowPlayerContextMenu = function(self, displayName, rawName)
     ZOS_ShowPlayerContextMenu(self, displayName, rawName)
-  
-    if shissuContextMenu["chatNewMail"] or shissuContextMenu["chatInvite"] then _addon.contextHead() end
-    
-    if shissuContextMenu["chatNewMail"] then  
 
-      AddMenuItem(white .. _L("NEWMAIL"), function() 
-        SCENE_MANAGER:Show('mailSend') ZO_MailSendToField:SetText(displayName) 
-      end)       
+    if shissuContextMenu["chatNewMail"] or shissuContextMenu["chatInvite"] then _addon.contextHead() end
+
+    if shissuContextMenu["chatNewMail"] then
+
+      AddMenuItem(white .. _L("NEWMAIL"), function()
+        SCENE_MANAGER:Show('mailSend') ZO_MailSendToField:SetText(displayName)
+      end)
     end
-    
-    if shissuContextMenu["chatInvite"] then _addon.guildInvite(displayName) end  
-    
+
+    if shissuContextMenu["chatInvite"] then _addon.guildInvite(displayName) end
+
     if ZO_Menu_GetNumMenuItems() > 0 then ShowMenu() end
   end
 end
@@ -112,31 +112,31 @@ function _addon.MailOnMouseUp(control, button)
   if (shissuContextMenu["mailAnswer"] or shissuContextMenu["mailInvite"]) then
     _addon.contextHead(0)
   end
-  
-  if shissuContextMenu["mailAnswer"] then        
-    AddMenuItem(white .. _L("NEWMAIL"), function() SCENE_MANAGER:Show('mailSend') ZO_MailSendToField:SetText(GetMailSender(control.dataEntry.data.mailId)) end)         
-    AddMenuItem(white .. _L("ANSWER2"), function() 
-      SCENE_MANAGER:Show('mailSend') 
-      ZO_MailSendToField:SetText(GetMailSender(control.dataEntry.data.mailId)) 
-      ZO_MailSendSubjectField:SetText(_L("ANSWER_PREFIX") .. ": " .. control.dataEntry.data.subject) 
-    end) 
-        
-    AddMenuItem(white .. _L("FORWARD"), function() 
-      SCENE_MANAGER:Show('mailSend') 
-      ZO_MailSendSubjectField:SetText(_L("FORWARD_PREFIX") .. ": " .. control.dataEntry.data.subject) 
-      ZO_MailSendBodyField:SetText(ZO_MailInboxMessageBody:GetText()) 
-    end)    
-    
-    AddMenuItem(white .. _L("DEL"), function() 
+
+  if shissuContextMenu["mailAnswer"] then
+    AddMenuItem(white .. _L("NEWMAIL"), function() SCENE_MANAGER:Show('mailSend') ZO_MailSendToField:SetText(GetMailSender(control.dataEntry.data.mailId)) end)
+    AddMenuItem(white .. _L("ANSWER2"), function()
+      SCENE_MANAGER:Show('mailSend')
+      ZO_MailSendToField:SetText(GetMailSender(control.dataEntry.data.mailId))
+      ZO_MailSendSubjectField:SetText(_L("ANSWER_PREFIX") .. ": " .. control.dataEntry.data.subject)
+    end)
+
+    AddMenuItem(white .. _L("FORWARD"), function()
+      SCENE_MANAGER:Show('mailSend')
+      ZO_MailSendSubjectField:SetText(_L("FORWARD_PREFIX") .. ": " .. control.dataEntry.data.subject)
+      ZO_MailSendBodyField:SetText(ZO_MailInboxMessageBody:GetText())
+    end)
+
+    AddMenuItem(white .. _L("DEL"), function()
       DeleteMail(control.dataEntry.data.mailId, control.dataEntry.data.confirmedDelete)
       MAIL_INBOX:RefreshData()
-    end)    
+    end)
   end
-  
-  if shissuContextMenu["mailInvite"] then 
-    _addon.guildInvite(GetMailSender(control.dataEntry.data.mailId)) 
-  end 
-  
+
+  if shissuContextMenu["mailInvite"] then
+    _addon.guildInvite(GetMailSender(control.dataEntry.data.mailId))
+  end
+
   ShowMenu()
 end
 
@@ -145,13 +145,13 @@ end
 -- Original Version Date: 01.09.2015
 function _addon.GuildRosterRow_OnMouseUp(self, control, button, upInside)
   local data = ZO_ScrollList_GetData(control)
-  
+
   data.characterName = string.gsub(data.characterName, white, "")
   ZOS_GUILD_ROSTER_KEYBOARD(self, control, button, upInside)
 
   if (button ~= MOUSE_BUTTON_INDEX_RIGHT --[[and not upInside]]) then return end
-  
-  if data then 
+
+  if data then
     if (shissuRoster) then
       if (shissuRoster["colNote"]) or shissuContextMenu["guild"] then
         _addon.contextHead(1, self:ShowMenu(control))
@@ -161,9 +161,9 @@ function _addon.GuildRosterRow_OnMouseUp(self, control, button, upInside)
     end
 
     if shissuContextMenu["guild"] then
-      _addon.guildInvite(data.displayName) 
+      _addon.guildInvite(data.displayName)
     end
-    
+
     -- Persönliche Notizen
     _addon.persNote(data)
 
@@ -175,22 +175,22 @@ end
 function _addon.persNote(data)
   if (shissuRoster) then
       if (shissuRoster["colNote"]) then
-        AddMenuItem(white .. _L("NOTE"), function(self) 
+        AddMenuItem(white .. _L("NOTE"), function(self)
           zo_callLater(function()
             local guildId = GUILD_ROSTER_MANAGER:GetGuildId()
             local notes = ""
             local displayName = data.displayName
 
-            if shissuRoster["PersonalNote"][guildId] == nil then 
+            if shissuRoster["PersonalNote"][guildId] == nil then
               shissuRoster["PersonalNote"][guildId] = {}
             end
-                          
-            if shissuRoster["PersonalNote"][guildId][displayName] == nil then 
+
+            if shissuRoster["PersonalNote"][guildId][displayName] == nil then
               notes = ""
             else
               notes = shissuRoster["PersonalNote"][guildId][displayName]
-            end     
-       
+            end
+
             ZO_Dialogs_ShowDialog("EDIT_NOTE", {displayName = data.displayName, note = notes, changedCallback = _addon.personalNoteChange})
           end, 50)
         end)
@@ -200,45 +200,45 @@ end
 
 function _addon.personalNoteChange(displayName, note)
   local guildId = GUILD_ROSTER_MANAGER:GetGuildId()
-   
+
   if guildId == nil then return false end
   if displayName == nil then return false end
-  
+
   -- Variablen erstellen, falls nicht vorhanden, und danach abspeichern
   if shissuRoster["PersonalNote"][guildId] == nil then shissuRoster["PersonalNote"][guildId] = {} end
   if shissuRoster["PersonalNote"][guildId][displayName] ~= nil then shissuRoster["PersonalNote"][guildId][displayName] = {} end
 
-  if string.len(note) == 1 and note ~= " " then 
+  if string.len(note) == 1 and note ~= " " then
     note = " " .. note
   end
-  
+
   shissuRoster["PersonalNote"][guildId][displayName] = note
   shissuRoster["PersonalNote"][guildId][displayName] = note
   shissuRoster["PersonalNote"][guildId][displayName] = note
-    
-  GUILD_ROSTER_MANAGER:RefreshData()     
+
+  GUILD_ROSTER_MANAGER:RefreshData()
 end
-    
+
 function _addon.createSettingMenu()
-  local controls = _addon.controls 
-  
+  local controls = _addon.controls
+
   controls[#controls+1] = {
     type = "title",
     name = "Chat",
   }
-   
+
   controls[#controls+1] = {
-    type = "checkbox",                                                                            
+    type = "checkbox",
     name = _L("NEWMAIL"),
     getFunc = shissuContextMenu["chatNewMail"],
-    setFunc = function(_, value)     
+    setFunc = function(_, value)
       shissuContextMenu["chatNewMail"] = value
       _addon.chat()
     end,
   }
 
   controls[#controls+1] = {
-    type = "checkbox",                                                                            
+    type = "checkbox",
     name = _L("INVITE"),
     getFunc = shissuContextMenu["chatInvite"],
     setFunc = function(_, value)
@@ -253,7 +253,7 @@ function _addon.createSettingMenu()
   }
 
   controls[#controls+1] = {
-    type = "checkbox",                                                                            
+    type = "checkbox",
     name = _L("ANSWER"),
     getFunc = shissuContextMenu["mailAnswer"],
     setFunc = function(_, value)
@@ -261,9 +261,9 @@ function _addon.createSettingMenu()
       ZO_MailInboxRow_OnMouseUp = _addon.MailOnMouseUp
     end,
   }
-  
+
   controls[#controls+1] = {
-    type = "checkbox",                                                                            
+    type = "checkbox",
     name = _L("INVITE"),
     getFunc = shissuContextMenu["mailInvite"],
     setFunc = function(_, value)
@@ -278,29 +278,28 @@ function _addon.createSettingMenu()
   }
 
   controls[#controls+1] = {
-    type = "checkbox",                                                                            
+    type = "checkbox",
     name = _L("INVITE"),
     getFunc = shissuContextMenu["guild"],
     setFunc = function(_, value)
       shissuContextMenu["guild"] = value
-      GUILD_ROSTER_KEYBOARD.GuildRosterRow_OnMouseUp = _addon.GuildRosterRow_OnMouseUp 
+      GUILD_ROSTER_KEYBOARD.GuildRosterRow_OnMouseUp = _addon.GuildRosterRow_OnMouseUp
     end,
   }
 end
 
 function _addon.createGuildVars(saveVar, value)
   if shissuContextMenu[saveVar] == nil then shissuContextMenu[saveVar] = {} end
-  
-  if shissuContextMenu[saveVar] ~= nil then  
-    local numGuild = GetNumGuilds()
-    
-    for guildId=1, numGuild do
-      local guildName = GetGuildName(GetGuildId(guildId))
-      
+
+  if shissuContextMenu[saveVar] ~= nil then
+    for i=1, GetNumGuilds() do
+      local guildId = GetGuildId(i)
+      local guildName = GetGuildName(guildId)
+
       if shissuContextMenu[saveVar][guildName] == nil then shissuContextMenu[saveVar][guildName] = value end
     end
   end
-end 
+end
 
 function _addon.initialized()
   --d(_addon.formattedName .. " " .. _addon.Version)
@@ -313,7 +312,7 @@ function _addon.initialized()
     shissuContextMenu["chatInvite"] = true
     shissuContextMenu["mailAnswer"] = true
     shissuContextMenu["mailInvite"] = true
-  end 
+  end
 
   _addon.createSettingMenu()
 
@@ -323,29 +322,29 @@ function _addon.initialized()
     end
   end
 
-  if shissuContextMenu["chatNewMail"] or shissuContextMenu["chatInvite"] then 
-    _addon.chat() 
+  if shissuContextMenu["chatNewMail"] or shissuContextMenu["chatInvite"] then
+    _addon.chat()
   end
 
-  if (shissuContextMenu["mailAnswer"] or shissuContextMenu["mailInvite"]) then 
+  if (shissuContextMenu["mailAnswer"] or shissuContextMenu["mailInvite"]) then
     ZO_MailInboxRow_OnMouseUp = _addon.MailOnMouseUp
   end
 
-  GUILD_ROSTER_KEYBOARD.GuildRosterRow_OnMouseUp = _addon.GuildRosterRow_OnMouseUp              
+  GUILD_ROSTER_KEYBOARD.GuildRosterRow_OnMouseUp = _addon.GuildRosterRow_OnMouseUp
 end
 
 function _addon.EVENT_ADD_ON_LOADED(_, addOnName)
   if addOnName ~= _addon.Name then return end
-  
-  zo_callLater(function()              
+
+  zo_callLater(function()
     ShissuFramework._settings[_addon.Name] = {}
-    ShissuFramework._settings[_addon.Name].panel = _addon.panel                                       
-    ShissuFramework._settings[_addon.Name].controls = _addon.controls  
+    ShissuFramework._settings[_addon.Name].panel = _addon.panel
+    ShissuFramework._settings[_addon.Name].controls = _addon.controls
 
     ShissuFramework.initAddon(_addon.Name, _addon.initialized)
-  end, 150) 
-                                 
+  end, 150)
+
   EVENT_MANAGER:UnregisterForEvent(_addon.Name, EVENT_ADD_ON_LOADED)
-end    
+end
 
 EVENT_MANAGER:RegisterForEvent(_addon.Name, EVENT_ADD_ON_LOADED, _addon.EVENT_ADD_ON_LOADED)

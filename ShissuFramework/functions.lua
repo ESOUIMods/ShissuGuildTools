@@ -116,13 +116,6 @@ end
 function _func.getKioskTime(which)
   local additional = additional or 0
 
-  --[[
-  1: This fuction is not called using other parameters
-  such as additional or day. If that changes this will
-  not work
-  2: This function gets the ammount of seconds remaining
-  until the next trader flip.
-  ]]--
   local _, weekCutoff = GetGuildKioskCycleTimes()
 
   -- Gebots Ende

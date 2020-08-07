@@ -29,19 +29,19 @@ function ShissuMapLocations:New(...)
   return object
 end
 
-function ShissuMapLocations:Initialize(control) 
+function ShissuMapLocations:Initialize(control)
   ZO_MapLocations_Shared.Initialize(self, control)
-    
-  WORLD_MAP_SHISSU_LOCATIONS_FRAGMENT = ZO_FadeSceneFragment:New(control)     
-     
+
+  WORLD_MAP_SHISSU_LOCATIONS_FRAGMENT = ZO_FadeSceneFragment:New(control)
+
   local sgtButtonData = {
     normal = "ShissuFramework/textures/button_sgt1.dds",
     pressed = "ShissuFramework/textures/button_sgt1.dds",
-    highlight = "ShissuFramework/textures/button_sgt2.dds", 
+    highlight = "ShissuFramework/textures/button_sgt2.dds",
   }
-    
-  WORLD_MAP_INFO.modeBar:Add("Teleporter", { WORLD_MAP_SHISSU_LOCATIONS_FRAGMENT }, sgtButtonData)    
-  
+
+  WORLD_MAP_INFO.modeBar:Add("Teleporter", { WORLD_MAP_SHISSU_LOCATIONS_FRAGMENT }, sgtButtonData)
+
   ShissuMapLocationsVersion:SetText(_addon.formattedName .. " " .. _addon.Version)
 end
 
@@ -50,7 +50,7 @@ function ShissuMapLocations:InitializeList(control)
 end
 
 function ShissuMapLocations:UpdateSelectedMap()
-  self.selectedMapIndex = GetCurrentMapIndex()            
+  self.selectedMapIndex = GetCurrentMapIndex()
   ZO_ScrollList_RefreshVisible(self.list)
 end
 
@@ -61,7 +61,7 @@ end
 
 function _addon.core.sortTable(list)
   if (list == nil) then return false end
-  
+
   local list = list
   local numEntrys = #list
   local sortedTitle = {}
@@ -70,23 +70,23 @@ function _addon.core.sortTable(list)
   for i = 1, numEntrys do
     table.insert(sortedTitle, i, list[i].locationName .. "**shissu" .. i)
   end
-  
+
   table.sort(sortedTitle)
-  
+
   for i = 1, numEntrys do
     local length = string.len(sortedTitle[i])
     local number = string.sub(sortedTitle[i], string.find(sortedTitle[i], "**shissu"), length)
-    
+
     number = string.gsub(number, "**shissu", "")
     number = string.gsub(number, " ", "")
     number = tonumber(number)
-    
+
     sortedData[i] = {}
     sortedData[i].locationName = list[number].locationName
     sortedData[i].description = list[number].description
     sortedData[i].player = list[number].player
     sortedData[i].index = list[number].index
-  end  
+  end
 
   return sortedData
 end
@@ -95,23 +95,23 @@ function ShissuMapLocations:BuildLocationList()
   ZO_ScrollList_AddDataType(self.list, LOCATION_DATA, "ShissuMapLocationsRow", 23, function(control, data) self:SetupLocation(control, data) end)
 
   local scrollData = ZO_ScrollList_GetDataList(self.list)
-  local ownName = GetDisplayName()   
+  local ownName = GetDisplayName()
   local availableZones = {}
- 
-  local availableLocations = {} 
- 
-  for guildId = 1, GetNumGuilds() do
-    local guildId = GetGuildId(guildId)
-    
+
+  local availableLocations = {}
+
+  for i = 1, GetNumGuilds() do
+    local guildId = GetGuildId(i)
+
     for memberId = 1, GetNumGuildMembers(guildId) do
       local _, _, memberlocationName = GetGuildMemberCharacterInfo(guildId, memberId)
       local memberName, _, _ , memberStatus = GetGuildMemberInfo(guildId, memberId)
-      
+
       local foundZone = 0
-      
-      for zoneId, zoneData in pairs(availableZones) do 
+
+      for zoneId, zoneData in pairs(availableZones) do
         if (zoneData["locationName"]  == memberlocationName) then
-          foundZone = 1 
+          foundZone = 1
           break
         end
       end
@@ -122,7 +122,7 @@ function ShissuMapLocations:BuildLocationList()
             break
           end
         end
-        
+
         if mapId == GetNumMaps() then foundZone = 1 end
       end
 
@@ -130,7 +130,7 @@ function ShissuMapLocations:BuildLocationList()
 
       -- Cyrodiil ID=14
       -- Kaiserstadt ID=26
-      if (foundZone == 0 and memberStatus ~= 4) then 
+      if (foundZone == 0 and memberStatus ~= 4) then
         table.insert(availableZones, {
           ["locationName"] = memberlocationName,
           ["description"]  = memberName,
@@ -140,7 +140,7 @@ function ShissuMapLocations:BuildLocationList()
       end
     end
   end
-  
+
   availableZones = _addon.core.sortTable(availableZones)
 
   for i, entry in ipairs(availableZones) do
@@ -155,7 +155,7 @@ function ShissuMapLocations:SetupLocation(control, data)
   local locationLabel = control:GetNamedChild("Location")
 
   locationLabel:SetText(white .. cutStringAtLetter(data.locationName, "^"))
-  locationLabel:SetSelected(self.selectedMapIndex == data.index)    
+  locationLabel:SetSelected(self.selectedMapIndex == data.index)
   locationLabel:SetEnabled(not listDisabled)
   locationLabel:SetMouseEnabled(not listDisabled)
 end
@@ -166,18 +166,18 @@ function ShissuMapLocations:RowLocation_OnMouseDown(label, button)
   end
 end
 
-function ShissuMapLocations:RowLocation_OnMouseUp(label, button, upInside)  
+function ShissuMapLocations:RowLocation_OnMouseUp(label, button, upInside)
   local data = ZO_ScrollList_GetData(label:GetParent())
 
   if (data.player == 1) then
     SCENE_MANAGER:Hide("worldMap")
-    JumpToGuildMember(data.description) 
+    JumpToGuildMember(data.description)
   end
 end
 
 function ShissuTeleporterMapRowLocation_OnMouseEnter(label)
   local data = ZO_ScrollList_GetData(label:GetParent())
-  
+
   if (data.description) then
     ZO_Tooltips_ShowTextTooltip(self, TOPRIGHT, white .. data.description)
   end
@@ -198,17 +198,17 @@ end
 function _addon.initialized()
   --d(_addon.formattedName .. " " .. _addon.Version)
 
-  local control = GetControl("ShissuMapLocations") 
+  local control = GetControl("ShissuMapLocations")
   WORLD_SHISSU_MAP_LOCATIONS = ShissuMapLocations:New(control)
 end
 
 function _addon.EVENT_ADD_ON_LOADED(_, addOnName)
   if addOnName ~= _addon.Name then return end
-   
-  zo_callLater(function()               
+
+  zo_callLater(function()
     ShissuFramework.initAddon(_addon.Name, _addon.initialized)
-  end, 150) 
-                                 
+  end, 150)
+
   EVENT_MANAGER:UnregisterForEvent(_addon.Name, EVENT_ADD_ON_LOADED)
 end
 
