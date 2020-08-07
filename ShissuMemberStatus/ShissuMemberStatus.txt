@@ -6,9 +6,11 @@
 
 ; Author: @Shissu on EU-Server!
 
-## Title: |c82FA58Shissu|ceeeeee's MemberStatus|r v1.3.1
+## Title: |c82FA58Shissu|ceeeeee's MemberStatus|r v1.5.0
 ## APIVersion: 100031 100032
 ## Author: |c82FA58@Shissu|r [EU-SERVER]
+## AddOnVersion: 1.5.0
+## Version: 150
 ## Description: None
 ## SavedVariables: shissuMemberStatus
 ## DependsOn: ShissuFramework

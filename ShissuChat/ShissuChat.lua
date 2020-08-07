@@ -1,7 +1,7 @@
 ﻿-- Shissu Guild Tools Addon
 -- ShissuChat
 --
--- Version: v2.2.1
+-- Version: v2.3.0
 -- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
@@ -15,7 +15,7 @@ local cutStringAtLetter = ShissuFramework["func"].cutStringAtLetter
 
 local _addon = {}
 _addon.Name = "ShissuChat"
-_addon.Version = "2.2.1"
+_addon.Version = "2.3.0"
 _addon.formattedName	= stdColor .. "Shissu" .. white .. "'s Chat"
 _addon.enabled = false
 _addon.LINK = "shissu"

@@ -6,9 +6,11 @@
 
 ; Author: @Shissu on EU-Server!
 
-## Title: |c82FA58Shissu|ceeeeee's Guild Tools|r v3.5.1
+## Title: |c82FA58Shissu|ceeeeee's Guild Tools|r v3.6.0
 ## APIVersion: 100031 100032
 ## Author: |c82FA58@Shissu|r [EU-SERVER]
+## AddOnVersion:3.6.0
+## Version: 360
 ## SavedVariables: shissuGT
 ## DependsOn: ShissuFramework
 

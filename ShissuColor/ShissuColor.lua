@@ -1,7 +1,7 @@
 -- Shissu Guild Tools Addon
 -- ShissuColor
 --
--- Version: v1.1.0
+-- Version: v1.5.0
 -- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
@@ -14,12 +14,12 @@ local setPanel = ShissuFramework["setPanel"]
 
 local _addon = {}
 _addon.Name	= "ShissuColor"
-_addon.Version = "1.1.0"
+_addon.Version = "1.5.0"
 _addon.formattedName = stdColor .. "Shissu" .. white .. "'s Color"
 _addon.controls = {}
 
 local _L = ShissuFramework["func"]._L(_addon.Name)
- 
+
 _addon.panel = setPanel(_L("TITLE"), _addon.formattedName, _addon.Version)
 
 function _addon.createSettingMenu()
@@ -32,46 +32,46 @@ function _addon.createSettingMenu()
   end
 
   local controls = ShissuFramework._settings[_addon.Name].controls
-  
+
   controls[#controls+1] = {
-    type = "description", 
+    type = "description",
     text = _L("DESC") .. ":",
   }
-  
+
   controls[#controls+1] = {
-    type = "description", 
-    text = stdColor .. "- " .. white .. _L("NOTE") .. "\n" .. 
+    type = "description",
+    text = stdColor .. "- " .. white .. _L("NOTE") .. "\n" ..
            stdColor .. "- " .. white .. _L("NOTE2") .. "\n" ..
            stdColor .. "- " .. white .. _L("MOTD") ..  "\n" ..
            stdColor .. "- " .. white .. "...",
   }
- 
+
   for i = 1, 5 do
     controls[#controls+1] = {
-      type = "colorpicker", 
+      type = "colorpicker",
       name = _L("STD") .. " " .. i,
-      getFunc = shissuColor["c" .. i], 
-      setFunc = function (r, g, b, a)                                                                                                                                                                         
+      getFunc = shissuColor["c" .. i],
+      setFunc = function (r, g, b, a)
         shissuColor["c" .. i] = {r, g, b, a}
       end,
-    }    
+    }
   end
-end               
+end
 
 function _addon.EVENT_ADD_ON_LOADED(_, addOnName)
   if addOnName ~= _addon.Name then return end
 
   shissuColor = shissuColor or {}
-  
-  zo_callLater(function()         
+
+  zo_callLater(function()
     ShissuFramework._settings[_addon.Name] = {}
-    ShissuFramework._settings[_addon.Name].panel = _addon.panel                                       
-    ShissuFramework._settings[_addon.Name].controls = _addon.controls  
+    ShissuFramework._settings[_addon.Name].panel = _addon.panel
+    ShissuFramework._settings[_addon.Name].controls = _addon.controls
 
     ShissuFramework.initAddon(_addon.Name, _addon.createSettingMenu)
-  end, 150) 
-                                 
+  end, 150)
+
   EVENT_MANAGER:UnregisterForEvent(_addon.Name, EVENT_ADD_ON_LOADED)
-end  
+end
 
 EVENT_MANAGER:RegisterForEvent(_addon.Name, EVENT_ADD_ON_LOADED, _addon.EVENT_ADD_ON_LOADED)

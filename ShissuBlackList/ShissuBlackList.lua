@@ -1,7 +1,7 @@
 ﻿-- Shissu Guild Tools Addon
 -- ShissuBlackList
 --
--- Version: v1.4.0
+-- Version: v1.5.0
 -- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
@@ -14,7 +14,7 @@ local red = _globals["red"]
 
 local _addon = {}
 _addon.Name = "ShissuBlackList"
-_addon.Version = "1.4.0"
+_addon.Version = "1.5.0"
 _addon.formatedName = stdColor .. "Shissu" .. white .. "'s BlackList"
 _addon.selectCategory = "general"
 

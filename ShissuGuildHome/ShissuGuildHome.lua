@@ -1,7 +1,7 @@
 ﻿-- Shissu Guild Tools Addon
 -- ShissuGuildHome
 --
--- Version: v1.3.2
+-- Version: v1.5.0
 -- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
@@ -25,7 +25,7 @@ local frameClose = 0
 local _addon = {}
 _addon.Name	= "ShissuGuildHome"
 _addon.formattedName	= stdColor .. "Shissu" .. white .. "'s GuildHome"
-_addon.Version = "1.3.2"
+_addon.Version = "1.5.0"
 _addon.buttons = {}
 
 _addon.settings = {

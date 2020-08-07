@@ -9,4 +9,6 @@
 ## Title: |c82FA58Shissu|ceeeeee's ShissuSuiteManager|r
 ## APIVersion: 100031 100032
 ## Author: |c82FA58@Shissu|r [EU-SERVER]
-## Description: None
+## Description: This mod does nothing and can be disabled.
+## AddOnVersion: 1.5.0
+## Version: 150

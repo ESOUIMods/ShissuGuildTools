@@ -1,7 +1,7 @@
 ﻿-- Shissu Guild Tools Addon
 -- ShissuContextMenu
 --
--- Version: v1.2.2
+-- Version: v1.5.0
 -- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
@@ -19,7 +19,7 @@ local setPanel = ShissuFramework["setPanel"]
 
 local _addon = {}
 _addon.Name	= "ShissuContextMenu"
-_addon.Version = "1.2.1"
+_addon.Version = "1.5.0"
 _addon.formattedName = stdColor .. "Shissu" .. white .. "'s Contextmenu"
 
 local _L = ShissuFramework["func"]._L(_addon.Name)

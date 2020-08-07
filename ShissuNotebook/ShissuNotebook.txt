@@ -6,9 +6,11 @@
 
 ; Author: @Shissu on EU-Server!
 
-## Title: |c82FA58Shissu's|r|ceeeeee Notebook|r v2.5.1
+## Title: |c82FA58Shissu's|r|ceeeeee Notebook|r v2.6.0
 ## APIVersion: 100031 100032
 ## Author: |c82FA58@Shissu|r [EU-SERVER]
+## AddOnVersion: 2.6.0
+## Version: 260
 ## Description: None
 ## SavedVariables: shissuNotebook
 ## DependsOn: ShissuFramework ShissuColor

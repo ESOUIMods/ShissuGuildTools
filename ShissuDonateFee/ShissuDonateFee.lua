@@ -7,7 +7,7 @@ local goldSymbol = _globals["goldSymbol"]
 
 local _addon = {}
 _addon.Name = "ShissuDonateFee"
-_addon.Version = "1.1.0"
+_addon.Version = "1.5.0"
 _addon.formattedName	= stdColor .. "Shissu" .. white .. "'s Donate/Fee"
 
 local _L = ShissuFramework["func"]._L(_addon.Name)

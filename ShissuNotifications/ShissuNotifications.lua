@@ -1,7 +1,7 @@
 ﻿-- Shissu Guild Tools Addon
 -- ShissuNotifications
 --
--- Version: v2.2.0
+-- Version: v2.6.0
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
 
@@ -16,7 +16,7 @@ local setPanel = ShissuFramework["setPanel"]
 
 local _addon = {}
 _addon.Name	= "ShissuNotifications"
-_addon.Version = "2.2.0"
+_addon.Version = "2.6.0"
 _addon.formattedName	= stdColor .. "Shissu" .. white .. "'s Notifications"
 
 _addon.settings = {

@@ -1,7 +1,7 @@
 -- Shissu Guild Tools Addon
 -- ShissuAutoAFK
 --
--- Version: v1.4.0
+-- Version: v1.5.0
 -- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
@@ -14,7 +14,7 @@ local setPanel = ShissuFramework["setPanel"]
 
 local _addon = {}
 _addon.Name	= "ShissuAutoAFK"
-_addon.Version = "1.4.0"
+_addon.Version = "1.5.0"
 _addon.formattedName = stdColor .. "Shissu" .. white .. "'s AutoAFK"
 _addon.controls = {}
 _addon.settings = {
@@ -24,7 +24,7 @@ _addon.settings = {
   ["reminderOffline"] = true,
   ["reminderOfflineTime"] = 1,
   ["time"] = 20,
-}              
+}
 
 local _L = ShissuFramework["func"]._L(_addon.Name)
 
@@ -48,7 +48,7 @@ end
 function _addon.isAutoAFK()
   if ( shissuAutoAFK["enabled"] ) then
     EVENT_MANAGER:UnregisterForUpdate("ShissuGT_AutoAFK")
-    local currentStatus = GetPlayerStatus() 
+    local currentStatus = GetPlayerStatus()
 
     if currentStatus == _online or currentStatus == _dnd then
       _addon.autoAFK()
@@ -59,10 +59,10 @@ end
 -- Bewegungen in der UI / Bewegung im Sichtfeld?
 function _addon.EVENT_UI_MOVEMENT(eventCode)
   _addon.setOnline()
-  
+
   local currentStatus = GetPlayerStatus()
 
-  if (shissuAutoAFK["enabled"] and currentStatus == _away) then 
+  if (shissuAutoAFK["enabled"] and currentStatus == _away) then
     SelectPlayerStatus(_cache)
     _addon.autoAFK()
   end
@@ -70,15 +70,15 @@ end
 
 function _addon.autoAFK()
   local _minute = shissuAutoAFK["time"] or 1
-  
+
   EVENT_MANAGER:RegisterForUpdate("ShissuGT_AutoAFK", _minute * 60 * 1000 , function()
     local currentStatus = GetPlayerStatus()
-    local notMoving = not IsPlayerMoving() 
+    local notMoving = not IsPlayerMoving()
 
     if notMoving and (currentStatus == _online or currentStatus == _dnd) then
       EVENT_MANAGER:UnregisterForUpdate("ShissuGT_AutoAFK")
       SelectPlayerStatus(_away)
-    end           
+    end
   end)
 end
 
@@ -88,42 +88,42 @@ function _addon.EVENT_PLAYER_STATUS_CHANGED(eventCode, oldStatus, newStatus)
 
   if ( shissuAutoAFK["reminderOffline"] and newStatus == _offline) then
     _addon.reminderOffline()
-  end                        
+  end
 
   if shissuAutoAFK["enabled"] then
     if newStatus == _away then
       EVENT_MANAGER:RegisterForUpdate("ShissuGT_AutoAFK", 500, function()
         local currentStatus = GetPlayerStatus()
-        local moving = not IsPlayerMoving()     
-        
+        local moving = not IsPlayerMoving()
+
         if IsPlayerMoving() and currentStatus == _away then
           SelectPlayerStatus(_cache)
           EVENT_MANAGER:UnregisterForUpdate("ShissuGT_AutoAFK")
-        end         
+        end
       end)
-    --end                                                   
+    --end
     elseif newStatus == _online or newStatus == _dnd then
       _cache = newStatus
     end
-    
+
     _addon.autoAFK()
-  end     
+  end
 end
 
 -- Automatische Erinnerung alle shissuAutoAFK["reminderOfflineTime"]-Minuten
 function _addon.reminderOffline()
   local _minute = shissuAutoAFK["reminderOfflineTime"]
-  local currentStatus = GetPlayerStatus() 
-  
+  local currentStatus = GetPlayerStatus()
+
   if ( currentStatus == _offline ) then
     EVENT_MANAGER:RegisterForUpdate("SGT_AutoAFK_Reminder", _minute * 60 * 1000 , function()
-      local currentStatus = GetPlayerStatus() 
-      
+      local currentStatus = GetPlayerStatus()
+
       if ( currentStatus == _offline ) then
         d(_offlineText)
         _addon.setOnline()
-      end 
-    
+      end
+
       if ( shissuAutoAFK["reminderOffline"] == false ) then
         EVENT_MANAGER:UnregisterForUpdate("SGT_AutoAFK_Reminder")
       end
@@ -135,12 +135,12 @@ function _addon.createSettingMenu()
   local controls = ShissuFramework._settings[_addon.Name].controls
 
   controls[#controls+1] = {
-    type = "title", 
+    type = "title",
     name = _L("TITLE"),
   }
-  
+
   controls[#controls+1] = {
-    type = "checkbox", 
+    type = "checkbox",
     name = _L("AUTOAFK"),
     getFunc = shissuAutoAFK["enabled"],
     setFunc = function(_, value)
@@ -150,7 +150,7 @@ function _addon.createSettingMenu()
   }
 
   controls[#controls+1] = {
-    type = "slider", 
+    type = "slider",
     name = _L("AUTOAFK") .. " " .. _L("MINUTE"),
     minimum = 1,
     maximum = 120,
@@ -160,30 +160,30 @@ function _addon.createSettingMenu()
       shissuAutoAFK["time"] = value
       _addon.isAutoAFK()
     end,
-  }  
-                    
+  }
+
   controls[#controls+1] = {
-    type = "checkbox", 
+    type = "checkbox",
     name = _L("AUTOONLINE"),
     getFunc = shissuAutoAFK["autoOnline"],
     setFunc = function(_, value)
       shissuAutoAFK["autoOnline"] = value
       if (value) then _addon.reminderOffline() end
     end,
-  }   
+  }
 
   controls[#controls+1] = {
-    type = "checkbox", 
+    type = "checkbox",
     name = _L("REMINDER"),
     getFunc = shissuAutoAFK["reminderOffline"],
     setFunc = function(_, value)
       shissuAutoAFK["reminderOffline"] = value
       if (value) then _addon.setOnline() end
     end,
-  }   
-  
+  }
+
   controls[#controls+1] = {
-    type = "slider", 
+    type = "slider",
     name = _L("REMINDEROFFLINE").. " " .. _L("MINUTE"),
     minimum = 1,
     maximum = 120,
@@ -191,41 +191,41 @@ function _addon.createSettingMenu()
     getFunc = shissuAutoAFK["reminderOfflineTime"],
     setFunc = function(value)
       shissuAutoAFK["reminderOfflineTime"] = value
-      
+
       if ( shissuAutoAFK["reminderOffline"] ) then
         EVENT_MANAGER:UnregisterForUpdate("SGT_AutoAFK_Reminder")
         _addon.reminderOffline()
       end
-      
+
     end,
-  }   
+  }
 end
-                     
+
 function _addon.initialized()
   --d(_addon.formattedName .. " " .. _addon.Version)
-  
+
   _addon.createSettingMenu()
-  
+
   EVENT_MANAGER:RegisterForEvent(_addon.Name, EVENT_NEW_MOVEMENT_IN_UI_MODE, _addon.EVENT_UI_MOVEMENT)
   EVENT_MANAGER:RegisterForEvent(_addon.Name, EVENT_RETICLE_HIDDEN_UPDATE, _addon.EVENT_UI_MOVEMENT)
   EVENT_MANAGER:RegisterForEvent(_addon.Name, EVENT_PLAYER_STATUS_CHANGED, _addon.EVENT_PLAYER_STATUS_CHANGED)
 
-  _addon.isAutoAFK()  
-  
+  _addon.isAutoAFK()
+
   if ( shissuAutoAFK["reminderOffline"] ) then
     if ( currentStatus == _offline ) then
       d(_offlineText)
-    end 
-    
+    end
+
     _addon.reminderOffline()
-  end      
+  end
 end
 
 function _addon.EVENT_ADD_ON_LOADED(_, addOnName)
   if addOnName ~= _addon.Name then return end
 
   shissuAutoAFK = shissuAutoAFK or {}
-  
+
   if shissuAutoAFK["enabled"] == nil then
     shissuAutoAFK["enabled"] = true
     shissuAutoAFK["autoOnline"] = true
@@ -233,17 +233,17 @@ function _addon.EVENT_ADD_ON_LOADED(_, addOnName)
     shissuAutoAFK["reminderOffline"] = true
     shissuAutoAFK["reminderOfflineTime"] = 1
     shissuAutoAFK["time"] = 20
-  end 
+  end
 
-  zo_callLater(function()         
+  zo_callLater(function()
     ShissuFramework._settings[_addon.Name] = {}
-    ShissuFramework._settings[_addon.Name].panel = _addon.panel                                       
-    ShissuFramework._settings[_addon.Name].controls = _addon.controls  
+    ShissuFramework._settings[_addon.Name].panel = _addon.panel
+    ShissuFramework._settings[_addon.Name].controls = _addon.controls
 
     ShissuFramework.initAddon(_addon.Name, _addon.initialized)
-  end, 50) 
-                                 
+  end, 50)
+
   EVENT_MANAGER:UnregisterForEvent(_addon.Name, EVENT_ADD_ON_LOADED)
-end  
+end
 
 EVENT_MANAGER:RegisterForEvent(_addon.Name, EVENT_ADD_ON_LOADED, _addon.EVENT_ADD_ON_LOADED)
