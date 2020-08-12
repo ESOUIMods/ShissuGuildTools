@@ -74,26 +74,57 @@ ESO_Dialogs["SGT_RADIOBUTTONS"] = {
   }
 }
 
-local function days_last_kiosk()
+-- 1597777200 Aug 18 3PM
+-- 1597172400 Aug 11 3PM
+_globals.KIOSK_INDEX_THISWEEK = 1
+_globals.KIOSK_INDEX_LASTWEEK = 2
+_globals.KIOSK_INDEX_PRIORWEEK = 3
+local function days_last_kiosk(weekIndex)
+  local currentTime = GetTimeStamp()
   local days_last_kiosk
-  if GetTimeStamp() > 1597172400 then -- proposed flip begining Tuesday Aug 11
-    days_last_kiosk = 604800 -- 7 days
-  else
-    days_last_kiosk = 777600 -- 9 days
+  --KIOSK_INDEX_THISWEEK
+  --KIOSK_INDEX_LASTWEEK
+  --KIOSK_INDEX_PRIORWEEK
+
+  -- between 1597172400 Aug 11 3PM and 1597777200 Aug 18 3PM
+  if weekIndex == _globals.KIOSK_INDEX_PRIORWEEK and (currentTime > 1597172400 and currentTime < 1597777200) then
+    --MasterMerchant.dm("Debug", "KIOSK_INDEX_PRIORWEEK 1597172400 1597777200 Seven Day Week")
+    days_last_kiosk = 604800 -- 7 days if after Aug 11
   end
-  if GetWorldName() == 'EU Megaserver' then
-    days_last_kiosk = days_last_kiosk - (3600 * 5)
-  else
-    days_last_kiosk = days_last_kiosk - (3600 * 6)
+  -- between 1597172400 Aug 11 3PM and 1597777200 Aug 18 3PM
+  if weekIndex == _globals.KIOSK_INDEX_LASTWEEK and (currentTime > 1597172400 and currentTime < 1597777200) then
+    --MasterMerchant.dm("Debug", "MM_INDEX_LASTWEEK 1597172400 1597777200 Nine Day Week")
+    days_last_kiosk = 777600 -- 9 days 1 Hour to reflect old cuttof of 6:00 PM Pacific
+    if GetWorldName() == 'EU Megaserver' then
+      days_last_kiosk = days_last_kiosk - (3600 * 5)
+    else
+      days_last_kiosk = days_last_kiosk - (3600 * 6)
+    end
   end
+  --
+  if weekIndex == _globals.KIOSK_INDEX_THISWEEK and (currentTime > 1597172400 and currentTime < 1597777200) then -- 1597777200 Aug 18 3PM
+    --MasterMerchant.dm("Debug", "KIOSK_INDEX_THISWEEK Seven Day Week Agu 11 to 18")
+    days_last_kiosk = 604800 -- 7 days back after Aug 18
+  end
+
+  -- for all dates after Aug 18
+  if weekIndex == _globals.KIOSK_INDEX_PRIORWEEK and currentTime > 1597777200 then
+    --MasterMerchant.dm("Debug", "Regular Prior Week")
+    days_last_kiosk = 604800 -- 7 days if after Aug 11
+  end
+  if weekIndex == _globals.KIOSK_INDEX_THISWEEK and currentTime > 1597777200 then -- 1597777200 Aug 18 3PM
+    --MasterMerchant.dm("Debug", "Regular Week")
+    days_last_kiosk = 604800 -- 7 days back after Aug 18
+  end
+
   return days_last_kiosk
 end
 
 local _, weekCutoff = GetGuildKioskCycleTimes()
 _globals.start_of_day = GetTimeStamp() - GetSecondsSinceMidnight() -- Today
 _globals.yesterday = _globals.start_of_day - 86400 -- one day in seconds, yesterday
-_globals.next_kiosk_change = weekCutoff -- the up comming change in the future
-_globals.last_kiosk_change = weekCutoff - days_last_kiosk() -- since last kiosk flip, this week
-_globals.previous_kiosk_change = _globals.last_kiosk_change - 604800 -- seven days in seconds, the previous kiosk flip, last week
+_globals.next_kiosk_change = weekCutoff - days_last_kiosk(_globals.KIOSK_INDEX_THISWEEK) -- the up comming change in the future
+_globals.last_kiosk_change = weekCutoff - days_last_kiosk(_globals.KIOSK_INDEX_LASTWEEK) -- since last kiosk flip, this week
+_globals.previous_kiosk_change = weekCutoff - days_last_kiosk(_globals.KIOSK_INDEX_PRIORWEEK) -- seven days in seconds, the previous kiosk flip, last week
 
 ShissuFramework["globals"] = _globals
