@@ -2,7 +2,7 @@ local _addon = {}
 
 _addon.Name = "ShissuFramework"
 _addon.formattedName	= "|c82FA58Shissu|ceeeeee's Framework"
-_addon.Version = "1.5.0"
+_addon.Version = "1.6.0"
 
 _addon._settings = {}
 sf_internal = {}

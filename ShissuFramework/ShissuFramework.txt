@@ -1,8 +1,8 @@
-## Title: |c82FA58Shissu|ceeeeee's Framework|r 1.5.0
+## Title: |c82FA58Shissu|ceeeeee's Framework|r 1.6.0
 ## APIVersion: 100031 100032
 ## Author: |c82FA58@Shissu|r [EU-SERVER]
-## AddOnVersion: 1.5.0
-## Version: 150
+## AddOnVersion: 1.6.0
+## Version: 160
 ## SavedVariables: shissuFramework
 ## OptionalDependsOn: LibDebugLogger>=196 DebugLogViewer
 
