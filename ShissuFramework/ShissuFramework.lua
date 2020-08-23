@@ -6,11 +6,17 @@ _addon.Version = "1.6.0"
 
 _addon._settings = {}
 sf_internal = {}
+local logger
+local SDLV
 
-local logger = LibDebugLogger.Create(_addon.Name)
-_addon.logger = logger
-local SDLV = DebugLogViewer
-if SDLV then sf_internal.viewer = true else sf_internal.viewer = false end
+if LibDebugLogger then
+  logger = LibDebugLogger.Create(_addon.Name)
+  _addon.logger = logger
+end
+if DebugLogViewer then
+  SDLV = DebugLogViewer
+  if SDLV then sf_internal.viewer = true else sf_internal.viewer = false end
+end
 
 local function create_log(log_type, log_content)
   if log_type == "Debug" then
