@@ -1,7 +1,7 @@
 ﻿-- Shissu Guild Tools Addon
 -- ShissuContextMenu
 --
--- Version: v1.5.0
+-- Version: v1.5.1
 -- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
@@ -19,7 +19,7 @@ local setPanel = ShissuFramework["setPanel"]
 
 local _addon = {}
 _addon.Name	= "ShissuContextMenu"
-_addon.Version = "1.5.0"
+_addon.Version = "1.5.1"
 _addon.formattedName = stdColor .. "Shissu" .. white .. "'s Contextmenu"
 
 local _L = ShissuFramework["func"]._L(_addon.Name)
@@ -63,7 +63,7 @@ function _addon.guildInvite(displayName)
                     local chatMessage = string.gsub(chatMessageArray[rnd], "%%1", displayName)
                     chatMessage = string.gsub(chatMessage, "%%2", GuildName)
 
-                    local text = "/g" .. i .. " " .. chatMessage
+                    local text = "/g" .. guildId .. " " .. chatMessage
                     ZO_ChatWindowTextEntryEditBox:SetText(text)
                 end
               end
@@ -180,6 +180,10 @@ function _addon.persNote(data)
             local guildId = GUILD_ROSTER_MANAGER:GetGuildId()
             local notes = ""
             local displayName = data.displayName
+
+            if shissuRoster["PersonalNote"] == nil then
+              shissuRoster["PersonalNote"] = {}
+            end
 
             if shissuRoster["PersonalNote"][guildId] == nil then
               shissuRoster["PersonalNote"][guildId] = {}

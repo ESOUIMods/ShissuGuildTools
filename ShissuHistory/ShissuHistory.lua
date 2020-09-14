@@ -1,7 +1,7 @@
 ﻿-- Shissu Guild Tools Addon
 -- ShissuHistory
 --
--- Version: v1.5.0
+-- Version: v1.5.1
 -- Last Update: 24.05.2019
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
@@ -31,7 +31,7 @@ local SetupGuildEvent_Orig = GUILD_HISTORY.SetupGuildEvent
 
 local _addon = {}
 _addon.Name	= "ShissuHistory"
-_addon.Version = "1.5.0"
+_addon.Version = "1.5.1"
 _addon.formattedName = stdColor .. "Shissu" .. white .. "'s History"
 
 local _cache = {}
@@ -429,13 +429,35 @@ function _addon.editBox()
 end
 
 function _addon.pageFilter()
+  local historyGoldAnchorX
+  local historyGoldAnchorY
+  local historyItemAnchorX
+  local historyItemAnchorY
+  local historyCountLabelX
+  if MasterMerchant then
+    historyGoldAnchorX = 460
+    historyGoldAnchorY = 10
+    historyItemAnchorX = 520
+    historyItemAnchorY = 10
+    historyCountLabelX = -170
+  else
+    historyGoldAnchorX = 640
+    historyGoldAnchorY = 35
+    historyItemAnchorX = 700
+    historyItemAnchorY = 35
+    historyCountLabelX = 8
+  end
   _ui.filterLabel = createLabel("SGT_HistoryFilterLabel", SGT_HistorySearchLabel, _L("STATUS"), {150, 30}, {135, 0}, false)
 
-  _ui.gold = _addon.createButton("SGT_History_Gold", "Gold", 640, 35)
-  _ui.item = _addon.createButton("SGT_History_Item", "Item", 700, 35)
+  _ui.gold = _addon.createButton("SGT_History_Gold", "Gold", historyGoldAnchorX, historyGoldAnchorY)
+  _ui.item = _addon.createButton("SGT_History_Item", "Item", historyItemAnchorX, historyItemAnchorY)
 
-  _ui.countLabel = createLabel("SGT_HistoryCountLabel", SGT_HistoryFilterLabel, _L("CHOICE"), {150, 30}, {8, 0}, false)
-  _ui.count = createZOButton("SGT_History_Count","", 150, 750, 30, ZO_GuildHistory)
+  _ui.countLabel = createLabel("SGT_HistoryCountLabel", SGT_HistoryFilterLabel, _L("CHOICE"), {150, 30}, {historyCountLabelX, 0}, false)
+  if MasterMerchant then
+    _ui.count = createZOButton("SGT_History_Count", "", 150, -25, 20, SGT_HistoryCountLabel)
+  else
+    _ui.count = createZOButton("SGT_History_Count","", 150, 750, 30, ZO_GuildHistory)
+  end
 end
 
 
@@ -523,7 +545,7 @@ function _addon.initialized()
  _addon.optionControls()
  _addon.refresh()
 
- zo_callLater(function() RequestMoreGuildHistoryCategoryEvents() end, 2000)
+ zo_callLater(function() RequestMoreGuildHistoryCategoryEvents() end, 3000)
 end
 
 function _addon.EVENT_ADD_ON_LOADED(_, addOnName)

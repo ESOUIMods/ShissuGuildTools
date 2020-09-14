@@ -144,7 +144,7 @@ function ShissuBlackList:Initialize(control)
 
   for i=1, numGuild do
     local guildId = GetGuildId(i)
-    local guildName = GetGuildName(GetGuildId(guildId))
+    local guildName = GetGuildName(guildId)
 
     local textControl = control:GetNamedChild("Guild" .. i)
     textControl:SetText(white .. guildName)
