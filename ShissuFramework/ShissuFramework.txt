@@ -1,5 +1,5 @@
 ## Title: |c82FA58Shissu|ceeeeee's Framework|r 1.6.0
-## APIVersion: 100031 100032
+## APIVersion: 101035 101036
 ## Author: |c82FA58@Shissu|r [EU-SERVER]
 ## AddOnVersion: 1.6.0
 ## Version: 160

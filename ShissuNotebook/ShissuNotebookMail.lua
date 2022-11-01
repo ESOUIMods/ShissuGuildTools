@@ -1040,7 +1040,7 @@ function _addon.mail()
     _mail.dropDownGuilds:AddItem(_mail.dropDownGuilds:CreateItemEntry(white .. guildName, _mail.optionSelected))
   end
 
-  --[[ investigate, the original code only checks the number of
+  --[[TODO: the original code only checks the number of
   guilds and then choose the first guild using GetGuildId(1)
   ]]--
   if (GetNumGuilds() > 0 ) then

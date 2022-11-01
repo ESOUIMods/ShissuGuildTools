@@ -46,6 +46,7 @@ end
 --  d("Diff: " .. mse - mss .. " ms")
 --end
 
+--[[TODO: Why is there a guild_id and guildId
 function _addon.removedMember(_, guild_id, accName)
   local mss = GetGameTimeMilliseconds()
   local memberId = -1
