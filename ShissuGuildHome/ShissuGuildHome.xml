@@ -3,7 +3,7 @@
 <GuiXml>
 	<Controls>	
 
- <TopLevelControl name="SGT_SharedRightBackgroundLef2t" mouseEnabled="true" movable="true" clampedToScreen="true" hidden="true">
+ <TopLevelControl name="SGT_SharedRightBackgroundLeft" mouseEnabled="true" movable="true" clampedToScreen="true" hidden="true">
       <Dimensions x="350" y="160" />
       <Anchor point="CENTER" offsetX="100" offsetY="100" />      
 	</TopLevelControl>

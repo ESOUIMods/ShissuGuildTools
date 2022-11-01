@@ -11,6 +11,13 @@
 --  Last Update: 17.12.2020
 --  Distribution without license is prohibited!
 
+local _addon = {}
+_addon.Name = "ShissuFramework"
+_addon.Version = "1.6.0"
+_addon._settings = {}
+_addon.functions = {}
+_addon.templates = {}
+
 sf_internal = {}
 local logger
 local SDLV
@@ -79,14 +86,6 @@ function sf_internal.v(...)
     d(...)
   end
 end
-
-
-local _addon = {}
-_addon.Name = "ShissuFramework"
-_addon.Version = "1.6.0"
-_addon._settings = {}
-_addon.functions = {}
-_addon.templates = {}
 
 local _fileList = {
   ["i18n/en.lua"]                   = function() return ShissuLocalization ~= nil end,

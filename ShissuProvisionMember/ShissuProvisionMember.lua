@@ -56,7 +56,7 @@ end
 --  d("Diff: " .. mse - mss .. " ms")
 --end
 
---[[TODO: Why is there a guild_id and guildId
+--[[TODO: Why is there a guild_id and guildId ]]--
 function _addon.removedMember(_, guild_id, accName)
   local mss = GetGameTimeMilliseconds()
   local memberId = -1
@@ -158,7 +158,7 @@ function _addon.removedMember(_, guild_id, accName)
   --sf_internal.v("Time Elapsed: " .. mse - mss .. " ms")
 end
 
---[[TODO: Why is there a guild_id and guildId
+--[[TODO: Why is there a guild_id and guildId ]]--
 function _addon.addedMember(_, guild_id, accName)
   --local mss = GetGameTimeMilliseconds()
 
