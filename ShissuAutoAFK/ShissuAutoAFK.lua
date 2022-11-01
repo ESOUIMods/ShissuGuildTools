@@ -1,5 +1,4 @@
--- Shissu Guild Tools Addon
--- ShissuAutoAFK
+-- Shissu AutoAFK
 -- --------------
 --
 -- Desc:        Automatisches AFK/Online setzen nach X-Minuten

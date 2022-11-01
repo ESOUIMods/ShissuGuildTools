@@ -21,6 +21,7 @@ local setPanel = ShissuFramework["setPanel"]
 local _addon = {}
 _addon.Name = "ShissuMemberStatus"
 _addon.Version = "1.5.0"
+_addon.lastUpdate = "06.12.2020"
 _addon.formattedName	= stdColor .. "Shissu" .. white .. "'s MemberStatus"
 _addon.settings = {
   charname = true,
@@ -139,7 +140,6 @@ function _addon.createSettingMenu()
 end
 
 function _addon.initialized()
-  --d(_addon.formattedName .. " " .. _addon.Version)
    -- Hat jemand die neue SaveVar schon?
   if (shissuMemberStatus["memberstatus"] == nil) then shissuMemberStatus["memberstatus"] = {} end
   if (shissuMemberStatus["added"] == nil) then shissuMemberStatus["added"] = {} end

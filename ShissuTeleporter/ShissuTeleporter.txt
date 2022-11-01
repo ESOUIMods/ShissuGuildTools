@@ -9,8 +9,8 @@
 ## Title: |cAFD3FFShissu's|r|ceeeeee Teleporter|r
 ## APIVersion: 101035 101036
 ## Author: |cAFD3FF@Shissu|r [EU]
-## AddOnVersion: 1.5.0
-## Version: 150
+## AddOnVersion: 1.6.1
+## Version: 161
 ## Description: None
 ## SavedVariables: shissuTeleporter
 ## DependsOn: ShissuFramework

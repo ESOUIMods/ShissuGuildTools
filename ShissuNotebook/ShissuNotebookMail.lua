@@ -1,7 +1,7 @@
 ﻿-- Shissu Guild Tools Addon
 -- ShissuNotebookMail
 --
--- Version: v2.5.1
+-- Version: v2.6.0
 -- Last Update: 28.11.2020
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
