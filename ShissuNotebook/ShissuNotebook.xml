@@ -144,7 +144,7 @@
 		    <Button name="$(parent)_SendTo" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="CENTER">
 			   <Anchor point="LEFT" relativeTo="$(parent)_Undo" relativePoint="RIGHT" offsetX="-4" offsetY="0" />
 			    <Dimensions x="36" y="36" />
-			    <Textures normal="/ShissuFramework/textures/button_sgt1.dds" mouseOver="/ShissuFramework/textures/button_sgt2.dds" />
+			    <Textures normal="/ShissuFramework/textures/button_sgt.dds" mouseOver="/ShissuFramework/textures/button_sgt2.dds" />
 	        <OnMouseExit>ZO_Tooltips_HideTextTooltip()</OnMouseExit>  
 		    </Button>       																
 
@@ -200,10 +200,10 @@
      	</Controls> 
 		</TopLevelControl> 
 
-		<!-- Notizblock | E-Mail Empfänger  <Anchor point="TOPLEFT" relativeTo="SGT_Notebook" relativePoint="TOPRIGHT"  offsetX="10" offsetY="-8" />  -->
+		<!-- Notizblock | E-Mail Empfänger  -->
     <TopLevelControl name="SGT_Notebook_MessagesRecipient" hidden="true" mouseEnabled="false" movable="true" clampedToScreen="true">  
       <Anchor point="TOPLEFT" relativeTo="SGT_Notebook" relativePoint="TOPRIGHT"  offsetX="15" offsetY="0" />
-      <Dimensions x="585" y="480" />
+      <Dimensions x="545" y="480" />
       <Controls>	
 			  <Control name="$(parent)_Guilds" width="200" inherits="ZO_StatsDropdownRow">
           <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="5" offsetY="45" />
@@ -224,7 +224,7 @@
 						
 				<Label name="$(parent)_Choice" font="SF_BUTTONFONT" wrapMode="ELLIPSIS" verticalAlignment="CENTER" text="Legacy of Heaven">
 					<Dimensions x="250" />
-					<Anchor point="TOPLEFT" relativeTo="$(parent)" offsetX="260" offsetY="42" />
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" offsetX="230" offsetY="42" />
 				</Label>       
 				<Label name="$(parent)_Choice2" font="SF_BUTTONFONT" wrapMode="ELLIPSIS" verticalAlignment="CENTER" text="...">
 					<Dimensions x="150" />

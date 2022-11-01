@@ -2,17 +2,19 @@
 -- ShissuHistoryScanner
 --
 -- Version: v1.5.0
--- Last Update: 24.05.2019
+-- Last Update: 25.11.2020
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
-
---ERSTE VORBEREITUNGEN FÜR GEMEINSAME LIB
 
 local _globals = ShissuFramework["globals"]
 local stdColor = _globals["stdColor"]
 local white = _globals["white"]
 local green = _globals["green"]
 local red = _globals["red"]
+
+local currentTime = ShissuFramework["func"].currentTime
+local getKioskTime = ShissuFramework["func"].getKioskTime
+
 
 local _addon = {}
 
@@ -96,7 +98,7 @@ function _addon.copyCurrentDateToLast()
   end
 end
 
-function _addon.previousTime(guildId, guildName, category)
+function _addon.previousTime(guildName, category)
   local t = 1500000000
 
   -- ~=
@@ -194,7 +196,7 @@ function _addon.processEvents(guildId, category)
     --sf_internal.v(string.format("%s %s", "processEvents timeStamp ", timeStamp))
 
     -- TimeStamp from the oldest event
-    local oldestEvent = _addon.previousTime(guildId, guildName, category)
+    local oldestEvent = _addon.previousTime(guildName, category)
 
     --sf_internal.v("OLDEST: " .. GetDateStringFromTimestamp(oldestEvent) .. " - " .. ZO_FormatTime((oldestEvent) % 86400, TIME_FORMAT_STYLE_CLOCK_TIME, TIME_FORMAT_PRECISION_TWENTY_FOUR_HOUR))
 
@@ -303,6 +305,8 @@ function _addon.processEvents(guildId, category)
              -- sf_internal.v("TABLE")
               timeFirst = 0
             end
+
+             -- sf_internal.v("2: " .. timeStamp)
 
             if (timeFirst == 0) then
               shissuHistoryScanner[guildName][displayName][eventType].timeFirst = timeStamp

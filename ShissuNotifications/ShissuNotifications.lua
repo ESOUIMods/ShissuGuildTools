@@ -2,6 +2,7 @@
 -- ShissuNotifications
 --
 -- Version: v2.6.0
+-- Last Update: 05.12.2020
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
 
@@ -11,12 +12,14 @@ local white = _globals["white"]
 local yellow = _globals["yellow"]
 local red = _globals["red"]
 
-local cutStringAtLetter = ShissuFramework["func"].cutStringAtLetter
+local cutStringAtLetter = ShissuFramework["functions"]["datatypes"].cutStringAtLetter
 local setPanel = ShissuFramework["setPanel"]
 
 local _addon = {}
 _addon.Name	= "ShissuNotifications"
 _addon.Version = "2.6.0"
+_addon.lastUpdate = "06.12.2020"
+
 _addon.formattedName	= stdColor .. "Shissu" .. white .. "'s Notifications"
 
 _addon.settings = {
@@ -29,13 +32,11 @@ _addon.settings = {
   ["inSight"] = {},
   ["motD"] = {},
   ["background"] = {},
-  ["friend"] = true,
-  ["raid"] = { true, true },
 }
 
 local _L = ShissuFramework["func"]._L(_addon.Name)
 
-_addon.panel = setPanel(_L("TITLE"), _addon.formattedName, _addon.Version)
+_addon.panel = setPanel(_L("TITLE"), _addon.formattedName, _addon.Version, _addon.lastUpdate)
 _addon.controls = {}
 
 local fString = {
@@ -44,8 +45,6 @@ local fString = {
   ["motD"] = stdColor .. _L("INFO") .. "|r " .. _L("MOTD"),
   ["friend"] = stdColor .. _L("INFO") .. "|r " .. _L("FRIEND"),
   ["background"] = stdColor .. _L("INFO") .. "|r " .. _L("BACKGROUND"),
-  ["friendRaid"] = stdColor .. _L("TITLE") .. "|r " .. _L("FRIEND2"),
-  ["guild"] = stdColor .. _L("TITLE") .. "|r " .. _L("GUILD"),
 }
 
 local libNotification = {}  -- ZO_NotificationProvider:Subclass()
@@ -223,38 +222,6 @@ function _addon.createControls()
       shissuNotifications["memberNote"] = value
     end,
   }
-
-
-
-  controls[#controls+1] = {
-    type = "title",
-    name = _L("RANK"),
-  }
-
-  if ( shissuNotifications["raid"] == nil ) then
-    shissuNotifications["raid"] = {}
-    table.insert(shissuNotifications["raid"], true)
-    table.insert(shissuNotifications["raid"], true)
-  end
-
-  controls[#controls+1] = {
-    type = "checkbox",
-    name = fString["guild"],
-    getFunc = shissuNotifications["raid"][1],
-    setFunc = function(_, value)
-      shissuNotifications["raid"][1] = value
-    end,
-  }
-
-  controls[#controls+1] = {
-    type = "checkbox",
-    name = fString["friendRaid"],
-    getFunc = shissuNotifications["raid"][2],
-    setFunc = function(_, value)
-      shissuNotifications["raid"][2] = value
-    end,
-  }
-
   controls[#controls+1] = {
     type = "title",
     name = fString["inSight"],
@@ -355,54 +322,8 @@ function ZO_GuildMotDProvider:BuildNotificationList()
   end
 end
 
--- Leaderbord Raid deaktivieren
-function ZO_LeaderboardRaidProvider:BuildNotificationList()
-    ZO_ClearNumericallyIndexedTable(self.list)
-    if GetSetting_Bool(SETTING_TYPE_UI, UI_SETTING_SHOW_LEADERBOARD_NOTIFICATIONS) then
-        for notificationIndex = 1, GetNumRaidScoreNotifications() do
-            local notificationId = GetRaidScoreNotificationId(notificationIndex)
-            local raidId, raidScore, millisecondsSinceRequest = GetRaidScoreNotificationInfo(notificationId)
-            local numMembers = GetNumRaidScoreNotificationMembers(notificationId)
-            local numKnownMembers = 0
-            local hasFriend = false
-            local hasGuildMember = false
-            local hasPlayer = false
-            for memberIndex = 1, numMembers do
-                local displayName, characterName, isFriend, isGuildMember, isPlayer = GetRaidScoreNotificationMemberInfo(notificationId, memberIndex)
-
-                hasFriend = hasFriend or isFriend
-                hasGuildMember = hasGuildMember or isGuildMember
-                hasPlayer = hasPlayer or isPlayer
-
-                if isFriend or isGuildMember then
-                    numKnownMembers = numKnownMembers + 1
-                end
-            end
-
-            if hasPlayer then
-                -- Player just received a notification about themselves, so filter it out
-                self:Decline({ notificationId = notificationId, })
-            elseif (hasFriend and shissuNotifications["raid"][2]) or (shissuNotifications["raid"][1] and hasGuildMember) then
-                local raidName = GetRaidName(raidId)
-
-                table.insert(self.list,
-                {
-                    dataType = NOTIFICATIONS_LEADERBOARD_DATA,
-                    notificationId = notificationId,
-                    raidId = raidId,
-                    notificationType = NOTIFICATION_TYPE_LEADERBOARD,
-                    secsSinceRequest = ZO_NormalizeSecondsSince(millisecondsSinceRequest / 1000),
-                    message = self:CreateMessage(raidName, raidScore, numKnownMembers, hasFriend, hasGuildMember, notificationId),
-                    shortDisplayText = zo_strformat(SI_NOTIFICATIONS_LEADERBOARD_RAID_NOTIFICATION_SHORT_TEXT_FORMATTER, raidName),
-                })
-            end
-        end
-    end
-end
-
 -- EVENT_GUILD_DESCRIPTION_CHANGED (integer eventCode, integer guildId)
 function _addon.guildDescriptionChanged(_, guildId)
-  --local guildId = GetGuildId(guildId)
   local guildName = GetGuildName(guildId)
   local guildDescription = GetGuildDescription(guildId)
   local guildAlliance = GetGuildAlliance(guildId)
@@ -439,8 +360,8 @@ function _addon.memberInSight(_, name)
     local count = 0
     local memberData = _SGTguildMemberList[unitName]
 
-    if memberData then
-      local _, _, _, class, alliance, lvl, vr = GetGuildMemberCharacterInfo( memberData["gid"], memberData["id"])
+    if ( memberData ~= nil ) then
+      local _, _, _, class, alliance, lvl, champ = GetGuildMemberCharacterInfo( memberData["gid"], memberData["id"])
       local text = GetGuildMemberInfo(memberData["gid"], memberData["id"])
 
       local acc = text
@@ -453,10 +374,10 @@ function _addon.memberInSight(_, name)
         text = stdColor .. acc .. "\n"
         text = text .. alliance .. class .. "|ceeeeee" .. charName
 
-        if vr == 0 then
+        if champ == 0 then
           text = text .. " |ceeeeee(|cAFD3FFLvL " .. "|ceeeeee" .. lvl .. ")"
         else
-          text = text .. " |ceeeeee(|cAFD3FFCP " .. "|ceeeeee" .. vr .. ")"
+          text = text .. " |ceeeeee(|cAFD3FFCP " .. "|ceeeeee" .. champ .. ")"
         end
 
         if ( _addon.allowForInSight() == true ) then
@@ -464,10 +385,13 @@ function _addon.memberInSight(_, name)
 
           local first = 0
 
+          if (shissuNotifications["inSight"] == nil) then return false end
+
           for saveId, guildData in pairs(memberData) do
             local guildName = guildData[1]
 
-            if ( shissuNotifications["inSight"][guildName] == true ) then
+            if (shissuNotifications["inSight"][guildName] == nil) then return false end
+            if (shissuNotifications["inSight"][guildName] == true ) then
               count = count + 1
 
               if (first == 0) then
@@ -476,10 +400,6 @@ function _addon.memberInSight(_, name)
               end
 
               text = text .. "\n|ceeeeee" .. guildName
-
-            --  if numGuild ~= #memberData then
-            --    text = text .. "\n"
-             -- end
             end
           end
         end
@@ -493,7 +413,6 @@ function _addon.memberInSight(_, name)
 end
 
 function _addon.memberRankChanged(_, guildId, displayName, rankIndex)
-  --local guildId = GetGuildId(guildId)
   local guildName = GetGuildName(guildId)
   local guildAlliance = GetGuildAlliance(guildId)
 
@@ -524,7 +443,6 @@ function _addon.memberRankChanged(_, guildId, displayName, rankIndex)
 end
 
 function _addon.memberNoteChanged(_, guildId, displayName, note)
- -- local guildId = GetGuildId(guildId)
   local guildName = GetGuildName(guildId)
 
   if shissuNotifications["memberNote"] == true then
@@ -539,7 +457,6 @@ end
 function _addon.leftGuild(_, guildId, guildName)
   if shissuNotifications["guildKicked"] == false then return end
 
- -- local guildId = GetGuildId(guildId)
   local guildAlliance = GetGuildAlliance(guildId)
   local allianceIcon = zo_iconFormat(GetAllianceBannerIcon(1), 24, 24)
 
@@ -554,7 +471,6 @@ end
 function _addon.joinGuild(_, guildId, guildName)
   if shissuNotifications["guildJoined"] == false then return end
 
---  local guildId = GetGuildId(guildId)
   local guildAlliance = GetGuildAlliance(guildId)
   local allianceIcon = zo_iconFormat(GetAllianceBannerIcon(guildAlliance), 24, 24)
 

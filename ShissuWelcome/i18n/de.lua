@@ -2,6 +2,7 @@ ShissuLocalization = ShissuLocalization or {}
 
 ShissuLocalization["ShissuWelcome"] = {       
   TITLE = "Willkommensnachricht",
+  INFO  = "Info",
   DESC1 = "Zur Gestaltung der Willkommennachrichten können Sie folgende Platzhalter verwenden",
   DESC2 = "Name des Spielers",
   DESC3 = "Name der Gilde",

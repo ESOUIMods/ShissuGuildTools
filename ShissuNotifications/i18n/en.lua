@@ -10,7 +10,6 @@ ShissuLocalization["ShissuNotifications"] = {
   FRIEND2 =         EsoStrings[5620], --"Freunde",   
   MOTD    =         GetString(SI_GUILD_MOTD_HEADER),   
   BACKGROUND  =     GetString(SI_GUILD_BACKGROUND_INFO_HEADER),   
-  RANK        =     EsoStrings[3466], --"Ranglisten",   
   GUILD       =     GetString(SI_GAMEPAD_CAMPAIGN_BROWSER_TOOLTIP_GUILD_MEMBERS),
   BACKGROUND2 =     "Background information of the guild <<X:1>>|cffffff<<2>>|r has been changed.",
   RANKCHANGE  =     "Rank change in the guild <<X:1>>|cffffff<<2>>|r: <<3>><<4>>.",
