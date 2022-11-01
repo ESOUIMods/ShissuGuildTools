@@ -2,7 +2,7 @@
 -- ShissuCompareMember
 --
 -- Version: v1.5.0
--- Last Update: 24.05.2019
+-- Last Update: 25.11.2020
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
 
@@ -16,13 +16,14 @@ local setPanel = ShissuFramework["setPanel"]
 local _addon = {}
 _addon.Name	= "ShissuCompareMember"
 _addon.Version = "1.5.0"
+_addon.lastUpdate = "25.11.2020"
 _addon.formattedName = stdColor .. "Shissu" .. white .. "'s CompareMember"
 _addon.compares = {}
 _addon.guildData = {}
 
 local _L = ShissuFramework["func"]._L(_addon.Name)
 
-_addon.panel = setPanel(_L("TITLE"), _addon.formattedName, _addon.Version)
+_addon.panel = setPanel(_L("TITLE"), _addon.formattedName, _addon.Version, _addon.lastUpdate)
 _addon.controls = {
   [1] = {
     type = "title",

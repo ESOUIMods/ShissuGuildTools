@@ -5,6 +5,7 @@ ShissuLocalization["ShissuChat"] = {
   COLOR2                = "Gildennamen Farbe",                                                
   
   -- Settings
+  GENERAL               = "Allgemein",
   AUTO                  = "Automatischer Wechsel",
   SOUND                 = "Akustischer Signalton",                                                       
   SOUND_TT              = "Akustischer Signalton, der abgespielt wird, wenn man angeflüstert wird",        
@@ -39,14 +40,18 @@ ShissuLocalization["ShissuChat"] = {
   PARTYLEAD             = GetString(SI_GROUP_LEADER_TOOLTIP) .. " farbig hervorheben.",               
   WARNINGCOLOR          = "Texthervorhebungfarbe für (neue) Flüster-Chats",                         
   TIMESTAMP             = "Zeitstempel",                                                             
-  TIMESTAMP_TT          = "Fügt Chat-Nachrichten einen Zeitstempel hinzu.",                        
+  TIMESTAMP_TT          = "Fügt Chat-Nachrichten einen Zeitstempel hinzu.",     
+  TIMESTAMPNPC          = "Zeitstempel für NPCs, Monster",
+  TIMESTAMPNPC_TT       = "Blendet zusätzlich einen Zeitstempel bei Textnachrichten von NPCs, Monstern ein.",
   DATE                  = "Datum",                                                                 
   TIME                  = "Uhrzeit",                                                                
   TIMESTAMP_FORMAT      = "Zeitstempelformat",                                                     
   TIMESTAMP_FORMAT_TT   = "|ceeeeeeFORMAT|r:\n" ..                                                
-                          "|cAFD3FFDDDatum|r\n" ..
+                          "|cAFD3FFDatum|r\n" ..
                           "|cAFD3FFDD|rTag\n|cAFD3FFD|r: Tag(keine vorangestellte 0)\n\|cAFD3FFMM|r: Monat\n|cAFD3FFM|r: Monat (keine vorangestellte 0)\n|cAFD3FFY|r: Jahr\n\n" ..
-                          "|cAFD3FFDDUhrzeit\n" ..
+                          "|cAFD3FFUhrzeit\n" ..
                           "|cAFD3FFHH|rStunden (24)\n|cAFD3FFhh|r: Stunden (12)\n|cAFD3FFH|r: Stunde (24, keine vorangestellte 0)\n|cAFD3FFh|r: Stunde (12, keine vorangestellte 0)\n" ..
                           "|cAFD3FFA|r: AM/PM\n|cAFD3FFa|r: am/pm\n|cAFD3FFm|r: Minuten\n|cAFD3FFs|r: Sekunden",
+  USEGUILDCOLORS        = "Verwenden Sie stattdessen Gildenchat-Farben",
+  USEGUILDCOLORS_TT     = "Statt einer benutzerdefinierten Farbe wird die Farbe aus dem Gildenchat für die Präsentation im Chat verwendet [Einstellungen -> Social].",
 }

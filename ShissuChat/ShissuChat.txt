@@ -6,11 +6,11 @@
 
 ; Author: @Shissu on EU-Server!
 
-## Title: |c82FA58Shissu|ceeeeee's Chat|r v2.3.0
+## Title: |cAFD3FFShissu|ceeeeee's Chat|r
 ## APIVersion: 101035 101036
-## Author: |c82FA58@Shissu|r [EU-SERVER]
-## AddOnVersion: 2.3.0
-## Version: 230
+## Author: |cAFD3FF@Shissu|r [EU]
+## AddOnVersion: 2.4.0
+## Version: 240
 ## Description: None
 ## SavedVariables: shissuChat
 ## DependsOn: ShissuFramework ShissuProvisionMember

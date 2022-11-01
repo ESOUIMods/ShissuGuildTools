@@ -3,13 +3,13 @@ ShissuLocalization = ShissuLocalization or {}
 ShissuLocalization["ShissuGuildHome"] = {
   TITLE =           "Gilde: " .. GetString(SI_WINDOW_TITLE_GUILD_HOME),
   KIOSK =           "Zeit bis zum nächsten Gildenhändlergebot",
-  KIOSK_TT =        "Zeigt in der Gildenübersicht die Zeit bis zum Wechsel des NPC-Händler an. Blendet zusätzlich in den letzten 15 Minuten der Händlervergabe ein zusätzlichen Fenster mit folgenden Informationen ein: Letzter Zeitpunkt für Gebotsabgabe, Gebots Ende, Zeitpunkt für Ersatzhändler.",
+  KIOSK_TT =        "Zeigt in der Gildenübersicht die Zeit bis zum Wechsel des NPC-Händler an. Blendet zusätzlich beim Klicken auf die Info ein zusätzlichen Fenster mit folgenden Informationen ein: Letzter Zeitpunkt für Gebotsabgabe, Gebots Ende, Zeitpunkt für Ersatzhändler.",
 
   LEFTTIME =        "Restzeit",
   
-  TRADER =          "Gildenhändler",
+  TRADER =          "Gilden-NPC",
   NEWKIOSK =        "Neuer Händler in",
-  BIDEND =          "Gebots Ende",
+  BIDEND =          "Versteigerung Ende",
   REPLACE =         "Ersatzhändler ab",        
   
   TEXT =            "DEINTEXT",

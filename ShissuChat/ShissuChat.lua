@@ -1,8 +1,8 @@
 ﻿-- Shissu Guild Tools Addon
 -- ShissuChat
 --
--- Version: v2.3.0
--- Last Update: 24.05.2019
+-- Version: v2.4.0
+-- Last Update: 17.12.2020
 -- Written by Christian Flory (@Shissu) - esoui@flory.one
 -- Distribution without license is prohibited!
 
@@ -11,15 +11,17 @@ local stdColor = _globals["stdColor"]
 local white = _globals["white"]
 
 local setPanel = ShissuFramework["setPanel"]
-local cutStringAtLetter = ShissuFramework["func"].cutStringAtLetter
+local RGBtoHex = ShissuFramework["functions"]["datatypes"].RGBtoHex
 
 local _addon = {}
 _addon.Name = "ShissuChat"
-_addon.Version = "2.3.0"
+_addon.Version = "2.4.0"
+_addon.lastUpdate = "17.12.2020"
 _addon.formattedName	= stdColor .. "Shissu" .. white .. "'s Chat"
 _addon.enabled = false
 _addon.LINK = "shissu"
 _addon.urlLINK = 101
+_addon.currentZone = ""
 _addon.core = {}
 
 _addon.settings = {
@@ -36,6 +38,7 @@ _addon.settings = {
   ["partyLeadColor"] = {1, 1, 1, 1},
   ["whisperInfoColor"] = {0.50196081399918, 0.80000001192093, 1, 1},
   ["timeStamp"] = true,
+  ["timeStampNPC"] = false,
   ["timeStampFormat"] = "DD.MM.Y HH:m:s" ,
   ["timeColor"] = {0.50196081399918, 0.80000001192093, 1, 1},
   ["dateColor"] = {0.8901960849762, 0.93333333730698, 1, 1},
@@ -54,7 +57,9 @@ _addon.settings = {
   ["alliance"] = true,
   ["rank"] = true,
 }
-_addon.panel = setPanel("Chat", _addon.formattedName, _addon.Version)
+
+_addon.zoneName = nil
+_addon.panel = setPanel("Chat", _addon.formattedName, _addon.Version, _addon.lastUpdate)
 _addon.controls = {}
 
 local _L = ShissuFramework["func"]._L(_addon.Name)
@@ -82,59 +87,6 @@ local _sounds = {
   SOUNDS.QUICKSLOT_SET,
   SOUNDS.MARKET_CROWNS_SPENT,
 }
-
--- FENSTER FUNKTIONEN
--- ******************
-function _addon.RGBtoHex(colors)
-  local rgb = {colors[1]*255, colors[2]*255, colors[3]*255}
-  local hexstring = ""
-
-  for key, value in pairs(rgb) do
-    local hex = ""
-
-    while (value > 0)do
-      local index = math.fmod(value, 16) + 1
-      value = math.floor(value / 16)
-      hex = string.sub("0123456789ABCDEF", index, index) .. hex
-    end
-
-    if(string.len(hex) == 0) then
-      hex = "00"
-    elseif(string.len(hex) == 1) then
-      hex = "0" .. hex
-    end
-
-    hexstring = hexstring .. hex
-  end
-
-  return hexstring
-end
-
-function _addon.RGBtoHex2(r,g,b)
-  local rgb = {r*255, g*255, b*255}
-  local hexstring = ""
-
-  for key, value in pairs(rgb) do
-    local hex = ""
-
-    while (value > 0)do
-      local index = math.fmod(value, 16) + 1
-      value = math.floor(value / 16)
-      hex = string.sub("0123456789ABCDEF", index, index) .. hex
-    end
-
-    if(string.len(hex) == 0) then
-      hex = "00"
-    elseif(string.len(hex) == 1) then
-      hex = "0" .. hex
-    end
-
-    hexstring = hexstring .. hex
-  end
-
-  return hexstring
-end
-
 
 function _addon.core.defaultRegister()
   if (CHAT_SYSTEM == nil) then return end
@@ -236,7 +188,7 @@ function _addon.core.fromLink(messageType, fromName, isCS, fromDisplayName)
   -- Gruppenanführer???
 	if (messageType == CHAT_CHANNEL_PARTY and shissuChat["partyLead"]) then
     if zo_strformat(SI_UNIT_NAME, fromName) == GetUnitName(GetGroupLeaderUnitTag()) then
-      newFrom = "|c" .. _addon.RGBtoHex(shissuChat["partyLeadColor"]) .. newFrom .. "|r"
+      newFrom = RGBtoHex(shissuChat["partyLeadColor"]) .. newFrom .. "|r"
     end
   end
 
@@ -348,10 +300,10 @@ function _addon.core.createTimestamp()
 
   -- Farben
   local cTime = shissuChat["timeColor"] or {1, 1, 1, 1}
-  cTime = "|c" .. _addon.RGBtoHex(shissuChat["timeColor"])
+  cTime = RGBtoHex(shissuChat["timeColor"])
 
-  local cDate = _addon.RGBtoHex(shissuChat["dateColor"]) or {1, 1, 1, 1}
-  cDate = "|c" .. _addon.RGBtoHex(shissuChat["dateColor"])
+  local cDate = RGBtoHex(shissuChat["dateColor"] or {1, 1, 1, 1})
+  cDate = RGBtoHex(shissuChat["dateColor"])
 
   -- Ausgabe String
   timestamp = shissuChat["timeStampFormat"] or "DD.MM.Y HH:m:s"
@@ -392,6 +344,9 @@ function _addon.core.getGuildInfo(fromName, displayName)
     end
 
     if ( foundInList == 1 ) then
+      if _SGTguildMemberList == nil then return end
+      if _SGTguildMemberList[foundNameInList] == nil then return end
+
       local guildId = _SGTguildMemberList[foundNameInList].gid
       local memberId = _SGTguildMemberList[foundNameInList].id
 
@@ -418,13 +373,16 @@ function _addon.core.getGuildInfo(fromName, displayName)
           --gd(charName)
 
           local charAlliance = charInfo[5]
+
           if charAlliance ~= nil and charAlliance ~= 0 then
-          charAlliance = zo_iconFormat(GetAllianceBannerIcon(charAlliance), 24, 24)
+            charAlliance = zo_iconFormat(GetAllianceBannerIcon(charAlliance), 24, 24)
           end
+
           local rang = GetGuildRankSmallIcon(GetGuildRankIconIndex(guildId, accInfo[3]))
           rang = "|t24:24:" .. rang .. "|t"
 
           local charLvL = charInfo[6]
+
           if charLvL == 50 and charInfo[7] > 0 then
             charLvL = "[CP" .. charInfo[7] .."]"
           else
@@ -469,7 +427,7 @@ function _addon.core.getGuildColor(guildName)
         color = ZO_ColorDef:New(1, 1, 1, 1)
         color:SetRGB(GetChatCategoryColor(guildChatCategories[i]))
 
-        color = _addon.RGBtoHex2(color["r"], color["g"], color["b"])
+        color = RGBtoHex({color["r"], color["g"], color["b"]})
         break
       end
   end
@@ -491,7 +449,6 @@ function _addon.core.formatMessage(messageType, fromName, text, isFromCustomerSe
  --   local mse = GetGameTimeMilliseconds()
  --   d("Diff: " .. mse - mss .. " ms")
 
-
     if ((messageType >= CHAT_CHANNEL_GUILD_1 and messageType <= CHAT_CHANNEL_GUILD_5) or messageType == CHAT_CHANNEL_WHISPER) then
       if (guildChar ~= nil) then
         fromName = guildChar
@@ -502,7 +459,7 @@ function _addon.core.formatMessage(messageType, fromName, text, isFromCustomerSe
 
     if (shissuChat["nameFormatColored"] == true) then
       fromLinkColor = shissuChat["nameFormatColor"] or {1, 1, 1, 1}
-      fromLinkColor = "|c" .. _addon.RGBtoHex(fromLinkColor)
+      fromLinkColor = RGBtoHex(fromLinkColor)
     end
 
     local fromLink = fromLinkColor .. _addon.core.fromLink(messageType, fromName, isCS, fromDisplayName)
@@ -511,10 +468,11 @@ function _addon.core.formatMessage(messageType, fromName, text, isFromCustomerSe
       local guildNameColor = ""
 
       if ( shissuChat["stdGuildColor"] == true ) then
-        guildNameColor = _addon.core.getGuildColor(guildName)
+        -- guildNameColor = _addon.core.getGuildColor(guildName)
+        guildNameColor = _addon.core.getGuildColor(origname)
       else
-        local guildNameColor =  shissuChat["namesColor"] or {1, 1, 1, 1}
-        guildNameColor = "|c" .. _addon.RGBtoHex(guildNameColor)
+        guildNameColor =  shissuChat["namesColor"]
+        guildNameColor = RGBtoHex(guildNameColor)
       end
 
       additionalInfo = guildNameColor .. "[" .. guildName .. "]|r"
@@ -536,13 +494,25 @@ function _addon.core.formatMessage(messageType, fromName, text, isFromCustomerSe
     -- URL Handling
     if shissuChat["url"] then
       text = _addon.core.createLinkURL(text)
-	  end
+    end
 
-    if shissuChat["timeStamp"] then
+    if (shissuChat["timeStampNPC"] == nil) then shissuChat["timeStampNPC"] = false end
+
+    if (shissuChat["timeStampNPC"] == false and shissuChat["timeStamp"] == true) then
+      -- Zeitstempel nicht anzeigen, wenn Chatnachricht von einem NPC stammt
+      if  (messageType ~= CHAT_CHANNEL_MONSTER_SAY and
+          messageType ~= CHAT_CHANNEL_MONSTER_YELL and
+          messageType ~= CHAT_CHANNEL_MONSTER_WHISPER and
+          messageType ~= CHAT_CHANNEL_MONSTER_EMOTE) then
+
+        timeStamp = "|c8989A2[|r" .. _addon.core.createTimestamp() .. "|c8989A2]|r "
+      end
+    elseif shissuChat["timeStamp"] == true then
       timeStamp = "|c8989A2[|r" .. _addon.core.createTimestamp() .. "|c8989A2]|r "
     end
 
-    -- Soundausgabe, beim Flüstern
+
+    -- Soundausgabe, beim plüstern
     if (messageType == CHAT_CHANNEL_WHISPER and shissuChat["whisperSound"] ~= 0) then
       PlaySound(_sounds[shissuChat["whisperSound"]])
     end
@@ -551,34 +521,24 @@ function _addon.core.formatMessage(messageType, fromName, text, isFromCustomerSe
       fromLink = fromLink .. " " .. guildLvL
     end
 
---    if channelLink then
---      return timeStamp .. additionalInfo .. zo_strformat(channelInfo.format, channelLink, fromLink .."|r", text), channelInfo.saveTarget, fromDisplayName, text
---    end
+    if channelInfo.formatMessage then
+      text = zo_strformat(SI_CHAT_MESSAGE_FORMATTER, text)
+    end
 
---    return timeStamp .. additionalInfo .. zo_strformat(channelInfo.format, fromLink .. "|r", text, GetCustomerServiceIcon(isFromCustomerService)), channelInfo.saveTarget, fromDisplayName, text
---  end
+    if channelLink then
+      formattedText = string.format(GetString(channelInfo.format), channelLink, " " .. fromLink .."|r", text)
+    else
+      if channelInfo.supportCSIcon then
+        formattedText = string.format(GetString(channelInfo.format), GetCustomerServiceIcon(isFromCustomerService), fromLink .. "|r", text)
+      else
+        formattedText = string.format(GetString(channelInfo.format), fromLink .. "|r", text)
+      end
+    end
 
---  return timeStamp .. text
+    return timeStamp .. additionalInfo .. formattedText, channelInfo.saveTarget, fromDisplayName, text
+  end
 
----------
-            if channelInfo.formatMessage then
-                text = zo_strformat(SI_CHAT_MESSAGE_FORMATTER, text)
-            end
-
-            if channelLink then
-                formattedText = string.format(GetString(channelInfo.format), channelLink, fromLink .."|r", text)
-            else
-                if channelInfo.supportCSIcon then
-                    formattedText = string.format(GetString(channelInfo.format), GetCustomerServiceIcon(isFromCustomerService), fromLink .. "|r", text)
-                else
-                    formattedText = string.format(GetString(channelInfo.format), fromLink .. "|r", text)
-                end
-            end
-            return timeStamp .. additionalInfo .. formattedText, channelInfo.saveTarget, fromDisplayName, text
-       end
-
-       return timeStamp .. text
-------
+  return timeStamp .. text
 end
 
 function _addon.core.onLickClicked(rawLink, mouseButton, linkText, color, linkType, lineNumber, chanCode)
@@ -610,7 +570,7 @@ function _addon.core.onGroupMemberLeft(_, characterName)
   end
 end
 
-function _addon.core.chatMessageChannel(eventId, messageType, fromName, _, _, fromDisplayName)
+function _addon.core.chatMessageChannel(eventId, messageType, fromName, text, isFromCustomerService, fromDisplayName)
   local currentText = CHAT_SYSTEM.textEntry:GetText()
   local allow = 0
   local channel = ""
@@ -670,15 +630,19 @@ end
 
 function _addon.core.startModule()
   _addon.enabled = true
-  -- FENSTER FUNKTIONEN
-  -- ******************
   _addon.core.createNewTab()
   _addon.core.defaultRegister()
 
   if (shissuChat["channel"] and shissuChat["startChannel"]) then
-    shissuChat["channel"] = cutStringAtLetter(shissuChat["channel"], ' ')
-    ZO_ChatWindowTextEntryEditBox:SetText(shissuChat["channel"] .. " ")
+    if (_addon.zoneName == nil) then
+      local cutStringAtLetter = ShissuFramework["functions"]["datatypes"].cutStringAtLetter
+
+      shissuChat["channel"] = cutStringAtLetter(shissuChat["channel"], ' ')
+      ZO_ChatWindowTextEntryEditBox:SetText(shissuChat["channel"] .. " ")
+    end
   end
+
+  _addon.zoneName = GetUnitZone('player')
 
   -- Vergrößerung der Chatbox auf Fenstergröße, bei Bedarf
   CHAT_SYSTEM.maxContainerWidth, CHAT_SYSTEM.maxContainerHeight = GuiRoot:GetDimensions()
@@ -692,7 +656,9 @@ function _addon.core.startModule()
 	EVENT_MANAGER:RegisterForEvent(_addon.Name, EVENT_GROUP_MEMBER_LEFT, _addon.core.onGroupMemberLeft)
 
   -- Formatierung der Textausgaben
-  ZO_ChatSystem_AddEventHandler(EVENT_CHAT_MESSAGE_CHANNEL, _addon.core.formatMessage)
+
+  local registerFormatEventChatMessage = ShissuFramework["functions"]["chat"].registerFormatEventChatMessage
+  registerFormatEventChatMessage(_addon.Name, _addon.core.formatMessage)
 end
 
 function _addon.createSettingMenu()
@@ -701,7 +667,7 @@ function _addon.createSettingMenu()
   -- Allgemeines
   controls[#controls+1] = {
     type = "title",
-    name = _L("GENERAL", "ShissuGeneral"),
+    name = _L("GENERAL"),
   }
 
   controls[#controls+1] = {
@@ -746,8 +712,8 @@ function _addon.createSettingMenu()
     type = "colorpicker",
     name = _L("NAME") .. " " .. _L("COLOR"),
     getFunc = shissuChat["nameFormatColor"],
-    setFunc = function (r, g, b, a)
-      shissuChat["nameFormatColor"] = {r, g, b, a}
+    setFunc = function (r, g, b)
+      shissuChat["nameFormatColor"] = {r, g, b}
     end,
   }
 
@@ -790,16 +756,26 @@ function _addon.createSettingMenu()
     type = "colorpicker",
     name = _L("TIME"),
     getFunc = shissuChat["timeColor"],
-    setFunc = function (r, g, b, a)
-      shissuChat["timeColor"] = {r, g, b, a}
+    setFunc = function (r, g, b)
+      shissuChat["timeColor"] = {r, g, b}
     end,
   }
   controls[#controls+1] = {
     type = "colorpicker",
     name = _L("DATE"),
     getFunc = shissuChat["dateColor"],
-    setFunc = function (r, g, b, a)
-      shissuChat["dateColor"] = {r, g, b, a}
+    setFunc = function (r, g, b)
+      shissuChat["dateColor"] = {r, g, b}
+    end,
+  }
+
+  controls[#controls+1] = {
+    type = "checkbox",
+    name = _L("TIMESTAMPNPC"),
+    tooltip = _L("TIMESTAMPNPC_TT"),
+    getFunc = shissuChat["timeStampNPC"] or false,
+    setFunc = function(_, value)
+      shissuChat["timeStampNPC"] = value
     end,
   }
 
@@ -898,8 +874,8 @@ function _addon.createSettingMenu()
     name = _L("WARNINGCOLOR"),
     tooltip = _L("WARNINGCOLOR"),
     getFunc = shissuChat["whisperInfoColor"],
-    setFunc = function (r, g, b, a)
-      shissuChat["whisperInfoColor"] = {r, g, b, a}
+    setFunc = function (r, g, b)
+      shissuChat["whisperInfoColor"] = {r, g, b}
     end,
   }
 
@@ -931,8 +907,8 @@ function _addon.createSettingMenu()
     type = "colorpicker",
     name = _L("PARTYLEAD"),
     getFunc = shissuChat["partyLeadColor"],
-    setFunc = function (r, g, b, a)
-      shissuChat["partyLeadColor"] = {r, g, b, a}
+    setFunc = function (r, g, b)
+      shissuChat["partyLeadColor"] = {r, g, b}
     end,
   }
 
@@ -1033,29 +1009,31 @@ function _addon.createSettingMenu()
     type = "colorpicker",
     name = _L("COLOR2"),
     getFunc = shissuChat["namesColor"],
-    setFunc = function (r, g, b, a)
-      shissuChat["namesColor"] = {r, g, b, a}
+    setFunc = function (r, g, b)
+      shissuChat["namesColor"] = {r, g, b}
     end,
   }
 
+  -- Gildenbezeichnung
   controls[#controls+1] = {
     type = "checkbox",
-    name = "Use Guild Chat colors instead",
-    tooltip = "Instead of a custom color, the color from the guild chat are used for the presentation in the chat [Settings -> Social].",
+    name = _L("USEGUILDCOLORS"),
+    tooltip = _L("USEGUILDCOLORS_TT"),
     getFunc = shissuChat["stdGuildColor"],
     setFunc = function(_, value)
       shissuChat["stdGuildColor"] = value
     end,
   }
 
-  for i=1, GetNumGuilds() do
-    guildId = GetGuildId(i)
-    guildName = GetGuildName(guildId)
+  for guildId=1, GetNumGuilds() do
+    local gId = GetGuildId(guildId)
+    local guildName = GetGuildName(gId)
 
     controls[#controls+1] = {
       type = "textbox",
       name = guildName,
-      getFunc = shissuChat["names"][guildName],
+      tooltip = shissuChat["names"][guildName] or guildName,
+      getFunc = shissuChat["names"][guildName] or guildName,
       setFunc = function(value, name)
         shissuChat["names"][name] = value
       end,
@@ -1069,9 +1047,9 @@ function _addon.createGuildVars(saveVar, value)
   if shissuChat[saveVar] ~= nil then
     local numGuild = GetNumGuilds()
 
-    for i=1, numGuild do
-      local guildId = GetGuildId(i)
-      local guildName = GetGuildName(guildId)
+    for guildId=1, numGuild do
+      local guildId = GetGuildId(guildId)
+      local guildName = GetGuildName(GetGuildId(guildId))
 
       if shissuChat[saveVar][guildName] == nil then shissuChat[saveVar][guildName] = value end
     end
@@ -1119,16 +1097,20 @@ function _addon.initNewVariables()
 end
 
 function _addon.initialized()
+  local registerEventChatMessage = ShissuFramework["functions"]["chat"].registerEventChatMessage
+
   --d(_addon.formattedName .. " " .. _addon.Version)
 
   _addon.initNewVariables()
   _addon.createSettingMenu()
 
-  EVENT_MANAGER:RegisterForEvent(_addon.Name, EVENT_CHAT_MESSAGE_CHANNEL, _addon.core.chatMessageChannel)
+  _addon.zoneName = nil --GetUnitZone('player')
+
+  registerEventChatMessage(_addon.Name, _addon.core.chatMessageChannel)
   EVENT_MANAGER:RegisterForEvent(_addon.Name, EVENT_PLAYER_ACTIVATED, _addon.core.startModule)
 
   if (_addon.enabled == false) then
-    zo_callLater(function() _addon.core.startModule() end, 10000)
+    zo_callLater(function() _addon.core.startModule() end, 1000)
   end
 end
 

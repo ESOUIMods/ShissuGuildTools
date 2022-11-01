@@ -6,9 +6,9 @@
 
 ; Author: @Shissu on EU-Server!
 
-## Title: |c82FA58Shissu|ceeeeee's Color|r v1.5.0
+## Title: |cAFD3FFShissu|ceeeeee's Color|r
 ## APIVersion: 101035 101036
-## Author: |c82FA58@Shissu|r [EU-SERVER]
+## Author: |cAFD3FF@Shissu|r [EU]
 ## AddOnVersion: 1.5.0
 ## Version: 150
 ## Description: None

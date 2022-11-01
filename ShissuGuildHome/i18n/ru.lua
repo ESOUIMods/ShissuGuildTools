@@ -1,3 +1,4 @@
+-- Automatische Generierung
 ShissuLocalization = ShissuLocalization or {}
 
 ShissuLocalization["ShissuGuildHome"] = {
@@ -7,7 +8,7 @@ ShissuLocalization["ShissuGuildHome"] = {
 
   LEFTTIME =        "Оставшееся время",
   
-  TRADER =          "Гильдейский торговец",
+  TRADER =          "Гильдия NPC",
   NEWKIOSK =        "Новый торговец в",
   BIDEND =          "Конец ставок",
   REPLACE =         "Смена",        

@@ -1,3 +1,4 @@
+-- Automatische Generierung
 ShissuLocalization = ShissuLocalization or {}
 
 ShissuLocalization["ShissuChat"] = {                          
@@ -5,6 +6,7 @@ ShissuLocalization["ShissuChat"] = {
   COLOR2                = "Цвет названия гильдии",      
 
   -- Settings
+  GENERAL               = "Общие сведения",
   AUTO                  = "Авто-переключение",
   SOUND                 = "Звук (Личное сообщение)",                                                       
   SOUND_TT              = "Звуковой сигнал звук, который воспроизводится при получении личного сообщения",        
@@ -39,7 +41,9 @@ ShissuLocalization["ShissuChat"] = {
   PARTYLEAD             = GetString(SI_GROUP_LEADER_TOOLTIP) .. " выделен цветом.",               
   WARNINGCOLOR          = "Цвет текста для (новых) чатов",                         
   TIMESTAMP             = "Время",                                                             
-  TIMESTAMP_TT          = "Добавляет в сообщения чата метку времени.",                        
+  TIMESTAMP_TT          = "Добавляет в сообщения чата метку времени.",    
+  TIMESTAMPNPC          = "Тайм-штампы для NPC, чудовищ.",
+  TIMESTAMPNPC_TT       = "Дополнительно показывает временную метку для текстовых сообщений от NPC, монстров.",                    
   DATE                  = "Дата",                                                                 
   TIME                  = "Время",                                                                
   TIMESTAMP_FORMAT      = "Формат времени",                                                     
@@ -49,4 +53,6 @@ ShissuLocalization["ShissuChat"] = {
                           "|cAFD3FFВремя\n" ..
                           "|cAFD3FFHH|rЧасы (24)\n|cAFD3FFhh|r: Часы (12)\n|cAFD3FFH|r: Часы (24, без 0)\n|cAFD3FFh|r: Часы (12, без 0)\n" ..
                           "|cAFD3FFA|r: AM/PM\n|cAFD3FFa|r: am/pm\n|cAFD3FFm|r: Минуты\n|cAFD3FFs|r: Секунды",
+  USEGUILDCOLORS        = "Используйте цвета гильдии чат вместо этого",
+  USEGUILDCOLORS_TT     = "Вместо пользовательского цвета для презентации в чате [Настройки -> Социальный] используется цвет из гильдии.",
 }
