@@ -1,9 +1,10 @@
-﻿-- Shissu Guild Tools Addon
--- ShissuGuildHome
+﻿-- Shissu's Guildhome
+-- ------------------
 --
 -- Version: v1.5.0
--- Last Update: 24.05.2019
--- Written by Christian Flory (@Shissu) - esoui@flory.one
+-- Last Update: 06.12.2020
+--
+-- Written by Christian Flory (@Shissu, EU) - esoui@flory.one
 -- Distribution without license is prohibited!
 
 -- *** GLOBALS, VARS
@@ -12,20 +13,28 @@ local _globals = ShissuFramework["globals"]
 local stdColor = _globals["stdColor"]
 local white = _globals["white"]
 local red = _globals["red"]
-local blue = _globals["blue"]
+local yellow = _globals["yellow"]
 
 local setPanel = ShissuFramework["setPanel"]
 local createLabel = ShissuFramework["interface"].createLabel
 local setDefaultColor = ShissuFramework["interface"].setDefaultColor
-local createColorButton = ShissuFramework["interface"].createColorButton
+
+local createColorButton = ShissuFramework["interface"].coloredButton
+
+local createFlatWindow = ShissuFramework["interface"].createFlatWindow
+local getWindowPosition = ShissuFramework["interface"].getWindowPosition
+local saveWindowPosition = ShissuFramework["interface"].saveWindowPosition
+
+local getRestKioskTime = ShissuFramework["functions"]["date"].getRestKioskTime
 
 local correctness = 0
 local frameClose = 0
 
 local _addon = {}
 _addon.Name	= "ShissuGuildHome"
-_addon.formattedName	= stdColor .. "Shissu" .. white .. "'s GuildHome"
+_addon.formattedName	= stdColor .. "Shissu" .. white .. "'s Guildhome"
 _addon.Version = "1.5.0"
+_addon.lastUpdate = "17.12.2020"
 _addon.buttons = {}
 
 _addon.settings = {
@@ -40,9 +49,9 @@ _addon.activeControls = {
 
 local _L = ShissuFramework["func"]._L(_addon.Name)
 
--- *** EINSTELLUNGEN
+-- EINSTELLUNGEN
 --------------------
-_addon.panel = setPanel(_L("TITLE"), _addon.formattedName, _addon.Version)
+_addon.panel = setPanel(_L("TITLE"), _addon.formattedName, _addon.Version, _addon.lastUpdate)
 _addon.controls = {}
 
 function _addon.createSettingMenu()
@@ -50,7 +59,7 @@ function _addon.createSettingMenu()
 
   controls[#controls+1] = {
     type = "title",
-    name = blue .. _L("COLOR")
+    name = stdColor .. _L("COLOR")
   }
 
   controls[#controls+1] = {
@@ -98,7 +107,7 @@ function _addon.createSettingMenu()
 
   controls[#controls+1] = {
     type = "title",
-    name = blue .. _L("TRADER")
+    name = stdColor .. _L("TRADER")
   }
 
   controls[#controls+1] = {
@@ -109,9 +118,21 @@ function _addon.createSettingMenu()
     setFunc = function(_, value)
       shissuGuildHome["kiosk"] = value
 
-      if (value == true) then _addon.initKioskTimer() end
+      if (value == true) then
+        _addon.initKioskTimer()
+        _addon.toogleControl(SGT_HomeTimer, false)
+      else
+        _addon.toogleControl(ShissuKioskTimer, true)
+        _addon.toogleControl(SGT_HomeTimer, true)
+      end
     end,
   }
+end
+
+function _addon.toogleControl(control, bool)
+  if (control ~= nil) then
+    control:SetHidden(bool)
+  end
 end
 
 function _addon.descSetHidden(bool)
@@ -158,17 +179,17 @@ function _addon.showColorsControls()
     _addon.buttons.descW = createColorButton("W", _addon.buttons.desc5, nil, nil, buttonLabel, editBox)
     _addon.buttons.descANY = createColorButton("ANY", _addon.buttons.descW, nil, nil, buttonLabel, editBox)
 
-    _addon.descriptionLeft = createLabel("SGT_DescriptionLeftLabel", ZO_GuildHomeInfoDescriptionSavingEdit, blue .. "100/252", nil, {-55, -51}, false, TOPRIGHT)
+    _addon.descriptionLeft = createLabel("SGT_DescriptionLeftLabel", ZO_GuildHomeInfoDescriptionSavingEdit, stdColor .. "100/252", nil, {-55, -51}, false, TOPRIGHT)
 
     local orgZO_GuildHomeInfoDescriptionSavingEdit = ZO_GuildHomeInfoDescriptionSavingEdit:GetHandler("OnTextChanged")
     local orgZO_GuildHomeInfoDescriptionModify = ZO_GuildHomeInfoDescriptionModify:GetHandler("OnClicked")
 
     ZO_GuildHomeInfoDescriptionModify:SetHandler("OnClicked", function()
-      _addon.buttons.desc1:SetColor(shissuColor["c1"][1], shissuColor["c1"][2], shissuColor["c1"][3], shissuColor["c1"][4])
-      _addon.buttons.desc2:SetColor(shissuColor["c2"][1], shissuColor["c2"][2], shissuColor["c2"][3], shissuColor["c2"][4])
-      _addon.buttons.desc3:SetColor(shissuColor["c3"][1], shissuColor["c3"][2], shissuColor["c3"][3], shissuColor["c3"][4])
-      _addon.buttons.desc4:SetColor(shissuColor["c4"][1], shissuColor["c4"][2], shissuColor["c4"][3], shissuColor["c4"][4])
-      _addon.buttons.desc5:SetColor(shissuColor["c5"][1], shissuColor["c5"][2], shissuColor["c5"][3], shissuColor["c5"][4])
+      _addon.buttons.desc1:SetColor(shissuColor["c1"][1], shissuColor["c1"][2], shissuColor["c1"][3])
+      _addon.buttons.desc2:SetColor(shissuColor["c2"][1], shissuColor["c2"][2], shissuColor["c2"][3])
+      _addon.buttons.desc3:SetColor(shissuColor["c3"][1], shissuColor["c3"][2], shissuColor["c3"][3])
+      _addon.buttons.desc4:SetColor(shissuColor["c4"][1], shissuColor["c4"][2], shissuColor["c4"][3])
+      _addon.buttons.desc5:SetColor(shissuColor["c5"][1], shissuColor["c5"][2], shissuColor["c5"][3])
 
       orgZO_GuildHomeInfoDescriptionModify()
     end)
@@ -183,7 +204,7 @@ function _addon.showColorsControls()
         color = red
       end
 
-      SGT_DescriptionLeftLabel:SetText(color .. length .. blue .. "/" .. white .. "256")
+      SGT_DescriptionLeftLabel:SetText(color .. length .. stdColor .. "/" .. white .. "256")
     end)
   end
 
@@ -201,17 +222,17 @@ function _addon.showColorsControls()
     _addon.buttons.motdW = createColorButton("W", _addon.buttons.motd5, nil, nil, buttonLabel, editBox)
     _addon.buttons.motdANY = createColorButton("ANY", _addon.buttons.motdW, nil, nil, buttonLabel, editBox)
 
-    _addon.MotDLeft = createLabel("SGT_MotDLeftLabel", ZO_GuildHomeInfoMotDSavingEdit, blue .. "100/1000", nil, {-55, -51}, false, TOPRIGHT)
+    _addon.MotDLeft = createLabel("SGT_MotDLeftLabel", ZO_GuildHomeInfoMotDSavingEdit, stdColor .. "100/1000", nil, {-55, -51}, false, TOPRIGHT)
 
     local orgZO_GuildHomeInfoMotDSavingEdit = ZO_GuildHomeInfoMotDSavingEdit:GetHandler("OnTextChanged")
     local orgZO_GuildHomeInfoMotDModify = ZO_GuildHomeInfoMotDModify:GetHandler("OnClicked")
 
     ZO_GuildHomeInfoMotDModify:SetHandler("OnClicked", function()
-      _addon.buttons.motd1:SetColor(shissuColor["c1"][1], shissuColor["c1"][2], shissuColor["c1"][3], shissuColor["c1"][4])
-      _addon.buttons.motd2:SetColor(shissuColor["c2"][1], shissuColor["c2"][2], shissuColor["c2"][3], shissuColor["c2"][4])
-      _addon.buttons.motd3:SetColor(shissuColor["c3"][1], shissuColor["c3"][2], shissuColor["c3"][3], shissuColor["c3"][4])
-      _addon.buttons.motd4:SetColor(shissuColor["c4"][1], shissuColor["c4"][2], shissuColor["c4"][3], shissuColor["c4"][4])
-      _addon.buttons.motd5:SetColor(shissuColor["c5"][1], shissuColor["c5"][2], shissuColor["c5"][3], shissuColor["c5"][4])
+      _addon.buttons.motd1:SetColor(shissuColor["c1"][1], shissuColor["c1"][2], shissuColor["c1"][3])
+      _addon.buttons.motd2:SetColor(shissuColor["c2"][1], shissuColor["c2"][2], shissuColor["c2"][3])
+      _addon.buttons.motd3:SetColor(shissuColor["c3"][1], shissuColor["c3"][2], shissuColor["c3"][3])
+      _addon.buttons.motd4:SetColor(shissuColor["c4"][1], shissuColor["c4"][2], shissuColor["c4"][3])
+      _addon.buttons.motd5:SetColor(shissuColor["c5"][1], shissuColor["c5"][2], shissuColor["c5"][3])
 
       orgZO_GuildHomeInfoMotDModify()
     end)
@@ -226,57 +247,9 @@ function _addon.showColorsControls()
         color = red
       end
 
-      _addon.MotDLeft:SetText(color .. length .. blue .. "/" .. white .. "1024")
+      _addon.MotDLeft:SetText(color .. length .. stdColor .. "/" .. white .. "1024")
     end)
   end
-end
-
--- *** GILDENHÄNDLER
---------------------
--- Sekunden in die Form: XXX Tage XX Stunden umrechnen
-function _addon.secsToTime(time, complete)
-  local day = math.floor(time / 86400)
-  local hours = math.floor(time / 3600) - (day * 24)
-  local minutes = math.floor(time / 60) - (day * 1440) - (hours * 60)
-  local seconds = time % 60
-
-  if complete then return ("%dd %dh %dmin %ds"):format(day, hours, minutes, seconds) end
-
-  -- mehr als 1 Tag
-  if(day >= 1) then return ("%dd %dh"):format(day, hours) end
-
-  -- Spieler sind weniger als 1d Offline
-  if(hours >= 1) then return ("%dh %dmin"):format(hours, minutes) end
-
-  -- Spieler sind weniger als 1h Offline
-  if(minutes >= 1) then return ("%dmin %ds"):format(minutes, seconds) end
-
-  -- Spieler sind weniger als 1m Offline
-  return ("%ds"):format(seconds)
-end
-
-function _addon.getKioskTimeRemaining(which)
-  local _, weekCutoff = GetGuildKioskCycleTimes()
-
-  -- Gebots Ende
-  -- Bidding end
-  if (which == 1) then
-    weekCutoff = weekCutoff - 300
-  -- Ersatzhändler
-  -- Replacement dealer
-  elseif (which == 2) then
-    weekCutoff = weekCutoff + 300
-  end
-
-  -- Restliche Zeit in der Woche
-  -- Remaining time in the week
-  local restWeekTime = weekCutoff - GetTimeStamp()
-
-  if restWeekTime < 0 then
-    restWeekTime = 7 * 86400 -- one week if guild store is offline
-  end
-
-  return restWeekTime
 end
 
 function _addon.initKioskTimer()
@@ -294,34 +267,50 @@ function _addon.initKioskTimer()
   _addon.time:SetWidth(180)
   _addon.time:SetHeight(100)
   _addon.time:SetHidden(false)
+
   _addon.time:SetHandler("OnMouseEnter", function(self)
-    ZO_Tooltips_ShowTextTooltip(self, TOPRIGHT, white.. _addon.secsToTime(_addon.getKioskTimeRemaining(), true))
+    local nextKiosk, _, _ = getRestKioskTime(true)
+    ZO_Tooltips_ShowTextTooltip(self, TOPRIGHT, white.. nextKiosk)
   end)
+
   _addon.time:SetHandler("OnMouseExit", function(self)
     ZO_Tooltips_HideTextTooltip()
   end)
 
-  _addon.time:SetHandler("OnMouseUp", function(self) SGT_KioskTime:SetHidden(false) end)
+  _addon.time:SetHandler("OnMouseUp", function(self)
+    ShissuKioskTimer:SetHidden(false)
+  end)
 
   _addon.kioskTimeUpdate(1000)
 end
+
+function _addon.currentTime()
+  local correction = GetSecondsSinceMidnight() - (GetTimeStamp() % 86400)
+  if correction < -12*60*60 then correction = correction + 86400 end
+
+  return GetTimeStamp() + correction
+end
+
 
 -- Gildenfenster, UPDATE EVENT
 function _addon.kioskTimeUpdate(time)
   EVENT_MANAGER:UnregisterForUpdate("ShissuGT_KioskTimer")
 
   EVENT_MANAGER:RegisterForUpdate("ShissuGT_KioskTimer", time, function()
-    local leftTime  = ZO_FormatTimeLargestTwo(_addon.getKioskTimeRemaining(), TIME_FORMAT_STYLE_DESCRIPTIVE)
-    _addon.time:SetText("|t36:36:EsoUI/Art/Guild/ownership_icon_guildtrader.dds|t" .."\n" .. stdColor .. _L("LEFTTIME") .. "\n" .. white .. leftTime)
+    local nextKiosk, lastBid, replacementKiosk = getRestKioskTime()
+    local leftTime  = ZO_FormatTimeLargestTwo(nextKiosk, TIME_FORMAT_STYLE_DESCRIPTIVE)
+    _addon.time:SetText("|t64:64:EsoUI/Art/Guild/ownership_icon_guildtrader.dds|t" .."\n\n" .. stdColor .. _L("LEFTTIME") .. "\n" .. white .. leftTime)
 
-    if (frameClose == 0 and GetTimeStamp() > ShissuFramework["func"].getKioskTime() - 900 ) then
-      SGT_KioskTime:SetHidden(false)
+    if (frameClose == 0 and _addon.currentTime() > _addon.currentTime() + nextKiosk - 900 ) then
+      ShissuKioskTimer:SetHidden(false)
     end
 
-    if (SGT_KioskTime:IsHidden() == false) then
-      SGT_KioskTime_NextKioskCount:SetText(_addon.secsToTime(_addon.getKioskTimeRemaining(), true))
-      SGT_KioskTime_LastBidCount:SetText(red .. _addon.secsToTime(_addon.getKioskTimeRemaining(1), true))
-      SGT_KioskTime_ReplacementBidCount:SetText(blue .. _addon.secsToTime(_addon.getKioskTimeRemaining(2), true))
+    if (ShissuKioskTimer:IsHidden() == false) then
+      local nextKiosk, lastBid, replacementKiosk = getRestKioskTime(true)
+
+      ShissuKioskTimer_NextKioskCount:SetText(yellow .. nextKiosk)
+      ShissuKioskTimer_LastBidCount:SetText(red .. lastBid)
+      ShissuKioskTimer_ReplacementBidCount:SetText(stdColor .. replacementKiosk)
     end
 
      _addon.kioskTimeUpdate(1000)
@@ -340,29 +329,30 @@ function _addon.initialized()
   -- Mausclicks in den EditBoxen (MotD, Rest Standard) erlauben
   GUILD_HOME.motd.editBackdrop:SetDrawLayer(1)
 
-  -- Gildenhändler
-  SGT_KioskTime_Version:SetText(_addon.formattedName .. " " .. _addon.Version)
-  setDefaultColor(SGT_KioskTime_Line)
+  if shissuGuildHome["kiosk"] then
+    _addon.window_kioskTimer()
+    _addon.initKioskTimer()
+  end
+end
 
-  local closeTeleportButton = WINDOW_MANAGER:CreateControl(SGT_KioskTime_Close, SGT_KioskTime, CT_TEXTURE)
-  closeTeleportButton:SetAnchor(TOPLEFT, parent, TOPRIGHT, -35, 2)
-  closeTeleportButton:SetDimensions(28, 28)
-  closeTeleportButton:SetTexture("ESOUI/art/buttons/decline_up.dds")
-  closeTeleportButton:SetMouseEnabled(true)
-  closeTeleportButton:SetHandler("OnMouseEnter", function(self) self:SetColor(0.2705882490, 0.5725490451, 1, 1) end)
-  closeTeleportButton:SetHandler("OnMouseExit", function(self) self:SetColor(1,1,1,1) end)
-  closeTeleportButton:SetHandler("OnMouseUp", function(self)
-    SGT_KioskTime:SetHidden(true)
-    frameClose = 1
-  end)
+function _addon.window_kioskTimer()
+  local control = GetControl("ShissuKioskTimer")
 
-  -- Localization
-  SGT_KioskTime_Title:SetText(_L("TRADER"))
-  SGT_KioskTime_NextKiosk:SetText(_L("NEWKIOSK") .. ":")
-  SGT_KioskTime_LastBid:SetText(_L("BIDEND") .. ":")
-  SGT_KioskTime_ReplacementBid:SetText(_L("REPLACE") .. ":")
+  createFlatWindow(
+    "ShissuKioskTimer",
+    control,
+    {330, 160},
+    function() control:SetHidden(true) end,
+    _L("TRADER")
+  )
 
-  if shissuGuildHome["kiosk"] then _addon.initKioskTimer() end
+  ShissuKioskTimer_Version:SetText(_addon.formattedName .. " " .. _addon.Version)
+  ShissuKioskTimer_NextKiosk:SetText(_L("NEWKIOSK") .. ":")
+  ShissuKioskTimer_LastBid:SetText(_L("BIDEND") .. ":")
+  ShissuKioskTimer_ReplacementBid:SetText(_L("REPLACE") .. ":")
+
+  saveWindowPosition(control, shissuGuildHome["position"])
+  getWindowPosition(control, shissuGuildHome["position"])
 end
 
 function _addon.EVENT_ADD_ON_LOADED(_, addOnName)
