@@ -6,9 +6,9 @@
 
 ; Author: @Shissu on EU-Server!
 
-## Title: |c82FA58Shissu|ceeeeee's AutoAFK|r v1.5.0
+## Title: |cAFD3FFShissu|ceeeeee's AutoAFK|r
 ## APIVersion: 101035 101036
-## Author: |c82FA58@Shissu|r [EU-SERVER]
+## Author: |cAFD3FF@Shissu|r [EU]
 ## Description: None
 ## AddOnVersion: 1.5.0
 ## Version: 150
@@ -20,3 +20,4 @@ i18n\$(language).lua
 
 #Main
 ShissuAutoAFK.lua
+bindings.xml
