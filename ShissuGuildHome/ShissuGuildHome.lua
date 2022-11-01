@@ -278,7 +278,11 @@ function _addon.initKioskTimer()
   end)
 
   _addon.time:SetHandler("OnMouseUp", function(self)
-    ShissuKioskTimer:SetHidden(false)
+    if ShissuKioskTimer:IsHidden() then
+      ShissuKioskTimer:SetHidden(false)
+    else
+      ShissuKioskTimer:SetHidden(true)
+    end
   end)
 
   _addon.kioskTimeUpdate(1000)
