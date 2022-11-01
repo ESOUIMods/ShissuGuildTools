@@ -1,27 +1,30 @@
--- Shissu Guild Tools Addon
--- ShissuColor
+-- Shissu Framework: Chat commands
+-- -------------------------------
+-- 
+-- Filename:    modules/chatcommands.lua
+-- Version:     v1.0.11
+-- Last Update: 19.11.2020
 --
--- Version: v1.0.8
--- Last Update: 25.09.2017
--- Written by Christian Flory (@Shissu) - esoui@flory.one
+-- Written by Christian Flory (@Shissu, EU) - esoui@flory.one
 -- Distribution without license is prohibited!
 
 local _globals = ShissuFramework["globals"]
 local stdColor = _globals["stdColor"]
 local white = _globals["white"]
 local red = _globals["red"]
-
 local setPanel = ShissuFramework["setPanel"]
+
+local replacePlaceholder = ShissuFramework["functions"]["chat"].replacePlaceholder
 
 local _addon = {}
 _addon.Name	= "ShissuStandardCommands"
-_addon.Version = "1.0.1"
-_addon.formattedName = stdColor .. "Shissu" .. white .. "'s standard commands"
+_addon.Version = "1.0.11"
+_addon.lastUpdate = "19.11.2020"
 
 local _L = ShissuFramework["func"]._L(_addon.Name)
 
-_addon.panel = setPanel(_L("TITLE"), _addon.formattedName, _addon.Version)
-
+_addon.formattedName = stdColor .. "Shissu" .. white .. "'s " .. _L("TITLE")
+_addon.panel = setPanel(_L("TITLE"), _addon.formattedName, _addon.Version, _addon.lastUpdate)
 _addon.controls = {
   [1] = {
     type = "title",
@@ -33,47 +36,29 @@ _addon.controls = {
   },          
 }
 
-function _addon.helmToogle()
-  local cache = GetSetting( SETTING_TYPE_IN_WORLD, IN_WORLD_UI_SETTING_HIDE_HELM )
+function _addon.dice(number)    
+  if (number == false) then return false end 
+  local number = number
 
-  SetSetting( SETTING_TYPE_IN_WORLD, IN_WORLD_UI_SETTING_HIDE_HELM, 1 - cache )
-end
+  local i18n = _L(string.upper(GetCVar("Language.2")) .. "_DICE")
+  local langPlaceholder = string.find(number, ' ')
 
-function _addon.dice(number)     
-  if (number == false) then return false end
-  
-  local variableText = {
-    ["de"] = " hat bei einem Zufallswurf (1-MAX) die Zahl: RND erwürfelt.",
-    ["fr"] = " roule le nombre RND dans un jet alkatoire de 1-MAX.",
-    ["ru"] = " hat bei einem Zufallswurf (1-MAX) die Zahl: RND erwürfelt.",
-    ["en"] = " rolls the number RND in a random throw of 1-MAX."  
-  }
-  
-  local text = variableText[GetCVar("Language.2")]
-   
-  if string.len(text) < 5 then
-    text = " rolls the number RND in a random throw of 1-MAX."
-  end
-   
-  local textLang = string.sub(number, string.len(number)-2, string.len(number))
-  textLang = string.gsub(textLang, " ", "")
-
-  if textLang ~= nil then    
-    if variableText[textLang] then
-      text = variableText[textLang]
-      number = string.gsub(number, "" .. textLang, "")
-    end
+  if (langPlaceholder ~= nil) then
+    lang = string.sub(number, langPlaceholder)
+    lang = string.gsub(lang, " " , "")
+    number = string.sub(number, 0, langPlaceholder) 
+    langPlaceholder = string.upper(lang) .. "_DICE" 
+    
+    i18n = _L(langPlaceholder)
   end
 
   local numMax = tonumber(number)
 
-  if numMax ~= nil then 
+  if (numMax ~= nil) then 
     local numRnd = math.random(numMax)
-    
-    text = string.gsub (text, "MAX" , numMax)
-    text = string.gsub (text , "RND", numRnd)
-           
-    CHAT_SYSTEM:StartTextEntry(GetUnitName("player") .. text)
+    i18n = replacePlaceholder (i18n, {GetUnitName("player"), numMax, numRnd})
+
+    CHAT_SYSTEM:StartTextEntry(i18n)
   end
 end
 
@@ -82,9 +67,9 @@ function _addon.offlineToogle()
   local online = PLAYER_STATUS_ONLINE
   local current = GetPlayerStatus()
   
-  if ( current == offline) then
+  if (current == offline) then
     SelectPlayerStatus(online)
-  elseif ( current == online) then
+  elseif (current == online) then
     SelectPlayerStatus(offline)
   else
     SelectPlayerStatus(online)
@@ -99,16 +84,11 @@ function _addon.initialized()
   SLASH_COMMANDS["/dnd"] = function() SelectPlayerStatus(PLAYER_STATUS_DO_NOT_DISTURB) end
   SLASH_COMMANDS["/afk"] = function() SelectPlayerStatus(PLAYER_STATUS_AWAY) end  
 
-  SLASH_COMMANDS["/helm"] = _addon.helmToogle
   SLASH_COMMANDS["/roll"] = _addon.dice
   SLASH_COMMANDS["/dice"] = _addon.dice
 
-  ShissuFramework._bindings["helmToogle"] = _addon.helmToogle 
   ShissuFramework._bindings["offlineToogle"] = _addon.offlineToogle 
   ShissuFramework._bindings["reload"] = function() SLASH_COMMANDS["/reloadui"]() end
-
-  --SLASH_COMMANDS["/setting"] = function() SelectPlayerStatus(PLAYER_STATUS_AWAY) end
-  --SLASH_COMMANDS["/shissu"] = function() SelectPlayerStatus(PLAYER_STATUS_AWAY) end
 end
 
 ShissuFramework._bindings = {}

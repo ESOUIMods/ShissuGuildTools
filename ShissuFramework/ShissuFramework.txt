@@ -1,6 +1,6 @@
-## Title: |c82FA58Shissu|ceeeeee's Framework|r 1.6.0
+## Title: |c82FA58Shissu|ceeeeee's Framework|r
 ## APIVersion: 101035 101036
-## Author: |c82FA58@Shissu|r [EU-SERVER]
+## Author: |cAFD3FF@Shissu|r [EU]
 ## AddOnVersion: 1.6.0
 ## Version: 160
 ## SavedVariables: shissuFramework
@@ -12,14 +12,32 @@ i18n\$(language).lua
 ShissuFramework.xml
 ShissuFramework.lua
 
-
 globals.lua
-functions.lua
-settings.lua
-interface.lua
 
-# Standard Add-ons
-stdModule\language.lua
-stdModule\chatcommands.lua
-stdModule\color.lua
-stdModule\bindings.xml
+# Funktionen
+functions\general.lua
+functions\fileintegrity.lua
+functions\chatsystem.lua
+functions\datatypes.lua
+functions\date.lua
+
+settings\settings.lua
+settings\checkbox.lua
+settings\colorpicker.lua
+settings\combobox.lua
+settings\description.lua
+settings\editbox.lua
+settings\title.lua
+settings\slider.lua
+settings\slidereditbox.lua
+settings\textbox.lua
+
+interface\interface.lua
+interface\coloredbutton.lua
+
+# Standard Addons/Module
+modules\language.lua
+modules\chatcommands.lua
+modules\fileintegrity.lua
+
+modules\bindings.xml
