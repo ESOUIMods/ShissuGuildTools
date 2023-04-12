@@ -681,7 +681,42 @@ function _addon.checkAfterLogin()
   end
 end
 
+--[[ I had to remove Shissu's TryShowingStandardInteractLabel() because it makes no sense
+
+The original function returns true if the player can trade, otherwise false.
+
+You can't change it to return true
+
+Also he didn't define the constant P2P_UNIT_TAG from the original code, which is "reticleoverplayer"
+]]--
+
+--[[ ORIGINAL FUNCTION
+function ZO_PlayerToPlayer:TryShowingStandardInteractLabel()
+    local function GetPlatformIgnoredString()
+        return IsConsoleUI() and SI_PLAYER_TO_PLAYER_TARGET_BLOCKED or SI_PLAYER_TO_PLAYER_TARGET_IGNORED
+    end
+
+    if CanUnitTrade(P2P_UNIT_TAG) then
+        self.resurrectable = false
+        self:SetTargetIdentification(P2P_UNIT_TAG)
+
+        local isIgnored = IsUnitIgnored(P2P_UNIT_TAG)
+        local interactLabel = isIgnored and GetPlatformIgnoredString() or SI_PLAYER_TO_PLAYER_TARGET
+
+        self.actionKeybindButton:SetHidden(false)
+        self.targetLabel:SetColor(ZO_SELECTED_TEXT:UnpackRGBA())
+        self.targetLabel:SetText(zo_strformat(interactLabel, ZO_GetPrimaryPlayerNameWithSecondary(self.currentTargetDisplayName, self.currentTargetCharacterName)))
+        self.actionKeybindButton:SetText(GetString(SI_PLAYER_TO_PLAYER_ACTION_MENU))
+
+        return true
+    end
+    return false
+end
+]]--
+
+--[[
 local TryShowingStandardInteractLabel = ZO_PlayerToPlayer:TryShowingStandardInteractLabel()
+local P2P_UNIT_TAG = "reticleoverplayer"
 
 function ZO_PlayerToPlayer:TryShowingStandardInteractLabel()
   local function GetPlatformIgnoredString()
@@ -743,6 +778,7 @@ function ZO_PlayerToPlayer:TryShowingStandardInteractLabel()
 
   return true
 end
+]]--
 
 -- * Initialisierung
 function _addon.initialized()
